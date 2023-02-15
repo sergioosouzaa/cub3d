@@ -1,4 +1,4 @@
-NAME	= cub3d
+NAME	= cube
 
 ##LIBFT	= ./libft/libft.a
 
@@ -9,18 +9,18 @@ OBJS	=  $(SRCS:.c=.o)
 CFLAGS	= -g -Wall -Wextra -Werror
 
 $(NAME):	$(OBJS)
-			make -C ./mlx_linux
-			$(CC) $(OBJ) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
+			make -C ./minilibx
+			cc $^ -I ./minilibx -L ./minilibx -l mlx -framework OpenGl -framework Appkit -o $@
 
 all:		$(NAME)
 
 clean:
 			rm -f $(OBJS)
-			##make clean -C ./mlx_linux
+			make clean -C ./minilibx
 
 fclean:		clean
 			rm -f $(NAME)
-##			make fclean -C ./libft
+			
 
 re:			fclean all
 
