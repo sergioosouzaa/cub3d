@@ -35,8 +35,8 @@ t_map	get_pos(void)
 {
 	t_map map;
 
-	map.pos_x = 10.0;
-	map.pos_x = 9.0;
+	map.pos_x = 22.0;
+	map.pos_x = 11.0;
 	map.dir_x = -1.0;
 	map.dir_y = 0.0;
 	map.plane_x = 0.0;
@@ -72,9 +72,11 @@ void	get_sprites(t_game *game)
 							&game->img_8.endian);
 }
 
-void	handle_key(void *game)
+int	handle_key(int key, t_game *game)
 {
-
+	(void)key;
+	(void)*game;
+	return (0);
 
 }
 
@@ -127,6 +129,31 @@ void	dda(t_ray *ray)
 		ray->perpwalldist = (ray->sidedist_y - ray->deltadist_y);
 }
 
+t_data	get_texture(t_ray  ray, t_game game)
+{
+	t_data	texture;
+
+	if (worldMap[ray.map_x][ray.map_y] - 1 == 0)
+		texture = game.img_1;
+	else if (worldMap[ray.map_x][ray.map_y] - 1 == 1)
+		texture = game.img_2;   
+	else if (worldMap[ray.map_x][ray.map_y] - 1 == 2)
+		texture = game.img_3;   
+	else if (worldMap[ray.map_x][ray.map_y] - 1 == 3)
+		texture = game.img_4;               
+	else if (worldMap[ray.map_x][ray.map_y] - 1 == 4)
+		texture = game.img_5;   
+	else if (worldMap[ray.map_x][ray.map_y] - 1 == 5)
+		texture = game.img_6;   
+	else if (worldMap[ray.map_x][ray.map_y] - 1 == 6)
+		texture = game.img_7; 
+	else
+		texture = game.img_8;    
+	return (texture);
+}
+
+
+
 void	raycast(t_game game)
 {
 	t_ray	ray;
@@ -137,11 +164,11 @@ void	raycast(t_game game)
 	h = screenHeight;
 	w = screenWidth;
 	x = 0;
-	while (x < h)
+	while (x < w)
 	{
 		ray.camera_x = 2 * x / (double)w - 1;
-		ray.raydir_x = game.map.dir_x + game.map.plane_x * ray.camera_x;
-		ray.raydir_y = game.map.dir_y + game.map.plane_y * ray.camera_x;;
+		ray.raydir_x = game.map.dir_x + (game.map.plane_x * ray.camera_x);
+		ray.raydir_y = game.map.dir_y + (game.map.plane_y * ray.camera_x);
 		ray.map_x = (int)game.map.pos_x;
 		ray.map_y = (int)game.map.pos_y;
 		ray.hit = 0;
@@ -157,66 +184,40 @@ void	raycast(t_game game)
 		dda(&ray);
 		ray.line_heigh = (int)(h / ray.perpwalldist);
 		ray.pitch = 100;
-		
+		ray.draw_start = -ray.line_heigh / 2 + h / 2 + ray.pitch;
+		if (ray.draw_start < 0)
+			ray.draw_start = 0;
+		ray.draw_end = ray.line_heigh / 2 + h / 2 + ray.pitch;
+      	if(ray.draw_end >= h)
+			ray.draw_end = h - 1;
+		ray.texture = get_texture(ray, game);
+		if (ray.side == 0)
+			ray.wall_x = game.map.pos_y + ray.perpwalldist * ray.raydir_y;
+		else
+			ray.wall_x = game.map.pos_x + ray.perpwalldist * ray.raydir_x;
+		ray.wall_x -= floor((ray.wall_x));
+		ray.tex_x = (int)(ray.wall_x * (double)texWidth);
+		if (ray.side == 0 && ray.raydir_x > 0)
+			ray.tex_x = texWidth - ray.tex_x - 1;
+		if (ray.side == 1 && ray.raydir_y < 0)
+			ray.tex_x = texWidth - ray.tex_x - 1;
+		ray.step = 1.0 * texHeight / ray.line_heigh;
+		ray.tex_pos = (ray.draw_start - ray.pitch - h / 2 + ray.line_heigh / 2) * ray.step;
+		int y;
+		y = ray.draw_start;
+		while (y < ray.draw_end)
+		{
+			ray.tex_y = (int)ray.tex_pos & (texHeight  - 1);
+			ray.tex_pos += ray.step;
+			ray.color = get_color(&ray.texture, ray.tex_x, ray.tex_y);
+			if (ray.side == 1)
+				ray.color = (ray.color >> 1) & 8355711;
+			my_mlx_pixel_put(&game.img, x, y, ray.color);
+			y++;
+		}
 		x++;
 	}
-    for(int x = 0; x < w; x++)
-    {
-      //calculate lowest and highest pixel to fill in current stripe
-      int drawStart = -lineHeight / 2 + h / 2 + pitch;
-      if(drawStart < 0) drawStart = 0;
-      int drawEnd = lineHeight / 2 + h / 2 + pitch;
-      if(drawEnd >= h) drawEnd = h - 1;
-
-      //texturing calculations
-        t_data texture;
-        if (worldMap[mapX][mapY] - 1 == 0)
-            texture = img_1;
-        else if (worldMap[mapX][mapY] - 1 == 1)
-            texture = img_2;   
-        else if (worldMap[mapX][mapY] - 1 == 2)
-            texture = img_3;   
-        else if (worldMap[mapX][mapY] - 1 == 3)
-            texture = img_4;               
-        else if (worldMap[mapX][mapY] - 1 == 4)
-            texture = img_5;   
-        else if (worldMap[mapX][mapY] - 1 == 5)
-            texture = img_6;   
-        else if (worldMap[mapX][mapY] - 1 == 6)
-            texture = img_7; 
-        else //if (worldMap[mapX][mapY] - 1 == 7)
-            texture = img_8;     
-      double wallX; //where exactly the wall was hit
-      if(side == 0) wallX = posY + perpWallDist * rayDirY;
-      else          wallX = posX + perpWallDist * ray->raydir_x;
-      wallX -= floor((wallX));
-
-      //x coordinate on the texture
-      int texX = (int)(wallX * (double)texWidth);
-      if(side == 0 && rayDirX > 0) texX = texWidth - texX - 1;
-      if(side == 1 && rayDirY < 0) texX = texWidth - texX - 1;
-
-      // TODO: an integer-only bresenham or DDA like algorithm could make the texture coordinate stepping faster
-      // How much to increase the texture coordinate per screen pixel
-      double step = 1.0 * texHeight / lineHeight;
-      // Starting texture coordinate
-      double texPos = (drawStart - pitch - h / 2 + lineHeight / 2) * step;
-      printf("%d \n", drawStart);
-      for(int y = drawStart; y < drawEnd; y++)
-      {
-        // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
-        int texY = (int)texPos & (texHeight - 1);
-        texPos += step;
-        unsigned int color = get_color(&texture, texX, texY);
-
-        //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
-        if(side == 1) color = (color >> 1) & 8355711;
-        my_mlx_pixel_put(&img, x, y, color);
-      }
-    }
-
-
-      mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
+	mlx_put_image_to_window(game.mlx, game.mlx_win, game.img.img, 0, 0);
 }
 
 int main(void)

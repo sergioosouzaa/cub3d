@@ -29,7 +29,7 @@ typedef struct	s_map {
 	double	dir_x;
 	double	dir_y;
 	double	plane_x;
-	double	plane_y
+	double	plane_y;
 }				t_map;
 
 typedef	struct	s_game {
@@ -51,22 +51,31 @@ typedef	struct	s_game {
 }				t_game;
 
 typedef struct s_ray {
-	double	camera_x;
-	double	raydir_x;
-	double	raydir_y;
-	int		map_x;
-	int		map_y;
-	double	sidedist_x;
-	double	sidedist_y;
-	int		step_x;
-	int		step_y;
-	int		hit;
-	int		side;
-	double	deltadist_x;
-	double	deltadist_y;
-	double	perpwalldist;
-	int		line_heigh;
-	int		pitch;
+	double			camera_x;
+	double			raydir_x;
+	double			raydir_y;
+	int				map_x;
+	int				map_y;
+	double			sidedist_x;
+	double			sidedist_y;
+	int				step_x;
+	int				step_y;
+	int				hit;
+	int				side;
+	double			deltadist_x;
+	double			deltadist_y;
+	double			perpwalldist;
+	int				line_heigh;
+	int				pitch;
+	int				draw_start;
+	int				draw_end;
+	double			wall_x;
+	int				tex_x;
+	double			step;
+	double			tex_pos;
+	int				tex_y;
+	unsigned int	color;
+	t_data			texture;
 }				t_ray;
 
 
