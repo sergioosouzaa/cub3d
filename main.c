@@ -36,7 +36,7 @@ t_map	get_pos(void)
 	t_map map;
 
 	map.pos_x = 22.0;
-	map.pos_x = 11.0;
+	map.pos_y = 11.0;
 	map.dir_x = -1.0;
 	map.dir_y = 0.0;
 	map.plane_x = 0.0;
@@ -72,13 +72,7 @@ void	get_sprites(t_game *game)
 							&game->img_8.endian);
 }
 
-int	handle_key(int key, t_game *game)
-{
-	(void)key;
-	(void)*game;
-	return (0);
 
-}
 
 void	side_dist_init(t_ray *ray, t_map map)
 {
@@ -220,6 +214,26 @@ void	raycast(t_game game)
 	mlx_put_image_to_window(game.mlx, game.mlx_win, game.img.img, 0, 0);
 }
 
+int	handle_key(int key, t_game *game)
+{
+	if (key == KEY_RIGHT)
+		game->map.pos_y = game->map.pos_y - 0.2;
+	if (key == KEY_LEFT)
+		game->map.pos_y = game->map.pos_y + 0.2;
+	if (key == KEY_DOWN)
+		game->map.pos_x = game->map.pos_x + 0.2;
+	if (key == KEY_UP)
+		game->map.pos_x = game->map.pos_x - 0.2;
+	mlx_destroy_image(game->mlx, game->img.img);
+	game->img.img = mlx_new_image(game->mlx, screenWidth, screenHeight);
+	game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length,
+								&game->img.endian);
+	mlx_clear_window(game->mlx, game->mlx_win);
+	raycast(*game);
+	return (0);
+
+}
+
 int main(void)
 {
 	t_map	pos;
@@ -238,3 +252,4 @@ int main(void)
 	mlx_key_hook(game.mlx_win, handle_key, &game);
 	mlx_loop(game.mlx);			
 }
+

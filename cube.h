@@ -15,6 +15,17 @@
 #define mapWidth 24
 #define mapHeight 24
 
+enum	mac_e_key_codes
+{
+	KEY_DOWN = 125,
+	KEY_UP = 126,
+	KEY_ESC = 53,
+	KEY_RIGHT = 123,
+	KEY_LEFT = 124,
+	KEY_RESET = 15,
+};
+
+
 typedef struct	s_data {
 	void	*img;
 	char	*addr;
