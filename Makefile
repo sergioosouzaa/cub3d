@@ -1,6 +1,9 @@
 NAME	= cube
 
 ##LIBFT	= ./libft/libft.a
+MLX = minilibx
+
+LXFLAGS = -lmlx -framework OpenGL -framework AppKit
 
 SRCS	= 	main.c
 
@@ -10,7 +13,8 @@ CFLAGS	= -g -Wall -Wextra -Werror
 
 $(NAME):	$(OBJS)
 			make -C ./minilibx
-			cc $^ -I ./minilibx -L ./minilibx -l mlx -framework OpenGl -framework Appkit -o $@
+			cc -o $(NAME) -L $(MLX) $(LXFLAGS) $(OBJS)
+##			//cc $^ -I ./minilibx -L ./minilibx -l mlx -framework OpenGl -framework Appkit -o $@
 
 all:		$(NAME)
 

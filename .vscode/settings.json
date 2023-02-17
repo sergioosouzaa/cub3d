@@ -5,6 +5,7 @@
         "string": "c",
         "string_view": "c",
         "vector": "c",
-        "iterator": "c"
+        "iterator": "c",
+        "stdlib.h": "c"
     }
 }

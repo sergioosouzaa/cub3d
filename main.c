@@ -1,33 +1,6 @@
 
-#include<stdio.h>
 #include "cube.h"
-#include "./minilibx/mlx.h"
-#include <math.h>
-#include <unistd.h>
 
-
-#define screenWidth 640
-#define screenHeight 480
-#define texWidth 64
-#define texHeight 64
-#define mapWidth 24
-#define mapHeight 24
-
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
-}
-
-unsigned int get_color(t_data *data, int x, int y)
-{
-    char	*dst;
-
-	  dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-    return (*(unsigned int*)dst);
-}
 
 int worldMap[mapWidth][mapHeight]=
 {
@@ -57,133 +30,138 @@ int worldMap[mapWidth][mapHeight]=
   {4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
 };
 
-int main(void)
+
+t_map	get_pos(void)
 {
-  double posX = 22.0, posY = 11.5;  //x and y start position
-  double dirX = -1.0, dirY = 0.0; //initial direction vector
-  double planeX = 0.0, planeY = 0.66; //the 2d raycaster version of camera plane
+	t_map map;
+
+	map.pos_x = 10.0;
+	map.pos_x = 9.0;
+	map.dir_x = -1.0;
+	map.dir_y = 0.0;
+	map.plane_x = 0.0;
+	map.plane_y = 0.66;
+	return (map);
+}
+
+void	get_sprites(t_game *game)
+{
+	game->img_1.img = mlx_xpm_file_to_image(game->mlx, "./sprits/eagle.xpm", &game->size_txt, &game->size_txt);
+	game->img_1.addr = mlx_get_data_addr(game->img_1.img, &game->img_1.bits_per_pixel, &game->img_1.line_length,
+							&game->img_1.endian);
+	game->img_2.img = mlx_xpm_file_to_image(game->mlx, "./sprits/redbrick.xpm", &game->size_txt, &game->size_txt);
+	game->img_2.addr = mlx_get_data_addr(game->img_2.img, &game->img_2.bits_per_pixel, &game->img_2.line_length,
+							&game->img_2.endian);
+	game->img_3.img = mlx_xpm_file_to_image(game->mlx, "./sprits/purplestone.xpm", &game->size_txt, &game->size_txt);
+	game->img_3.addr = mlx_get_data_addr(game->img_3.img, &game->img_3.bits_per_pixel, &game->img_3.line_length,
+							&game->img_3.endian);
+	game->img_4.img = mlx_xpm_file_to_image(game->mlx, "./sprits/purplestone.xpm", &game->size_txt, &game->size_txt);
+	game->img_4.addr = mlx_get_data_addr(game->img_4.img, &game->img_4.bits_per_pixel, &game->img_4.line_length,
+							&game->img_4.endian);
+	game->img_5.img = mlx_xpm_file_to_image(game->mlx, "./sprits/bluestone.xpm", &game->size_txt, &game->size_txt);
+	game->img_5.addr = mlx_get_data_addr(game->img_5.img, &game->img_5.bits_per_pixel, &game->img_5.line_length,
+							&game->img_5.endian);
+	game->img_6.img = mlx_xpm_file_to_image(game->mlx, "./sprits/mossy.xpm", &game->size_txt, &game->size_txt);
+	game->img_6.addr = mlx_get_data_addr(game->img_6.img, &game->img_6.bits_per_pixel, &game->img_6.line_length,
+							&game->img_6.endian);
+	game->img_7.img = mlx_xpm_file_to_image(game->mlx, "./sprits/wood.xpm", &game->size_txt, &game->size_txt);
+	game->img_7.addr = mlx_get_data_addr(game->img_7.img, &game->img_7.bits_per_pixel, &game->img_7.line_length,
+							&game->img_7.endian);
+	game->img_8.img = mlx_xpm_file_to_image(game->mlx, "./sprits/colorstone.xpm", &game->size_txt, &game->size_txt);
+	game->img_8.addr = mlx_get_data_addr(game->img_8.img, &game->img_8.bits_per_pixel, &game->img_8.line_length,
+							&game->img_8.endian);
+}
+
+void	handle_key(void *game)
+{
 
 
-    void *mlx = mlx_init();
-    void *mlx_win = mlx_new_window(mlx, screenWidth, screenWidth, "window");
-    int w = screenWidth;
-    int h = screenHeight;
-  	t_data	img;
-	  img.img = mlx_new_image(mlx, screenWidth, screenWidth);
-	  img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-								&img.endian);
-      int size_txt = texWidth;
-      t_data img_1;
-      img_1.img = mlx_png_file_to_image(mlx, "./sprits/eagle.png", &size_txt, &size_txt);
-	    img_1.addr = mlx_get_data_addr(img_1.img, &img_1.bits_per_pixel, &img_1.line_length,
-								&img_1.endian);
-      t_data img_2;
-      img_2.img = mlx_png_file_to_image(mlx, "./sprits/redbrick.png", &size_txt, &size_txt);
-	    img_2.addr = mlx_get_data_addr(img_2.img, &img_2.bits_per_pixel, &img_2.line_length,
-								&img_2.endian);
-      t_data img_3;
-      img_3.img = mlx_png_file_to_image(mlx, "./sprits/purplestone.png", &size_txt, &size_txt);
-	    img_3.addr = mlx_get_data_addr(img_3.img, &img_3.bits_per_pixel, &img_3.line_length,
-								&img_3.endian);
-      t_data img_4;
-      img_4.img = mlx_png_file_to_image(mlx, "./sprits/purplestone.png", &size_txt, &size_txt);
-	    img_4.addr = mlx_get_data_addr(img_4.img, &img_4.bits_per_pixel, &img_4.line_length,
-								&img_4.endian);
-      t_data img_5;
-      img_5.img = mlx_png_file_to_image(mlx, "./sprits/bluestone.png", &size_txt, &size_txt);
-	    img_5.addr = mlx_get_data_addr(img_5.img, &img_5.bits_per_pixel, &img_5.line_length,
-								&img_5.endian);
-      t_data img_6;
-      img_6.img = mlx_png_file_to_image(mlx, "./sprits/mossy.png", &size_txt, &size_txt);
-	    img_6.addr = mlx_get_data_addr(img_6.img, &img_6.bits_per_pixel, &img_6.line_length,
-								&img_6.endian);
-      t_data img_7;
-      img_7.img = mlx_png_file_to_image(mlx, "./sprits/wood.png", &size_txt, &size_txt);
-	    img_7.addr = mlx_get_data_addr(img_7.img, &img_7.bits_per_pixel, &img_7.line_length,
-								&img_7.endian);
-      t_data img_8;
-      img_8.img = mlx_png_file_to_image(mlx, "./sprits/colorstone.png", &size_txt, &size_txt);
-	    img_8.addr = mlx_get_data_addr(img_8.img, &img_8.bits_per_pixel, &img_8.line_length,
-								&img_8.endian);
+}
 
+void	side_dist_init(t_ray *ray, t_map map)
+{
+	if(ray->raydir_x < 0)
+	{
+		ray->step_x = -1;
+		ray->sidedist_x = (map.pos_x - ray->map_x) * ray->deltadist_x;
+	}
+	else
+	{
+		ray->step_x = 1;
+		ray->sidedist_x = (ray->map_x + 1.0 - map.pos_x) * ray->deltadist_x;
+	}
+	if(ray->raydir_y < 0)
+	{
+		ray->step_y = -1;
+		ray->sidedist_y = (map.pos_y - ray->map_y) * ray->deltadist_y;
+	}
+	else
+	{
+		ray->step_y = 1;
+		ray->sidedist_y = (ray->map_y + 1.0 - map.pos_y) * ray->deltadist_y;
+	}
+}
+
+void	dda(t_ray *ray)
+{
+	while (ray->hit == 0)
+	{
+		if(ray->sidedist_x < ray->sidedist_y)
+		{
+			ray->sidedist_x += ray->deltadist_x;
+			ray->map_x += ray->step_x;
+			ray->side = 0;
+		}
+		else
+		{
+			ray->sidedist_y += ray->deltadist_y;
+			ray->map_y += ray->step_y;
+			ray->side = 1;
+		}
+		if(worldMap[ray->map_x][ray->map_y] > 0)
+			ray->hit = 1;
+	}
+	if(ray->side == 0)
+		ray->perpwalldist = (ray->sidedist_x - ray->deltadist_x);
+	else          
+		ray->perpwalldist = (ray->sidedist_y - ray->deltadist_y);
+}
+
+void	raycast(t_game game)
+{
+	t_ray	ray;
+	int		w; 
+	int		h;
+	int		x;
+	
+	h = screenHeight;
+	w = screenWidth;
+	x = 0;
+	while (x < h)
+	{
+		ray.camera_x = 2 * x / (double)w - 1;
+		ray.raydir_x = game.map.dir_x + game.map.plane_x * ray.camera_x;
+		ray.raydir_y = game.map.dir_y + game.map.plane_y * ray.camera_x;;
+		ray.map_x = (int)game.map.pos_x;
+		ray.map_y = (int)game.map.pos_y;
+		ray.hit = 0;
+		if (ray.raydir_x == 0)
+			ray.deltadist_x = 1e30;
+		else
+			ray.deltadist_x = fabs( 1 / ray.raydir_x);
+		if (ray.raydir_y == 0)
+			ray.deltadist_y = 1e30;
+		else
+			ray.deltadist_y = fabs( 1 / ray.raydir_y);
+		side_dist_init(&ray, game.map);
+		dda(&ray);
+		ray.line_heigh = (int)(h / ray.perpwalldist);
+		ray.pitch = 100;
+		
+		x++;
+	}
     for(int x = 0; x < w; x++)
     {
-      //calculate ray position and direction
-      double cameraX = 2 * x / (double)w - 1; //x-coordinate in camera space
-      double rayDirX = dirX + planeX*cameraX;
-      double rayDirY = dirY + planeY*cameraX;
-
-      //which box of the map we're in
-      int mapX = (int)posX;
-      int mapY = (int)posY;
-
-      //length of ray from current position to next x or y-side
-      double sideDistX;
-      double sideDistY;
-
-      //length of ray from one x or y-side to next x or y-side
-      double deltaDistX = (rayDirX == 0) ? 1e30 : fabs(1 / rayDirX);
-      double deltaDistY = (rayDirY == 0) ? 1e30 : fabs(1 / rayDirY);
-      double perpWallDist;
-
-      //what direction to step in x or y-direction (either +1 or -1)
-      int stepX;
-      int stepY;
-
-      int hit = 0; //was there a wall hit?
-      int side; //was a NS or a EW wall hit?
-
-      //calculate step and initial sideDist
-      if(rayDirX < 0)
-      {
-        stepX = -1;
-        sideDistX = (posX - mapX) * deltaDistX;
-      }
-      else
-      {
-        stepX = 1;
-        sideDistX = (mapX + 1.0 - posX) * deltaDistX;
-      }
-      if(rayDirY < 0)
-      {
-        stepY = -1;
-        sideDistY = (posY - mapY) * deltaDistY;
-      }
-      else
-      {
-        stepY = 1;
-        sideDistY = (mapY + 1.0 - posY) * deltaDistY;
-      }
-      //perform DDA
-      while (hit == 0)
-      {
-        //jump to next map square, either in x-direction, or in y-direction
-        if(sideDistX < sideDistY)
-        {
-          sideDistX += deltaDistX;
-          mapX += stepX;
-          side = 0;
-        }
-        else
-        {
-          sideDistY += deltaDistY;
-          mapY += stepY;
-          side = 1;
-        }
-        //Check if ray has hit a wall
-        if(worldMap[mapX][mapY] > 0) hit = 1;
-      }
-
-      //Calculate distance of perpendicular ray (Euclidean distance would give fisheye effect!)
-      if(side == 0) perpWallDist = (sideDistX - deltaDistX);
-      else          perpWallDist = (sideDistY - deltaDistY);
-
-      //Calculate height of line to draw on screen
-      int lineHeight = (int)(h / perpWallDist);
-
-
-      int pitch = 100;
-
       //calculate lowest and highest pixel to fill in current stripe
       int drawStart = -lineHeight / 2 + h / 2 + pitch;
       if(drawStart < 0) drawStart = 0;
@@ -210,7 +188,7 @@ int main(void)
             texture = img_8;     
       double wallX; //where exactly the wall was hit
       if(side == 0) wallX = posY + perpWallDist * rayDirY;
-      else          wallX = posX + perpWallDist * rayDirX;
+      else          wallX = posX + perpWallDist * ray->raydir_x;
       wallX -= floor((wallX));
 
       //x coordinate on the texture
@@ -223,20 +201,39 @@ int main(void)
       double step = 1.0 * texHeight / lineHeight;
       // Starting texture coordinate
       double texPos = (drawStart - pitch - h / 2 + lineHeight / 2) * step;
+      printf("%d \n", drawStart);
       for(int y = drawStart; y < drawEnd; y++)
       {
         // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
         int texY = (int)texPos & (texHeight - 1);
         texPos += step;
-        unsigned int color = get_color(&texture, texHeight * texX, texHeight * texY);
+        unsigned int color = get_color(&texture, texX, texY);
 
         //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
         if(side == 1) color = (color >> 1) & 8355711;
-        my_mlx_pixel_put(&img, y, x, color);
+        my_mlx_pixel_put(&img, x, y, color);
       }
     }
 
 
       mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-        mlx_loop(mlx);
+}
+
+int main(void)
+{
+	t_map	pos;
+	t_game	game;
+
+	pos = get_pos();
+	game.mlx = mlx_init();
+	game.mlx_win = mlx_new_window(game.mlx, screenWidth, screenWidth, "window");
+	game.size_txt = texWidth;
+	get_sprites(&game);
+	game.img.img = mlx_new_image(game.mlx, screenWidth, screenWidth);
+	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length,
+								&game.img.endian);
+	game.map = pos;
+	raycast(game);
+	mlx_key_hook(game.mlx_win, handle_key, &game);
+	mlx_loop(game.mlx);			
 }
