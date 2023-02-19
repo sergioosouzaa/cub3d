@@ -5,7 +5,7 @@ MLX = minilibx
 
 LXFLAGS = -lmlx -framework OpenGL -framework AppKit
 
-SRCS	= 	main.c utils.c
+SRCS	= 	main.c utils.c raycast.c
 
 OBJS	=  $(SRCS:.c=.o)
 

@@ -14,7 +14,7 @@
 #define texHeight 64
 #define mapWidth 24
 #define mapHeight 24
-
+#define rot 0.1	
 enum	mac_e_key_codes
 {
 	KEY_DOWN = 125,
@@ -54,10 +54,6 @@ typedef	struct	s_game {
 	t_data	img_2;
 	t_data	img_3;
 	t_data	img_4;
-	t_data	img_5;
-	t_data	img_6;
-	t_data	img_7;
-	t_data	img_8;
 	t_map	map;
 }				t_game;
 
@@ -94,6 +90,18 @@ typedef struct s_ray {
 
 unsigned int	get_color(t_data *data, int x, int y);
 void			my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void			print_floor(t_data *img, int floor_color, int ceiling_color);
+void			get_sprites(t_game *game);
 
+
+
+t_data	get_texture(t_ray  ray, t_game game);
+void	dda(t_ray *ray);
+void	side_dist_init(t_ray *ray, t_map map);
+void	calc_texture(t_ray *ray, t_game game);
+void	ray_init(t_ray *ray, t_game game, int x);
+void	raycast(t_game game);
+
+int worldMap[mapWidth][mapHeight];
 
 #endif
