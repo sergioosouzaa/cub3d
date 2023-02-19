@@ -224,10 +224,28 @@ int	handle_key(int key, t_game *game)
 		game->map.pos_x = game->map.pos_x + 0.2;
 	if (key == KEY_UP)
 		game->map.pos_x = game->map.pos_x - 0.2;
+	int	i;
+	int	j;
+	i = 0;
+	j = 0;
 	mlx_destroy_image(game->mlx, game->img.img);
 	game->img.img = mlx_new_image(game->mlx, screenWidth, screenHeight);
 	game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length,
 								&game->img.endian);
+	while (i < screenWidth)
+	{
+		j = 0;
+		while (j < screenWidth)
+		{
+
+			if (j < screenHeight / 4 * 3)
+				my_mlx_pixel_put(&game->img, i, j, 0X00FF0000);
+			else
+				my_mlx_pixel_put(&game->img, i, j, 0X00FF00FF);
+			j++;
+		}
+		i++;
+	}
 	mlx_clear_window(game->mlx, game->mlx_win);
 	raycast(*game);
 	return (0);
@@ -241,12 +259,29 @@ int main(void)
 
 	pos = get_pos();
 	game.mlx = mlx_init();
-	game.mlx_win = mlx_new_window(game.mlx, screenWidth, screenWidth, "window");
+	game.mlx_win = mlx_new_window(game.mlx, screenWidth, screenHeight, "window");
 	game.size_txt = texWidth;
 	get_sprites(&game);
-	game.img.img = mlx_new_image(game.mlx, screenWidth, screenWidth);
+	game.img.img = mlx_new_image(game.mlx, screenWidth, screenHeight);
 	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length,
 								&game.img.endian);
+	int i;
+	int	j;
+	i = 0;
+	j = 0;
+	while (i < screenWidth)
+	{
+		j = 0;
+		while (j < screenHeight)
+		{
+			if (j < (screenHeight / 4) * 3)
+				my_mlx_pixel_put(&game.img, i, j, 0X00FF0000);
+			else
+				my_mlx_pixel_put(&game.img, i, j, 0X00FF00FF);
+			j++;
+		}
+		i++;
+	}
 	game.map = pos;
 	raycast(game);
 	mlx_key_hook(game.mlx_win, handle_key, &game);
