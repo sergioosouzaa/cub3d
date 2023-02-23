@@ -18,7 +18,7 @@ void	raycast(t_game game)
 		{
 			ray.tex_y = (int)ray.tex_pos & (texHeight  - 1);
 			ray.tex_pos += ray.step;
-			ray.color = get_color(&ray.texture, ray.tex_x, ray.tex_y);
+			ray.color = get_color(&ray.texture,  ray.tex_x, ray.tex_y);
 			if (ray.side == 1)
 				ray.color = (ray.color >> 1) & 8355711;
 			my_mlx_pixel_put(&game.img, x, y, ray.color);

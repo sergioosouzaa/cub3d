@@ -14,7 +14,7 @@
 #define texHeight 64
 #define mapWidth 24
 #define mapHeight 24
-#define rot 0.1	
+#define rot 0.08	
 enum	mac_e_key_codes
 {
 	KEY_DOWN = 125,
