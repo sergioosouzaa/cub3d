@@ -16,7 +16,9 @@ void	raycast(t_game game)
 		y = ray.draw_start;
 		while (y < ray.draw_end)
 		{
-			ray.tex_y = (int)ray.tex_pos & (texHeight  - 1);
+			ray.tex_y = (int)ray.tex_pos;
+			if (ray.tex_y > texHeight  - 1)
+				ray.tex_y = texHeight  - 1;
 			ray.tex_pos += ray.step;
 			ray.color = get_color(&ray.texture,  ray.tex_x, ray.tex_y);
 			if (ray.side == 1)

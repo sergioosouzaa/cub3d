@@ -33,8 +33,8 @@ t_map	get_pos(void)
 {
 	t_map	map;
 
-	map.pos_x = 22.0;
-	map.pos_y = 11.0;
+	map.pos_x = 8.0;
+	map.pos_y = 4.0;
 	map.dir_x = -1.0;
 	map.dir_y = 0.0;
 	map.plane_x = 0.0;
@@ -61,7 +61,7 @@ int	handle_press(int key, t_game *game)
 	  	game->map.dir_x = game->map.dir_x * cos(rot) - game->map.dir_y * sin(rot);
 	  	game->map.dir_y = aux * sin(rot) + game->map.dir_y  * cos(rot);
 	  	aux = game->map.plane_x;
-	  	game->map.plane_x = game->map.plane_x * cos(rot) - game->map.plane_y * sin(-rot);
+	  	game->map.plane_x = game->map.plane_x * cos(rot) - game->map.plane_y * sin(rot);
 	  	game->map.plane_y = aux * sin(rot) + game->map.plane_y * cos(rot);
 	}
 	if (key == KEY_DOWN)
