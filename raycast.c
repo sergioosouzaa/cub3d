@@ -13,17 +13,24 @@ void	raycast(t_game game)
 		side_dist_init(&ray, game.map);
 		dda(&ray);
 		calc_texture(&ray, game);
-		y = ray.draw_start;
-		while (y < ray.draw_end)
+		y = 0;
+		while (y < screenHeight)
 		{
-			ray.tex_y = (int)ray.tex_pos;
-			if (ray.tex_y > texHeight  - 1)
-				ray.tex_y = texHeight  - 1;
-			ray.tex_pos += ray.step;
-			ray.color = get_color(&ray.texture,  ray.tex_x, ray.tex_y);
-			if (ray.side == 1)
-				ray.color = (ray.color >> 1) & 8355711;
-			my_mlx_pixel_put(&game.img, x, y, ray.color);
+			if (y < ray.draw_start)
+				my_mlx_pixel_put(&game.img, x, y, game.floor_color);
+			else if (y >= ray.draw_end)
+				my_mlx_pixel_put(&game.img, x, y, game.ceiling_color);
+			else
+			{
+				ray.tex_y = (int)ray.tex_pos;
+				if (ray.tex_y > texHeight  - 1)
+					ray.tex_y = texHeight  - 1;
+				ray.tex_pos += ray.step;
+				ray.color = get_color(&ray.texture,  ray.tex_x, ray.tex_y);
+				if (ray.side == 1)
+					ray.color = (ray.color >> 1) & 8355711;
+				my_mlx_pixel_put(&game.img, x, y, ray.color);
+			}
 			y++;
 		}
 		x++;

@@ -78,7 +78,6 @@ int	handle_press(int key, t_game *game)
 	game->img.img = mlx_new_image(game->mlx, screenWidth, screenHeight);
 	game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length,
 								&game->img.endian);
-	print_floor(&game->img, 0X00FF0000, 0X00FF00FF);								
 	mlx_clear_window(game->mlx, game->mlx_win);
 	raycast(*game);
 	return (0);
@@ -120,7 +119,6 @@ int	handle_key(int key, t_game *game)
 	game->img.img = mlx_new_image(game->mlx, screenWidth, screenHeight);
 	game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length,
 								&game->img.endian);
-	print_floor(&game->img, 0X00FF0000, 0X00FF00FF);								
 	mlx_clear_window(game->mlx, game->mlx_win);
 	raycast(*game);
 	return (0);
@@ -139,10 +137,11 @@ int main(void)
 	game.img.img = mlx_new_image(game.mlx, screenWidth, screenHeight);
 	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length,
 								&game.img.endian);
-	print_floor(&game.img, 0X00FF0000, 0X00FF00FF);
 	game.map = pos;
+	game.ceiling_color =  0x000000FF;
+	game.floor_color =  0x00F00FFF;
 	raycast(game);
-	mlx_hook(game.mlx_win, 2, (1L<<0), &handle_press,  &game); /* ADDED */
+	mlx_hook(game.mlx_win, 2, (1L<<0), &handle_press,  &game);
 	mlx_key_hook(game.mlx_win, handle_key, &game);
 	mlx_loop(game.mlx);			
 }
