@@ -75,13 +75,19 @@ int	handle_key(t_game *game)
 
 	if (game->key.down && game->key.down != game->key.up)
 	{
-		game->map.pos_x -= game->map.dir_x * 0.05;
-		game->map.pos_y -= game->map.dir_y * 0.05;
+		if (worldMap[(int)(game->map.pos_x - game->map.dir_x * 0.05) % 24][(int)(game->map.pos_y - game->map.dir_y * 0.05) % 24] < 1)
+		{
+			game->map.pos_x -= game->map.dir_x * 0.05;
+			game->map.pos_y -= game->map.dir_y * 0.05;
+		}
 	}
 	if (game->key.up && game->key.down != game->key.up)
-	{		
-		game->map.pos_x += game->map.dir_x * 0.05;
-		game->map.pos_y += game->map.dir_y * 0.05;
+	{	
+		if (worldMap[(int)(game->map.pos_x + game->map.dir_x * 0.05) % 24][(int)(game->map.pos_y + game->map.dir_y * 0.05) % 24] < 1)
+		{	
+			game->map.pos_x += game->map.dir_x * 0.05;
+			game->map.pos_y += game->map.dir_y * 0.05;
+		}
 	}
 	if (game->key.rotate_l && game->key.rotate_l != game->key.rotate_r)
 	{
