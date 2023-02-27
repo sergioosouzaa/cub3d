@@ -25,6 +25,13 @@ enum	mac_e_key_codes
 	KEY_RESET = 15,
 };
 
+typedef	struct s_keys {
+	int up;
+	int	down;
+	int	esc;
+	int	rotate_r;
+	int	rotate_l;
+}				t_keys;
 
 typedef struct	s_data {
 	void	*img;
@@ -55,6 +62,7 @@ typedef	struct	s_game {
 	t_data	img_3;
 	t_data	img_4;
 	t_map	map;
+	t_keys	keys;
 }				t_game;
 
 typedef struct s_ray {

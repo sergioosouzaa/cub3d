@@ -6,8 +6,8 @@ void floor_ceiling(t_game *game)
 	int	x;
 	t_ray	ray;
 
-	y = 0;
-	while (y < screenHeight / 2)
+	y = screenHeight / 2;
+	while (y < screenHeight)
 	{
 		ray.ray_dir_x0 = game->map.dir_x - game->map.plane_x;
 		ray.ray_dir_y0 = game->map.dir_y - game->map.plane_y;
@@ -30,15 +30,14 @@ void floor_ceiling(t_game *game)
 			ray.t_y = (int)(texHeight * (ray.floor_y - ray.cell_y)) & (texHeight - 1);
 			ray.floor_x += ray.floor_step_x;
 			ray.floor_y += ray.floor_step_y;
-			ray.color = get_color(&ray.texture,  ray.t_x, ray.t_y);
+			ray.color = get_color(&game->img_4,  ray.t_x, ray.t_y);
 			my_mlx_pixel_put(&game->img, x, y, ray.color);
-			ray.color = get_color(&game->img_2,  ray.t_x, ray.t_y);
+			ray.color = get_color(&game->img_3,  ray.t_x, ray.t_y);
 			my_mlx_pixel_put(&game->img, x, screenHeight - y - 1, ray.color);
 			x++;
 		}
 		y++;
 	}
-
 }
 
 void	raycast(t_game game)
@@ -55,26 +54,97 @@ void	raycast(t_game game)
 		side_dist_init(&ray, game.map);
 		dda(&ray);
 		calc_texture(&ray, game);
-		y = 0;
-		while (y < screenHeight)
+		y = ray.draw_start ;
+		while (y < ray.draw_end)
 		{
-			if (y >= ray.draw_start && y < ray.draw_end)
-			{
-				ray.tex_y = (int)ray.tex_pos;
-				if (ray.tex_y > texHeight  - 1)
-					ray.tex_y = texHeight  - 1;
-				ray.tex_pos += ray.step;
-				ray.color = get_color(&ray.texture,  ray.tex_x, ray.tex_y);
-				if (ray.side == 1)
-					ray.color = (ray.color >> 1) & 8355711;
-				my_mlx_pixel_put(&game.img, x, y, ray.color);
-			}
+			ray.tex_y = (int)ray.tex_pos;
+			if (ray.tex_y > texHeight  - 1)
+				ray.tex_y = texHeight  - 1;
+			ray.tex_pos += ray.step;
+			ray.color = get_color(&ray.texture,  ray.tex_x, ray.tex_y);
+			if (ray.side == 1)
+				ray.color = (ray.color >> 1) & 8355711;
+			my_mlx_pixel_put(&game.img, x, y, ray.color);
 			y++;
 		}
+
+
+
+
+		while (y < screenHeight)
+		{
+			ray.ray_dir_x0 = game.map.dir_x - game.map.plane_x;
+			ray.ray_dir_y0 = game.map.dir_y - game.map.plane_y;
+			ray.ray_dir_x1 = game.map.dir_x + game.map.plane_x;
+			ray.ray_dir_y1 = game.map.dir_y + game.map.plane_y;
+			ray.pos_p = y - screenHeight / 2;
+			ray.pos_camera = 0.7 * screenHeight;
+			ray.row_dist = 1.0 * ray.pos_camera / ray.pos_p;
+			ray.floor_step_x = ray.row_dist * (ray.ray_dir_x1 - ray.ray_dir_x0) / screenWidth;
+			ray.floor_step_y = ray.row_dist * (ray.ray_dir_y1 - ray.ray_dir_y0) / screenWidth;
+			ray.floor_x = game.map.pos_x + ray.row_dist * ray.ray_dir_x0;
+			ray.floor_y = game.map.pos_y + ray.row_dist * ray.ray_dir_y0;
+			ray.texture  = game.img_1;
+			double floorXWall, floorYWall; //x, y position of the floor texel at the bottom of the wall
+
+			//4 different wall directions possible
+			if(ray.side == 0 && ray.raydir_x > 0)
+			{
+				floorXWall = ray.map_x;
+				floorYWall = ray.map_y + ray.wall_x;
+			}
+			else if(ray.side == 0 && ray.raydir_x < 0)
+			{
+				floorXWall = ray.map_x + 1.0;
+				floorYWall = ray.map_y + ray.wall_x;
+			}
+			else if(ray.side == 1 && ray.raydir_y > 0)
+			{
+				floorXWall = ray.map_x + ray.wall_x;
+				floorYWall = ray.map_y;
+			}
+			else
+			{
+				floorXWall = ray.map_x + ray.wall_x;
+				floorYWall = ray.map_y + 1.0;
+			}
+				ray.cell_x = (int)ray.floor_x;
+				ray.cell_y = (int)ray.floor_y;
+				ray.t_x = (int)(texWidth * (ray.floor_x - ray.cell_x))  & (texWidth - 1);
+				ray.t_y = (int)(texHeight * (ray.floor_y - ray.cell_y)) & (texHeight - 1);
+				ray.floor_x += ray.floor_step_x;
+				ray.floor_y += ray.floor_step_y;
+				double currentDist;
+				double distWall = ray.perpwalldist;
+      			double distPlayer = 0.0;
+
+				if (ray.draw_end < 0)
+					ray.draw_end = screenHeight;
+				int j = ray.draw_end + 1;
+				while (j < screenHeight)
+				{
+
+					currentDist = screenHeight / (2.0 * y - screenHeight); //you could make a small lookup table for this instead
+
+					double weight = (currentDist - distPlayer) / (distWall - distPlayer);
+
+					double currentFloorX = weight * floorXWall + (1.0 - weight) * game.map.pos_x;
+					double currentFloorY = weight * floorYWall + (1.0 - weight) * game.map.pos_y;
+					int floorTexX, floorTexY;
+					floorTexX = (int)(currentFloorX * texWidth) % texWidth;
+					floorTexY =  (int)(currentFloorY * texHeight) % texHeight;
+					ray.color = get_color(&game.img_4,  floorTexX, floorTexY);
+						my_mlx_pixel_put(&game.img, x, j, ray.color);
+					ray.color = get_color(&game.img_3,  floorTexX, floorTexY);
+						my_mlx_pixel_put(&game.img, x, screenHeight - j, ray.color);
+				}
+		y++;
+	}
 		x++;
 	}
 	mlx_put_image_to_window(game.mlx, game.mlx_win, game.img.img, 0, 0);
 }
+
 
 
 void	ray_init(t_ray *ray, t_game game, int x)
