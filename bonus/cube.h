@@ -33,6 +33,7 @@ typedef	struct s_keys {
 	int	rotate_l;
 }				t_keys;
 
+
 typedef struct	s_data {
 	void	*img;
 	char	*addr;
@@ -61,8 +62,9 @@ typedef	struct	s_game {
 	t_data	img_2;
 	t_data	img_3;
 	t_data	img_4;
+	t_data	sky;
 	t_map	map;
-	t_keys	keys;
+	t_keys	key;
 }				t_game;
 
 typedef struct s_ray {
@@ -127,6 +129,9 @@ void	side_dist_init(t_ray *ray, t_map map);
 void	calc_texture(t_ray *ray, t_game game);
 void	ray_init(t_ray *ray, t_game game, int x);
 void	raycast(t_game game);
+void	 cpy_img(t_game *game);
+
+void	put_img( t_game game);
 
 int worldMap[mapWidth][mapHeight];
 

@@ -53,12 +53,6 @@ int	handle_press(int key, t_game *game)
 		game->key.down = 1;
 	if (key == KEY_UP)
 		game->key.up = 1;
-	// mlx_destroy_image(game->mlx, game->img.img);
-	// game->img.img = mlx_new_image(game->mlx, screenWidth, screenHeight);
-	// game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length,
-	// 							&game->img.endian);
-	// mlx_clear_window(game->mlx, game->mlx_win);
-	// raycast(*game);
 	return (0);
 }
 
@@ -81,13 +75,13 @@ int	handle_key(t_game *game)
 
 	if (game->key.down && game->key.down != game->key.up)
 	{
-		game->map.pos_x -= game->map.dir_x * 0.1;
-		game->map.pos_y -= game->map.dir_y * 0.1;
+		game->map.pos_x -= game->map.dir_x * 0.05;
+		game->map.pos_y -= game->map.dir_y * 0.05;
 	}
 	if (game->key.up && game->key.down != game->key.up)
 	{		
-		game->map.pos_x += game->map.dir_x * 0.1;
-		game->map.pos_y += game->map.dir_y * 0.1;
+		game->map.pos_x += game->map.dir_x * 0.05;
+		game->map.pos_y += game->map.dir_y * 0.05;
 	}
 	if (game->key.rotate_l && game->key.rotate_l != game->key.rotate_r)
 	{
@@ -107,12 +101,6 @@ int	handle_key(t_game *game)
 	  	game->map.plane_x = game->map.plane_x * cos(rot) - game->map.plane_y * sin(rot);
 	  	game->map.plane_y = aux * sin(rot) + game->map.plane_y * cos(rot);
 	}
-	// mlx_destroy_image(game->mlx, game->img.img);
-	// game->img.img = mlx_new_image(game->mlx, screenWidth, screenHeight);
-	// game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length,
-	// 							&game->img.endian);
-	// mlx_clear_window(game->mlx, game->mlx_win);
-	// raycast(*game);
 	return (0);
 }
 

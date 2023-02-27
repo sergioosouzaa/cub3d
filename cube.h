@@ -14,7 +14,7 @@
 #define texHeight 256
 #define mapWidth 24
 #define mapHeight 24
-#define rot 0.08	
+#define rot 0.05	
 
 enum	mac_e_key_codes
 {
@@ -111,6 +111,8 @@ void	side_dist_init(t_ray *ray, t_map map);
 void	calc_texture(t_ray *ray, t_game game);
 void	ray_init(t_ray *ray, t_game game, int x);
 void	raycast(t_game game);
+
+
 
 int worldMap[mapWidth][mapHeight];
 

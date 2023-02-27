@@ -40,6 +40,14 @@ void	print_floor(t_data *img, int floor_color, int ceiling_color)
 
 void	get_sprites(t_game *game)
 {
+	int x;
+	int y;
+
+	x = screenWidth;
+	y = screenHeight;
+	game->sky.img = mlx_xpm_file_to_image(game->mlx, "./sprits/sky.xpm", &x, &y);
+	game->sky.addr=  mlx_get_data_addr(game->sky.img, &game->sky.bits_per_pixel, &game->sky.line_length,
+							&game->sky.endian);
 	game->img_1.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Wood.xpm", &game->size_txt, &game->size_txt);
 	game->img_1.addr = mlx_get_data_addr(game->img_1.img, &game->img_1.bits_per_pixel, &game->img_1.line_length,
 							&game->img_1.endian);
