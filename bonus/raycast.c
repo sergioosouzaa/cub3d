@@ -1,12 +1,120 @@
 #include "cube.h"
 
+// int	hsv_to_rgb(int hue, double saturation, double value)
+// {
+// 	double c;
+// 	double x;
+// 	double m;
+// 	c = value * saturation;
+// 	x = c * (1 - fabs(fmod((hue / 60.0), 2) - 1));
+// 	m = value - c;
+// 	if (hue >= 0 && hue < 60)
+// 	{
+// 		printf("%d %d %d \n",(int)(255 * (m + c)),  (int)(255 * (m + x)), ((int)((255 * m) )));
+// 		return (((int)(255 * (m + c)) << 16) | ((int)(255 * (m + x)) << 8) | (int)(255 * m));
+// 	}
+// 	else if (60 <= hue && hue < 120)
+// 		return (((int)(255 * (m + x)) << 16) | ((int)(255 * (m + c)) << 8) | (int)(255 * m));
+// 	else if (120 <= hue && hue < 180)
+// 		return (((int)(255 * m) << 16) | ((int)(255 * (m + c)) << 8) | (int)(255 * (m + x)));
+// 	else if (180 <= hue && hue < 240)
+// 		return (((int)(255 * (m + 0)) << 16) | ((int)(255 * (m + x)) << 8) | (int)(255 * (m + c)));
+// 	else if (240 <= hue && hue < 300)
+// 		return (((int)(255 * (m + x)) << 16) | ((int)(255 * m) << 8) | (int)(255 * (m + c)));
+// 	else
+// 		return (((int)(255 * (m + c)) << 16) | ((int)(255 * m) << 8) | (int)(255 * (m + x)));
+// }
+
+int sky_color(int x, int y)
+{
+	static int offset;
+
+	(void)offset;
+	(void)x;
+	(void)y;
+	// if (y > (int)(0.6 * screenHeight))
+	// 	return (0x00000000);
+	int i = rand() % 2000;
+	int	j = rand() % 7;
+	if (i  == 10)
+	{
+		if (j == 0)
+			return (0x9400D3);
+		if (j == 1)
+			return (0x4B0082);
+		if (j == 2)
+			return (0x0000FF);
+		if (j == 3)
+			return (0x00FF00);
+		if (j == 4)
+			return (0xFFFF00);
+		if (j == 5)
+			return (0xFF7F00);
+		if (j == 6)
+			return (0xFF0000);
+	}
+
+	//return (255 / (int)(0.6 * screenHeight) * y);
+	return (0x00000000);
+}
+
+int floor_color(int y, int f)
+{
+	int p = 70;
+	int j = p / 7;
+	int h[7] = {0xf94144, 0xf3722c, 0xf8961e, 0xf9844a, 0xf9c74f, 0x90be6d, 0x43aa8b};
+	return (h[(f + (y % p) / j) % 7]);
+
+
+	(void)f;
+	//(void)y;
+
+	// if (y % p < j)
+	// 	return(h[f]);
+	// if (y % p < j * 2)
+	// 	f = f + 1;
+	// if (y % p < j * 3)
+	// 	f = f + 2;
+	// if (y % p <  j * 4)
+	// 	f = f + 3;
+	// if (y % p <  j * 5)
+	// 	f = f + 4;
+	// if (y % p <  j * 6)
+	// 	f = f + 5;
+	// if (y % p <  j * 7)
+	// 	f = f + 6;
+	// f = f % 7;
+	// return (h[f]);
+	//return (0x00000000);		
+}
+
+
 void	raycast(t_game game)
 {
 	t_ray	ray;
 	int		x;
 	int		y;
+	static int f;
+	// static long long last_time;
+	// long long time;
 	
 	x = 0;
+	if (rand() % 2 == 0)
+		f = (f + 1) % 360;
+	// time = time_return(game.time);
+	// printf("%lld \n", time - last_time);
+	// last_time = time;
+	// int j = 0;
+	// while (j < screenHeight)
+	// {
+	// 	int p = 0;
+	// 	while (p < screenWidth)
+	// 	{
+	// 		my_mlx_pixel_put(&game.img, p, j, sky_color(p, j));
+	// 		p++;
+	// 	}
+	// 	j++;
+	// }
 	while (x < screenWidth)
 	{
 		ray_init(&ray, game, x);
@@ -14,15 +122,20 @@ void	raycast(t_game game)
 		dda(&ray);
 		calc_texture(&ray, game);
 		y = 0;
-		while (y < screenHeight)
+		while (y++ < ray. draw_start)
+			my_mlx_pixel_put(&game.img, x, y, sky_color(x, y));
+		y = ray.draw_start;
+		while (y < ray.draw_end)
 		{
-			int y_temp = (y + screenHeight) % screenHeight;
-			if (y_temp >= ray.draw_end)
-				my_mlx_pixel_put(&game.img, x, y_temp, game.ceiling_color);
-			else if (y_temp < ray.draw_start)
-				my_mlx_pixel_put(&game.img, x, y_temp, get_color(&game.sky, x, y_temp));
-			else
-			{
+			//my_mlx_pixel_put(&game.img, x, y_temp, 0xFFFFFFFF);
+			//my_mlx_pixel_put(&game.img, x, y_temp, get_color(&game.sky, x, y_temp));
+			// else if (y_temp < ray.draw_start)
+			// 	my_mlx_pixel_put(&game.img, x, y_temp, sky_color(x, y));
+			// int y_temp = (y + screenHeight) % screenHeight;
+			// if (y_temp >= ray.draw_end)
+			// 	my_mlx_pixel_put(&game.img, x, y_temp, game.ceiling_color);
+			// else if (y >= ray.draw_end && y < ray.draw_end)
+			// {
 				ray.tex_y = (int)ray.tex_pos;
 				if (ray.tex_y > texHeight  - 1)
 					ray.tex_y = texHeight  - 1;
@@ -30,12 +143,19 @@ void	raycast(t_game game)
 				ray.color = get_color(&ray.texture,  ray.tex_x, ray.tex_y);
 				if (ray.side == 1)
 					ray.color = (ray.color >> 1) & 8355711;
-				my_mlx_pixel_put(&game.img, x, y_temp, ray.color);
-			}
+				my_mlx_pixel_put(&game.img, x, y, ray.color);
+			// }
+			y++;
+		}
+		y = ray.draw_end;
+		while (y < screenHeight)
+		{
+			my_mlx_pixel_put(&game.img, x, y, floor_color(y, f));
 			y++;
 		}
 		x++;
 	}
+	//mlx_put_image_to_window(game.mlx, game.mlx_win, game.sky.img, 0, 0);
 	mlx_put_image_to_window(game.mlx, game.mlx_win, game.img.img, 0, 0);
 }
 

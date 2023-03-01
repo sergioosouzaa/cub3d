@@ -73,20 +73,21 @@ int	handle_key(t_game *game)
 {
 	double	aux;
 
+	double speed = 0.08;
 	if (game->key.down && game->key.down != game->key.up)
 	{
-		if (worldMap[(int)(game->map.pos_x - game->map.dir_x * 0.05) % 24][(int)(game->map.pos_y - game->map.dir_y * 0.05) % 24] < 1)
+		if (worldMap[(int)(game->map.pos_x - game->map.dir_x * speed) % 24][(int)(game->map.pos_y - game->map.dir_y * speed) % 24] < 1)
 		{
-			game->map.pos_x -= game->map.dir_x * 0.05;
-			game->map.pos_y -= game->map.dir_y * 0.05;
+			game->map.pos_x -= game->map.dir_x * speed;
+			game->map.pos_y -= game->map.dir_y * speed;
 		}
 	}
 	if (game->key.up && game->key.down != game->key.up)
 	{	
-		if (worldMap[(int)(game->map.pos_x + game->map.dir_x * 0.05) % 24][(int)(game->map.pos_y + game->map.dir_y * 0.05) % 24] < 1)
+		if (worldMap[(int)(game->map.pos_x + game->map.dir_x * speed) % 24][(int)(game->map.pos_y + game->map.dir_y * speed) % 24] < 1)
 		{	
-			game->map.pos_x += game->map.dir_x * 0.05;
-			game->map.pos_y += game->map.dir_y * 0.05;
+			game->map.pos_x += game->map.dir_x * speed;
+			game->map.pos_y += game->map.dir_y * speed;
 		}
 	}
 	if (game->key.rotate_l && game->key.rotate_l != game->key.rotate_r)
@@ -129,11 +130,34 @@ t_keys	init_keys(void)
 	return (key);
 }
 
+long long	get_first_time(void)
+{
+	struct timeval	first;
+
+	gettimeofday(&first, NULL);
+	return ((first.tv_sec) * 1000 + (first.tv_usec) * 0.001);
+}
+
+long long	time_return(long long first_time)
+{
+	struct timeval	first;
+	long long		actual_time;
+
+	gettimeofday(&first, NULL);
+	actual_time = (first.tv_sec) * 1000 + (first.tv_usec) * 0.001;
+	return (actual_time - first_time);
+}
+
 int main(void)
 {
 	t_map	pos;
 	t_game	game;
+	// struct timeval current_time;
+  	// gettimeofday(&current_time, NULL);
+	// long long time = get_first_time();
 
+   	time_t t;
+   	srand((unsigned) time(&t));  
 	pos = get_pos();
 	game.mlx = mlx_init();
 	game.mlx_win = mlx_new_window(game.mlx, screenWidth, screenHeight, "window");
@@ -146,6 +170,7 @@ int main(void)
 	game.ceiling_color =  0x000000FF;
 	game.floor_color =  0x00F00FFF;
 	game.key = init_keys();
+	// game.time = time;
 	raycast(game);
 	mlx_hook(game.mlx_win, 2, (1L<<0), &handle_press,  &game);
 	mlx_hook(game.mlx_win, 3, (1L<<1), &handle_release,  &game);

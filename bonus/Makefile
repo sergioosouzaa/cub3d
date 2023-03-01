@@ -9,7 +9,7 @@ SRCS	= 	main.c utils.c raycast.c
 
 OBJS	=  $(SRCS:.c=.o)
 
-CFLAGS	= -o3 -g -Wall -Wextra -Werror
+CFLAGS	= -O3 -g -Wall -Wextra -Werror
 
 $(NAME):	$(OBJS)
 			make -C ./minilibx

@@ -6,6 +6,8 @@
 # include <stdio.h>
 # include <math.h>
 # include <unistd.h>
+# include <sys/time.h>
+# include <time.h>
 
 
 #define screenWidth 640
@@ -65,6 +67,7 @@ typedef	struct	s_game {
 	t_data	sky;
 	t_map	map;
 	t_keys	key;
+	long long	time;
 }				t_game;
 
 typedef struct s_ray {
@@ -132,6 +135,11 @@ void	raycast(t_game game);
 void	 cpy_img(t_game *game);
 
 void	put_img( t_game game);
+
+//int	hsv_to_rgb(float h, float s, float v);
+int	hsv_to_rgb(int hue, double saturation, double value);
+
+long long	time_return(long long first_time);
 
 int worldMap[mapWidth][mapHeight];
 
