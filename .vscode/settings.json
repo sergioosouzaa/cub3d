@@ -6,6 +6,8 @@
         "string_view": "c",
         "vector": "c",
         "iterator": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "__locale": "c",
+        "unistd.h": "c"
     }
 }

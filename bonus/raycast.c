@@ -1,30 +1,5 @@
 #include "cube.h"
 
-// int	hsv_to_rgb(int hue, double saturation, double value)
-// {
-// 	double c;
-// 	double x;
-// 	double m;
-// 	c = value * saturation;
-// 	x = c * (1 - fabs(fmod((hue / 60.0), 2) - 1));
-// 	m = value - c;
-// 	if (hue >= 0 && hue < 60)
-// 	{
-// 		printf("%d %d %d \n",(int)(255 * (m + c)),  (int)(255 * (m + x)), ((int)((255 * m) )));
-// 		return (((int)(255 * (m + c)) << 16) | ((int)(255 * (m + x)) << 8) | (int)(255 * m));
-// 	}
-// 	else if (60 <= hue && hue < 120)
-// 		return (((int)(255 * (m + x)) << 16) | ((int)(255 * (m + c)) << 8) | (int)(255 * m));
-// 	else if (120 <= hue && hue < 180)
-// 		return (((int)(255 * m) << 16) | ((int)(255 * (m + c)) << 8) | (int)(255 * (m + x)));
-// 	else if (180 <= hue && hue < 240)
-// 		return (((int)(255 * (m + 0)) << 16) | ((int)(255 * (m + x)) << 8) | (int)(255 * (m + c)));
-// 	else if (240 <= hue && hue < 300)
-// 		return (((int)(255 * (m + x)) << 16) | ((int)(255 * m) << 8) | (int)(255 * (m + c)));
-// 	else
-// 		return (((int)(255 * (m + c)) << 16) | ((int)(255 * m) << 8) | (int)(255 * (m + x)));
-// }
-
 int sky_color(int x, int y)
 {
 	static int offset;
@@ -32,8 +7,6 @@ int sky_color(int x, int y)
 	(void)offset;
 	(void)x;
 	(void)y;
-	// if (y > (int)(0.6 * screenHeight))
-	// 	return (0x00000000);
 	int i = rand() % 2000;
 	int	j = rand() % 7;
 	if (i  == 10)
@@ -53,8 +26,6 @@ int sky_color(int x, int y)
 		if (j == 6)
 			return (0xFF0000);
 	}
-
-	//return (255 / (int)(0.6 * screenHeight) * y);
 	return (0x00000000);
 }
 
@@ -64,28 +35,98 @@ int floor_color(int y, int f)
 	int j = p / 7;
 	int h[7] = {0xf94144, 0xf3722c, 0xf8961e, 0xf9844a, 0xf9c74f, 0x90be6d, 0x43aa8b};
 	return (h[(f + (y % p) / j) % 7]);
+}
+void	sort_sprites(int *sprite_order, int *sprite_dist, int sprite_num)
+{
+	int i;
+
+	i = 0;
+	while (i < sprite_num - 1)
+	{
+		if (sprite_dist[i] < sprite_dist[i + 1])
+		{
+			int aux;
+			aux = sprite_order[i + 1];
+			sprite_order[i + 1] = sprite_order[i];
+			sprite_order[i] = aux;
+			aux = sprite_dist[i + 1];
+			sprite_dist[i + 1] = sprite_dist[i];
+			sprite_dist[i] = aux;
+			i = 0;
+		}
+		else
+			i++;
+	}
+}
 
 
-	(void)f;
-	//(void)y;
+void 	draw_sprites(int *perpedist, t_game *game)
+{
+	int	sprite_order[game->sprite_num];
+	int	sprite_dist[game->sprite_num];
+	int i;
 
-	// if (y % p < j)
-	// 	return(h[f]);
-	// if (y % p < j * 2)
-	// 	f = f + 1;
-	// if (y % p < j * 3)
-	// 	f = f + 2;
-	// if (y % p <  j * 4)
-	// 	f = f + 3;
-	// if (y % p <  j * 5)
-	// 	f = f + 4;
-	// if (y % p <  j * 6)
-	// 	f = f + 5;
-	// if (y % p <  j * 7)
-	// 	f = f + 6;
-	// f = f % 7;
-	// return (h[f]);
-	//return (0x00000000);		
+	i  = 0;
+	while(i < game->sprite_num)
+	{
+		sprite_order[i] = i;
+		sprite_dist[i] = ((game->map.pos_x - game->sprites[i].pos_x) * (game->map.pos_x - game->sprites[i].pos_x)) + ((game->map.pos_y - game->sprites[i].pos_y) * (game->map.pos_y - game->sprites[i].pos_y));
+		i++;
+	}
+	sort_sprites(sprite_order, sprite_dist, game->sprite_num);
+	i = 0;
+	while (i < game->sprite_num)
+	{
+		double sprite_x = game->sprites[sprite_order[i]].pos_x - game->map.pos_x;
+		double sprite_y = game->sprites[sprite_order[i]].pos_y - game->map.pos_y;
+		double invers_det = 1.0 / (game->map.plane_x * game->map.dir_y - game->map.plane_y * game->map.dir_x);
+		double	new_x =  invers_det * (game->map.dir_y * sprite_x - game->map.dir_x * sprite_y);
+		double	new_y =  invers_det * (-game->map.plane_y * sprite_x - game->map.plane_x * sprite_y);
+
+		int sprite_pos_x = (int)((screenWidth / 2) * (1 + new_x / new_y));
+		int	udiv = 1;
+		int vdiv = 1;
+		double vmove = (screenHeight - 64.0);
+
+		int v_move_screen =  (int)(vmove / new_y);
+
+		int sprite_height = abs((int)(screenHeight / new_y)) / vdiv;
+		int draw_start_y = -sprite_height / 2 + screenHeight / 2 + v_move_screen;
+		if (draw_start_y < 0)
+			draw_start_y = 0;
+		int draw_end_y = sprite_height / 2 + screenHeight / 2 + v_move_screen;
+		if (draw_start_y >= screenHeight)
+			draw_start_y = screenHeight - 1;
+
+		int	sprite_width = abs((int)(screenHeight / new_y)) / udiv;
+		int	draw_start_x = -sprite_width / 2 + sprite_pos_x;
+		if (draw_start_x < 0)
+			draw_start_x = 0;
+		int draw_end_x = sprite_width / 2 + sprite_pos_x;
+		if (draw_end_x > screenWidth)
+			draw_end_x = screenWidth;
+		int stripe = draw_start_x;
+		while (stripe < draw_end_x)
+		{
+			int tex_x =  (int)(256 * (stripe - (-sprite_width / 2 + sprite_pos_x)) * (texWidth / 4) / sprite_width) / 256;
+			if (new_y > 0 && new_y < perpedist[stripe] && stripe > 0 && stripe < screenWidth)
+			{
+				int p;
+				p = draw_start_y;
+				while (p < draw_end_y)
+				{
+					int d = (p - v_move_screen) * 256 - screenHeight * 128 + sprite_height * 128;
+					int tex_y = ((d * texHeight / 4) / sprite_height) / 256;
+					int color = get_color(game->sprites[i].texture, tex_x, tex_y);
+					if (((color >> 24) & 0xFF) != 0xFF)
+						my_mlx_pixel_put(&game->img, stripe, p, color);
+					p++;
+				}
+			}
+			stripe++;
+		}
+		i++;
+	}
 }
 
 
@@ -95,26 +136,13 @@ void	raycast(t_game game)
 	int		x;
 	int		y;
 	static int f;
+	int		perpedist[screenWidth];
 	// static long long last_time;
 	// long long time;
 	
 	x = 0;
 	if (rand() % 2 == 0)
 		f = (f + 1) % 360;
-	// time = time_return(game.time);
-	// printf("%lld \n", time - last_time);
-	// last_time = time;
-	// int j = 0;
-	// while (j < screenHeight)
-	// {
-	// 	int p = 0;
-	// 	while (p < screenWidth)
-	// 	{
-	// 		my_mlx_pixel_put(&game.img, p, j, sky_color(p, j));
-	// 		p++;
-	// 	}
-	// 	j++;
-	// }
 	while (x < screenWidth)
 	{
 		ray_init(&ray, game, x);
@@ -127,24 +155,14 @@ void	raycast(t_game game)
 		y = ray.draw_start;
 		while (y < ray.draw_end)
 		{
-			//my_mlx_pixel_put(&game.img, x, y_temp, 0xFFFFFFFF);
-			//my_mlx_pixel_put(&game.img, x, y_temp, get_color(&game.sky, x, y_temp));
-			// else if (y_temp < ray.draw_start)
-			// 	my_mlx_pixel_put(&game.img, x, y_temp, sky_color(x, y));
-			// int y_temp = (y + screenHeight) % screenHeight;
-			// if (y_temp >= ray.draw_end)
-			// 	my_mlx_pixel_put(&game.img, x, y_temp, game.ceiling_color);
-			// else if (y >= ray.draw_end && y < ray.draw_end)
-			// {
-				ray.tex_y = (int)ray.tex_pos;
-				if (ray.tex_y > texHeight  - 1)
-					ray.tex_y = texHeight  - 1;
-				ray.tex_pos += ray.step;
-				ray.color = get_color(&ray.texture,  ray.tex_x, ray.tex_y);
-				if (ray.side == 1)
-					ray.color = (ray.color >> 1) & 8355711;
-				my_mlx_pixel_put(&game.img, x, y, ray.color);
-			// }
+			ray.tex_y = (int)ray.tex_pos;
+			if (ray.tex_y > texHeight  - 1)
+				ray.tex_y = texHeight  - 1;
+			ray.tex_pos += ray.step;
+			ray.color = get_color(&ray.texture,  ray.tex_x, ray.tex_y);
+			if (ray.side == 1)
+				ray.color = (ray.color >> 1) & 8355711;
+			my_mlx_pixel_put(&game.img, x, y, ray.color);
 			y++;
 		}
 		y = ray.draw_end;
@@ -153,10 +171,13 @@ void	raycast(t_game game)
 			my_mlx_pixel_put(&game.img, x, y, floor_color(y, f));
 			y++;
 		}
+		perpedist[x] = ray.perpwalldist;
 		x++;
 	}
-	//mlx_put_image_to_window(game.mlx, game.mlx_win, game.sky.img, 0, 0);
+	game.sprite_num = 1;
+	draw_sprites(perpedist, &game);
 	mlx_put_image_to_window(game.mlx, game.mlx_win, game.img.img, 0, 0);
+	//mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture->img, screenWidth/2, screenHeight - 64);
 }
 
 

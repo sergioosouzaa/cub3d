@@ -9,7 +9,6 @@
 # include <sys/time.h>
 # include <time.h>
 
-
 #define screenWidth 640
 #define screenHeight 480
 #define texWidth 256
@@ -17,6 +16,7 @@
 #define mapWidth 24
 #define mapHeight 24
 #define rot 0.08	
+
 enum	mac_e_key_codes
 {
 	KEY_DOWN = 125,
@@ -44,6 +44,16 @@ typedef struct	s_data {
 	int		endian;
 }				t_data;
 
+typedef	struct s_sprite
+{
+	double	pos_x;
+	double	pos_y;
+	t_data	*texture;
+	t_data	texture_1;
+	t_data	texture_2;
+	t_data	texture_3;
+}   t_sprite;
+
 typedef struct	s_map {
 	double	pos_x;
 	double	pos_y;
@@ -66,9 +76,12 @@ typedef	struct	s_game {
 	t_data	img_4;
 	t_data	sky;
 	t_map	map;
-	t_keys	key;
+	t_keys		key;
+	t_sprite	*sprites;
+	int			sprite_num;
 	long long	time;
 }				t_game;
+
 
 typedef struct s_ray {
 	double			camera_x;
@@ -98,21 +111,21 @@ typedef struct s_ray {
 
 
 	// Floor and ceiling
-	float 			ray_dir_x0;
-	float 			ray_dir_y0;
-	float 			ray_dir_x1;
-	float 			ray_dir_y1;
-	int 			pos_p;
-	int				pos_camera;
-	float			row_dist;
-	float			floor_step_x;
-	float			floor_step_y;
-	float			floor_x;
-	float			floor_y;
-	int 			cell_x;
-	int 			cell_y;
-	int 			t_x;
-    int 			t_y;
+	// float 			ray_dir_x0;
+	// float 			ray_dir_y0;
+	// float 			ray_dir_x1;
+	// float 			ray_dir_y1;
+	// int 			pos_p;
+	// int				pos_camera;
+	// float			row_dist;
+	// float			floor_step_x;
+	// float			floor_step_y;
+	// float			floor_x;
+	// float			floor_y;
+	// int 			cell_x;
+	// int 			cell_y;
+	// int 			t_x;
+    // int 			t_y;
 	t_data			texture;
 }				t_ray;
 
