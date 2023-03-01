@@ -140,16 +140,16 @@ t_data	get_texture(t_ray  ray, t_game game)
 	if (ray.side == 1)
 	{
 		if (ray.raydir_y > 0)
-			texture = game.img_1;
+			texture = game.img_NO;
 		else
-			texture = game.img_2;
+			texture = game.img_SO;
 	}
 	else
 	{
 		if (ray.raydir_x > 0)
-			texture = game.img_3;
+			texture = game.img_WE;
 		else
-			texture = game.img_4;
+			texture = game.img_EA;
 
 	}
 	return (texture);

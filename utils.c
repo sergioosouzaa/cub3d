@@ -38,18 +38,60 @@ void	print_floor(t_data *img, int floor_color, int ceiling_color)
 	}
 }
 
-void	get_sprites(t_game *game)
+void	get_sprites(t_map *map, t_game *game)
 {
-	game->img_1.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Wood.xpm", &game->size_txt, &game->size_txt);
-	game->img_1.addr = mlx_get_data_addr(game->img_1.img, &game->img_1.bits_per_pixel, &game->img_1.line_length,
-							&game->img_1.endian);
-	game->img_2.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Circle.xpm", &game->size_txt, &game->size_txt);
-	game->img_2.addr = mlx_get_data_addr(game->img_2.img, &game->img_2.bits_per_pixel, &game->img_2.line_length,
-							&game->img_2.endian);
-	game->img_3.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Yellow.xpm", &game->size_txt, &game->size_txt);
-	game->img_3.addr = mlx_get_data_addr(game->img_3.img, &game->img_3.bits_per_pixel, &game->img_3.line_length,
-							&game->img_3.endian);
-	game->img_4.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Brick.xpm", &game->size_txt, &game->size_txt);
-	game->img_4.addr = mlx_get_data_addr(game->img_4.img, &game->img_4.bits_per_pixel, &game->img_4.line_length,
-							&game->img_4.endian);
+	(void)map;
+	game->img_NO.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Wood.xpm", &game->size_txt, &game->size_txt);
+	game->img_NO.addr = mlx_get_data_addr(game->img_NO.img, &game->img_NO.bits_per_pixel, &game->img_NO.line_length,
+							&game->img_NO.endian);
+	game->img_SO.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Circle.xpm", &game->size_txt, &game->size_txt);
+	game->img_SO.addr = mlx_get_data_addr(game->img_SO.img, &game->img_SO.bits_per_pixel, &game->img_SO.line_length,
+							&game->img_SO.endian);
+	game->img_WE.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Yellow.xpm", &game->size_txt, &game->size_txt);
+	game->img_WE.addr = mlx_get_data_addr(game->img_WE.img, &game->img_WE.bits_per_pixel, &game->img_WE.line_length,
+							&game->img_WE.endian);
+	game->img_EA.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Brick.xpm", &game->size_txt, &game->size_txt);
+	game->img_EA.addr = mlx_get_data_addr(game->img_EA.img, &game->img_EA.bits_per_pixel, &game->img_EA.line_length,
+							&game->img_EA.endian);
+}
+
+int	ft_strrncmp(const char *s1, const char *s2, size_t n)
+{
+	unsigned int	i;
+	unsigned char	*str;
+	unsigned char	*str1;
+	size_t			size_s1;
+	size_t			size_s2;
+
+	str = (unsigned char *) s1;
+	str1 = (unsigned char *) s2;
+	size_s1 = ft_strlen(s1);
+	size_s2 = ft_strlen(s2);
+	if (n == 0)
+		return (0);
+	i = 0;
+	while (n--)
+	{
+		if (str[size_s1] != str1[size_s2])
+			return (str[size_s1] - str1[size_s2]);
+		size_s1--;
+		size_s2--;
+	}
+	return (0);
+}
+
+void	m_erro(char *message)
+{
+	ft_printf("Error\n%s", message);
+	exit(0);
+}
+
+int		is_map(char *map)
+{
+	if ((!ft_strncmp("NO", map, 2)) || (!ft_strncmp("SO", map, 2)) || (!ft_strncmp("EA", map, 2)) \
+	|| (!ft_strncmp("F ", map, 2)) || (!ft_strncmp("C ", map, 2)) || (!ft_strncmp("WE", map, 2)) \
+       || (!ft_strncmp("", map, ft_strlen(map))))
+		return (1);
+	else
+		return (0);
 }

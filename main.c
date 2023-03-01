@@ -29,19 +29,6 @@ int	worldMap[mapWidth][mapHeight]=
 	{ 4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3 }
 };
 
-t_map	get_pos(void)
-{
-	t_map	map;
-
-	map.pos_x = 8.0;
-	map.pos_y = 4.0;
-	map.dir_x = -1.0;
-	map.dir_y = 0.0;
-	map.plane_x = 0.0;
-	map.plane_y = 0.66;
-	return (map);
-}
-
 int	handle_press(int key, t_game *game)
 {
 	double	aux;
@@ -124,24 +111,36 @@ int	handle_key(int key, t_game *game)
 	return (0);
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
 	t_map	pos;
 	t_game	game;
-
-	pos = get_pos();
-	game.mlx = mlx_init();
-	game.mlx_win = mlx_new_window(game.mlx, screenWidth, screenHeight, "window");
-	game.size_txt = texWidth;
-	get_sprites(&game);
-	game.img.img = mlx_new_image(game.mlx, screenWidth, screenHeight);
-	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length,
+	char    **old_map;
+    char    **new_map;
+	if (argc == 2)
+    {
+        old_map = get_map(argv);
+        new_map = creating_map(old_map, &pos);
+        get_pos(new_map, &pos);
+        invalid_map(new_map, &pos);
+        printf("MAP \n NO %s\n SO %s\n WE %s\n EA %s\n F %s\n C %s\n POS_X %f\n POS_Y %f\n", pos.NO, pos.SO, pos.WE, pos.EA, pos.F, pos.C, pos.pos_x, pos.pos_y);
+		printf("passou\n");
+		game.mlx = mlx_init();
+    	get_sprites(&pos, &game);
+		printf("aqui");
+		game.mlx_win = mlx_new_window(game.mlx, screenWidth, screenHeight, "window");
+		game.size_txt = texWidth;
+		game.img.img = mlx_new_image(game.mlx, screenWidth, screenHeight);
+		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length,
 								&game.img.endian);
-	game.map = pos;
-	game.ceiling_color =  0x000000FF;
-	game.floor_color =  0x00F00FFF;
-	raycast(game);
-	mlx_hook(game.mlx_win, 2, (1L<<0), &handle_press,  &game);
-	mlx_key_hook(game.mlx_win, handle_key, &game);
-	mlx_loop(game.mlx);			
+		game.map = pos;
+		game.ceiling_color =  0x000000FF;
+		game.floor_color =  0x00F00FFF;
+		raycast(game);
+		mlx_hook(game.mlx_win, 2, (1L<<0), &handle_press,  &game);
+		mlx_key_hook(game.mlx_win, handle_key, &game);
+		mlx_loop(game.mlx);			
+	}
+	else
+		printf("Map not found\n");
 }

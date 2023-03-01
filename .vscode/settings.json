@@ -6,6 +6,7 @@
         "string_view": "c",
         "vector": "c",
         "iterator": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "cube.h": "c"
     }
 }
