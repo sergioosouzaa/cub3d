@@ -59,15 +59,19 @@ int	handle_press(int key, t_game *game)
 int handle_release(int key, t_game *game)
 {
 	if (key == KEY_LEFT)
+	{
 		game->key.rotate_l = 0;
-	if (key == KEY_RIGHT)	
+		game->sprites->sprite = 1;
+	}
+	if (key == KEY_RIGHT)
+	{
 		game->key.rotate_r = 0;
+		game->sprites->sprite = 1;
+	}
 	if (key == KEY_DOWN)
 		game->key.down = 0;
 	if (key == KEY_UP)
 		game->key.up = 0;
-	if (game->key.rotate_l == 0 && game->key.rotate_r == 0)
-		game->sprites->texture = &game->sprites->texture_1;
 	return (0);
 }
 
@@ -76,32 +80,32 @@ int	handle_key(t_game *game)
 	double	aux;
 
 	double speed = 0.08;
-	double scale = sqrt(game->map.dir_x * game->map.dir_x + game->map.dir_y * game->map.dir_x);
-	double	dir_norm_x = game->map.dir_x  / scale;
-	double	dir_norm_y = game->map.dir_y  / scale;
-	double invers_det = 1.0 / (game->map.plane_x * game->map.dir_y - game->map.plane_y * game->map.dir_x);
-	double	new_x =  invers_det * (game->map.dir_y * dir_norm_x - game->map.dir_x * dir_norm_y);
-	double	new_y =  invers_det * (-game->map.plane_y * dir_norm_x - game->map.plane_x * dir_norm_x);
+	// double scale = sqrt(game->map.dir_x * game->map.dir_x + game->map.dir_y * game->map.dir_x);
+	// double	dir_norm_x = game->map.dir_x  / scale;
+	// double	dir_norm_y = game->map.dir_y  / scale;
+	// double invers_det = 1.0 / (game->map.plane_x * game->map.dir_y - game->map.plane_y * game->map.dir_x);
+	// double	new_x =  invers_det * (game->map.dir_y * dir_norm_x - game->map.dir_x * dir_norm_y);
+	// double	new_y =  invers_det * (-game->map.plane_y * dir_norm_x - game->map.plane_x * dir_norm_x);
 
 
 	if (game->key.down && game->key.down != game->key.up)
 	{
-		if (worldMap[(int)(game->map.pos_x - game->map.dir_x * 25 * speed) % 24][(int)(game->map.pos_y - game->map.dir_y * 25 * speed) % 24] < 1)
+		if (worldMap[(int)(game->map.pos_x - game->map.dir_x * speed) % 24][(int)(game->map.pos_y - game->map.dir_y * speed) % 24] < 1)
 		{
 			game->map.pos_x -= game->map.dir_x * speed;
 			game->map.pos_y -= game->map.dir_y * speed;
-			game->sprites->pos_x = game->map.pos_x + (2.5 * new_x);
-			game->sprites->pos_y = game->map.pos_y + (2.5 * new_y);
+			// game->sprites->pos_x = game->map.pos_x + game->map.dir_x + dir_norm_x;
+			// game->sprites->pos_y = game->map.pos_y + game->map.dir_y + dir_norm_y;
 		}
 	}
 	if (game->key.up && game->key.down != game->key.up)
 	{	
-		if (worldMap[(int)(game->map.pos_x + game->map.dir_x * 25 * speed) % 24][(int)(game->map.pos_y + game->map.dir_y * 25 * speed) % 24] < 1)
+		if (worldMap[(int)(game->map.pos_x + game->map.dir_x * speed) % 24][(int)(game->map.pos_y + game->map.dir_y * speed) % 24] < 1)
 		{	
 			game->map.pos_x += game->map.dir_x * speed;
 			game->map.pos_y += game->map.dir_y * speed;
-			game->sprites->pos_x = game->map.pos_x + (2.5 * new_x);
-			game->sprites->pos_y = game->map.pos_y+ (2.5 * new_y);
+			// game->sprites->pos_x = game->map.pos_x + game->map.dir_x + dir_norm_x;
+			// game->sprites->pos_y = game->map.pos_y + game->map.dir_y + dir_norm_y;
 		}
 	}
 	if (game->key.rotate_l && game->key.rotate_l != game->key.rotate_r)
@@ -112,9 +116,13 @@ int	handle_key(t_game *game)
 	  	aux = game->map.plane_x;
 	  	game->map.plane_x = game->map.plane_x * cos(-rot) - game->map.plane_y * sin(-rot);
 	  	game->map.plane_y = aux * sin(-rot) + game->map.plane_y * cos(-rot);
-		//game->sprites->texture = &game->sprites->texture_3;
-		game->sprites->pos_x = game->map.pos_x + (2.5 * new_x);
-		game->sprites->pos_y = game->map.pos_y + (2.5 * new_y);
+		game->sprites->sprite = 1;
+		// aux = game->sprites->dir_x;
+	  	// game->sprites->dir_x = game->sprites->dir_x * cos(-rot) - game->sprites->dir_y * sin(-rot);
+	  	// game->sprites->dir_y = aux * sin(-rot) + game->sprites->dir_y  * cos(-rot);
+		// //game->sprites->texture = &game->sprites->texture_3;
+		// game->sprites->pos_x = game->sprites->pos_x + game->sprites->dir_x;
+		// game->sprites->pos_y = game->sprites->pos_y + game->sprites->dir_y;
 	}
 	if (game->key.rotate_r && game->key.rotate_l != game->key.rotate_r)
 	{
@@ -124,10 +132,16 @@ int	handle_key(t_game *game)
 	  	aux = game->map.plane_x;
 	  	game->map.plane_x = game->map.plane_x * cos(rot) - game->map.plane_y * sin(rot);
 	  	game->map.plane_y = aux * sin(rot) + game->map.plane_y * cos(rot);
+		game->sprites->sprite = 2;
 		//game->sprites->texture = &game->sprites->texture_2;
-		
-		game->sprites->pos_x = game->map.pos_x + (2.5 * new_x);
-		game->sprites->pos_y = game->map.pos_y + (2.5 * new_y);
+		// scale = sqrt(game->map.dir_x * game->map.dir_x + game->map.dir_y * game->map.dir_x);
+		// dir_norm_x = game->map.dir_x  / scale;
+		// dir_norm_y = game->map.dir_y  / scale;
+		// aux = game->sprites->dir_x;
+	  	// game->sprites->dir_x = game->sprites->dir_x * cos(rot) - game->sprites->dir_y * sin(rot);
+	  	// game->sprites->dir_y = aux * sin(rot) + game->sprites->dir_y  * cos(rot);
+		// game->sprites->pos_x = game->sprites->pos_x + game->sprites->dir_x;
+		// game->sprites->pos_y = game->sprites->pos_y + game->sprites->dir_y;
 	}
 
 	return (0);
@@ -192,16 +206,19 @@ int main(void)
 	game.sprites = malloc(sizeof(t_sprite));
 	game.sprites->pos_x = 6;
 	game.sprites->pos_y = 0;
-	game.sprites->texture_1.img = mlx_xpm_file_to_image(game.mlx, "./sprits/mariogay.xpm", &game.size_txt, &game.size_txt);
-	game.sprites->texture_1.addr=  mlx_get_data_addr(game.sprites->texture_1.img, &game.sprites->texture_1.bits_per_pixel, &game.sprites->texture_1.line_length,
-							&game.sprites->texture_1.endian);
-	game.sprites->texture_2.img = mlx_xpm_file_to_image(game.mlx, "./sprits/mariogay.xpm", &game.size_txt, &game.size_txt);
-	game.sprites->texture_2.addr=  mlx_get_data_addr(game.sprites->texture_2.img, &game.sprites->texture_2.bits_per_pixel, &game.sprites->texture_2.line_length,
-							&game.sprites->texture_2.endian);
-	game.sprites->texture_3.img = mlx_xpm_file_to_image(game.mlx, "./sprits/mariogay.xpm", &game.size_txt, &game.size_txt);
-	game.sprites->texture_3.addr=  mlx_get_data_addr(game.sprites->texture_3.img, &game.sprites->texture_3.bits_per_pixel, &game.sprites->texture_3.line_length,
-							&game.sprites->texture_3.endian);	
-	game.sprites->texture = &game.sprites->texture_1;		
+	game.sprites->dir_x= game.map.dir_x;
+	game.sprites->dir_y= game.map.dir_y;
+	game.sprites->texture = malloc(3 *sizeof(t_data));
+	game.sprites->sprite = 0;
+	game.sprites->texture[0].img = mlx_xpm_file_to_image(game.mlx, "./sprits/mariogay.xpm", &game.size_txt, &game.size_txt);
+	game.sprites->texture[0].addr=  mlx_get_data_addr(game.sprites->texture[0].img, &game.sprites->texture[0].bits_per_pixel, &game.sprites->texture[0].line_length,
+							&game.sprites->texture[0].endian);
+	game.sprites->texture[1].img = mlx_xpm_file_to_image(game.mlx, "./sprits/mario2.xpm", &game.size_txt, &game.size_txt);
+	game.sprites->texture[1].addr=  mlx_get_data_addr(game.sprites->texture[1].img, &game.sprites->texture[1].bits_per_pixel, &game.sprites->texture[1].line_length,
+							&game.sprites->texture[1].endian);
+	game.sprites->texture[2].img = mlx_xpm_file_to_image(game.mlx, "./sprits/mario3.xpm", &game.size_txt, &game.size_txt);
+	game.sprites->texture[2].addr=  mlx_get_data_addr(game.sprites->texture[2].img, &game.sprites->texture[2].bits_per_pixel, &game.sprites->texture[2].line_length,
+							&game.sprites->texture[2].endian);	
 	game.ceiling_color =  0x000000FF;
 	game.floor_color =  0x00F00FFF;
 	game.key = init_keys();

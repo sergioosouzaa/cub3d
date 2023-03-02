@@ -11,8 +11,8 @@
 
 #define screenWidth 640
 #define screenHeight 480
-#define texWidth 256
-#define texHeight 256
+#define texWidth 64
+#define texHeight 64
 #define mapWidth 24
 #define mapHeight 24
 #define rot 0.08	
@@ -48,6 +48,9 @@ typedef	struct s_sprite
 {
 	double	pos_x;
 	double	pos_y;
+	double	dir_x;
+	double	dir_y;
+	int		sprite;
 	t_data	*texture;
 	t_data	texture_1;
 	t_data	texture_2;
@@ -75,6 +78,7 @@ typedef	struct	s_game {
 	t_data	img_3;
 	t_data	img_4;
 	t_data	sky;
+	t_data	minimap;
 	t_map	map;
 	t_keys		key;
 	t_sprite	*sprites;
@@ -153,6 +157,7 @@ void	put_img( t_game game);
 int	hsv_to_rgb(int hue, double saturation, double value);
 
 long long	time_return(long long first_time);
+long long	get_first_time(void);
 
 int worldMap[mapWidth][mapHeight];
 

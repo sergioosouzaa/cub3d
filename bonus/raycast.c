@@ -36,6 +36,7 @@ int floor_color(int y, int f)
 	int h[7] = {0xf94144, 0xf3722c, 0xf8961e, 0xf9844a, 0xf9c74f, 0x90be6d, 0x43aa8b};
 	return (h[(f + (y % p) / j) % 7]);
 }
+
 void	sort_sprites(int *sprite_order, int *sprite_dist, int sprite_num)
 {
 	int i;
@@ -103,8 +104,8 @@ void 	draw_sprites(int *perpedist, t_game *game)
 		if (draw_start_x < 0)
 			draw_start_x = 0;
 		int draw_end_x = sprite_width / 2 + sprite_pos_x;
-		if (draw_end_x > screenWidth)
-			draw_end_x = screenWidth;
+		if (draw_end_x > screenWidth - 1)
+			draw_end_x = screenWidth - 1;
 		int stripe = draw_start_x;
 		while (stripe < draw_end_x)
 		{
@@ -117,7 +118,7 @@ void 	draw_sprites(int *perpedist, t_game *game)
 				{
 					int d = (p - v_move_screen) * 256 - screenHeight * 128 + sprite_height * 128;
 					int tex_y = ((d * texHeight / 4) / sprite_height) / 256;
-					int color = get_color(game->sprites[i].texture, tex_x, tex_y);
+					int color = get_color(&game->sprites[i].texture[0], tex_x, tex_y);
 					if (((color >> 24) & 0xFF) != 0xFF)
 						my_mlx_pixel_put(&game->img, stripe, p, color);
 					p++;
@@ -129,6 +130,80 @@ void 	draw_sprites(int *perpedist, t_game *game)
 	}
 }
 
+void draw_square(int x_screen, int y_screen, int color, int title_size, t_game game)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (i < title_size)
+	{
+		j = 0;
+		while (j < title_size)
+		{
+			my_mlx_pixel_put(&game.img, x_screen + i, y_screen + j, color);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	draw_minimap(t_game game, int *pos_x, int *pos_y)
+{
+	int	max_side;
+	int	side;
+	int	title_size;
+	int	y_screen;
+	int x_screen;
+	int color;
+
+	if (mapHeight > mapWidth)
+	{
+		max_side = mapHeight;
+		side = 0.2 * screenHeight;
+	}
+	else
+	{
+		max_side = mapWidth;
+		side = 0.2 * screenWidth;
+	}
+	title_size = side / max_side;
+	int y;
+	int x;
+	x = 0;
+	x_screen = screenWidth - (mapWidth * title_size);
+	while (x < mapWidth)
+	{
+		y = 0;
+		y_screen = screenHeight - (mapHeight * title_size);
+		while (y < mapHeight)
+		{
+			if (worldMap[x][y] >= 1)
+			{
+				color = 0x474564;
+			}
+			else if (x == (int)game.map.pos_x && y == (int)game.map.pos_y)
+			{
+				*pos_x = x_screen;
+				*pos_y = y_screen;
+				color = 0x00CACACA;
+			}
+			else
+			{
+				color = 0x00CACACA;
+			}
+			draw_square(x_screen, y_screen, color, title_size, game);
+			// else
+			// {
+			// 	draw_square(x_screen, y_screen, color, title_size, game);
+			// }
+			y_screen += title_size;
+			y++;
+		}
+		x_screen += title_size;
+		x++;
+	}
+}
 
 void	raycast(t_game game)
 {
@@ -137,12 +212,18 @@ void	raycast(t_game game)
 	int		y;
 	static int f;
 	int		perpedist[screenWidth];
-	// static long long last_time;
+	static long long last_time;
 	// long long time;
 	
 	x = 0;
-	if (rand() % 2 == 0)
-		f = (f + 1) % 360;
+	int	max_end;
+	max_end = 0;
+	// if (rand() % 2 == 0)
+	if (get_first_time() - last_time > 50)
+	{
+		f = (f + 1) % 7;
+		last_time = get_first_time();
+	}
 	while (x < screenWidth)
 	{
 		ray_init(&ray, game, x);
@@ -175,9 +256,23 @@ void	raycast(t_game game)
 		x++;
 	}
 	game.sprite_num = 1;
-	draw_sprites(perpedist, &game);
+	//draw_sprites(perpedist, &game);
+	int x_mini;
+	int y_mini;
+
+	x_mini = 2000;
+	y_mini = 2000;
+	draw_minimap(game, &x_mini, &y_mini);
 	mlx_put_image_to_window(game.mlx, game.mlx_win, game.img.img, 0, 0);
-	//mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture->img, screenWidth/2, screenHeight - 64);
+	mlx_put_image_to_window(game.mlx, game.mlx_win, game.minimap.img, x_mini, y_mini);
+	//mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[game.sprites->sprite].img, screenWidth/2, screenHeight - 64);
+	if (game.key.rotate_l == 1)
+		mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[2].img, screenWidth/2, screenHeight - 64);
+	else if (game.key.rotate_r == 1)
+		mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[1].img, screenWidth/2, screenHeight - 64);
+	else
+		mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[0].img, screenWidth/2, screenHeight - 64);
+	
 }
 
 

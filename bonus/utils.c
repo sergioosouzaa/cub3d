@@ -42,22 +42,39 @@ void	get_sprites(t_game *game)
 {
 	int x;
 	int y;
+	int	max_side;
+	int	side;
+	int title_size;
 
 	x = screenWidth;
 	y = screenHeight;
+	if (mapHeight > mapWidth)
+	{
+		max_side = mapHeight;
+		side = 0.2 * screenHeight;
+	}
+	else
+	{
+		max_side = mapWidth;
+		side = 0.2 * screenWidth;
+	}
+	title_size = (side / max_side) / 256;
 	game->sky.img = mlx_xpm_file_to_image(game->mlx, "./sprits/sky.xpm", &x, &y);
 	game->sky.addr=  mlx_get_data_addr(game->sky.img, &game->sky.bits_per_pixel, &game->sky.line_length,
 							&game->sky.endian);
-	game->img_1.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Wood.xpm", &game->size_txt, &game->size_txt);
+	game->img_1.img = mlx_xpm_file_to_image(game->mlx, "./sprits/star_road1.xpm", &game->size_txt, &game->size_txt);
 	game->img_1.addr = mlx_get_data_addr(game->img_1.img, &game->img_1.bits_per_pixel, &game->img_1.line_length,
 							&game->img_1.endian);
-	game->img_2.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Circle.xpm", &game->size_txt, &game->size_txt);
+	game->img_2.img = mlx_xpm_file_to_image(game->mlx, "./sprits/star_road1.xpm", &game->size_txt, &game->size_txt);
 	game->img_2.addr = mlx_get_data_addr(game->img_2.img, &game->img_2.bits_per_pixel, &game->img_2.line_length,
 							&game->img_2.endian);
-	game->img_3.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Yellow.xpm", &game->size_txt, &game->size_txt);
+	game->img_3.img = mlx_xpm_file_to_image(game->mlx, "./sprits/star_road1.xpm", &game->size_txt, &game->size_txt);
 	game->img_3.addr = mlx_get_data_addr(game->img_3.img, &game->img_3.bits_per_pixel, &game->img_3.line_length,
 							&game->img_3.endian);
-	game->img_4.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Brick.xpm", &game->size_txt, &game->size_txt);
+	game->img_4.img = mlx_xpm_file_to_image(game->mlx, "./sprits/star_road2.xpm", &game->size_txt, &game->size_txt);
 	game->img_4.addr = mlx_get_data_addr(game->img_4.img, &game->img_4.bits_per_pixel, &game->img_4.line_length,
 							&game->img_4.endian);
+	game->minimap.img = mlx_xpm_file_to_image(game->mlx, "./sprits/profile.xpm", &title_size, &title_size);
+	game->minimap.addr = mlx_get_data_addr(game->minimap.img, &game->minimap.bits_per_pixel, &game->minimap.line_length,
+							&game->minimap.endian);
 }
