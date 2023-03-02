@@ -8,6 +8,7 @@
 # include <math.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include <fcntl.h>
 
 
 #define screenWidth 640
@@ -117,6 +118,10 @@ void    check_map(char **old_map, int size, t_map *map);
 void	invalid_map(char **new_map, t_map *map);
 void	invalid_config(t_map *map);
 void	get_sprites(t_map *map, t_game *game);
+void	init_map(t_map *map);
+int		exit_close(void);
+int 	ft_ispace(char *str, int size);
+void    check_files(t_map *map);
 
 int worldMap[mapWidth][mapHeight];
 

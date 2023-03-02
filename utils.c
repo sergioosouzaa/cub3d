@@ -1,4 +1,3 @@
-
 #include "cube.h"
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
@@ -40,17 +39,17 @@ void	print_floor(t_data *img, int floor_color, int ceiling_color)
 
 void	get_sprites(t_map *map, t_game *game)
 {
-	(void)map;
-	game->img_NO.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Wood.xpm", &game->size_txt, &game->size_txt);
+	game->img_NO.img = mlx_xpm_file_to_image(game->mlx, map->NO, &game->size_txt, &game->size_txt);
+
 	game->img_NO.addr = mlx_get_data_addr(game->img_NO.img, &game->img_NO.bits_per_pixel, &game->img_NO.line_length,
 							&game->img_NO.endian);
-	game->img_SO.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Circle.xpm", &game->size_txt, &game->size_txt);
+	game->img_SO.img = mlx_xpm_file_to_image(game->mlx, map->SO, &game->size_txt, &game->size_txt);
 	game->img_SO.addr = mlx_get_data_addr(game->img_SO.img, &game->img_SO.bits_per_pixel, &game->img_SO.line_length,
 							&game->img_SO.endian);
-	game->img_WE.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Yellow.xpm", &game->size_txt, &game->size_txt);
+	game->img_WE.img = mlx_xpm_file_to_image(game->mlx, map->WE, &game->size_txt, &game->size_txt);
 	game->img_WE.addr = mlx_get_data_addr(game->img_WE.img, &game->img_WE.bits_per_pixel, &game->img_WE.line_length,
 							&game->img_WE.endian);
-	game->img_EA.img = mlx_xpm_file_to_image(game->mlx, "./sprits/Brick.xpm", &game->size_txt, &game->size_txt);
+	game->img_EA.img = mlx_xpm_file_to_image(game->mlx, map->EA, &game->size_txt, &game->size_txt);
 	game->img_EA.addr = mlx_get_data_addr(game->img_EA.img, &game->img_EA.bits_per_pixel, &game->img_EA.line_length,
 							&game->img_EA.endian);
 }
@@ -94,4 +93,22 @@ int		is_map(char *map)
 		return (1);
 	else
 		return (0);
+}
+
+void	init_map(t_map *map)
+{
+	map->C = 0;
+	map->EA = 0;
+	map->dir_x = 0;
+	map->dir_y = 0;
+	map->NO = 0;
+	map->WE = 0;
+	map->SO = 0;
+	map->F = 0;
+}
+	
+int	exit_close(void)
+{
+	exit(0);
+	return (0);
 }

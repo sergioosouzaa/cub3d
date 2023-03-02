@@ -2,8 +2,8 @@
 
 void	invalid_map(char **new_map, t_map *map)
 {
+	(void) map;
 	invalid_char(new_map);
-	invalid_config(map);
 }
 
 char    **get_map(char **argv)

@@ -1,27 +1,58 @@
 #include "cube.h"
-#include <stdio.h>
 
 void    check_map(char **old_map, int size, t_map *map)
 {
     int j;
+    int i;
  
     j = 0;
+    i = 0;
     while(j < size)
     {
 	    if (!ft_strncmp("NO", old_map[j], 2))
-            map->NO = ft_substr(old_map[j], 2, ft_strlen(old_map[j]));
+            map->NO = ft_substr(old_map[j], ft_ispace(old_map[j], 2), ft_strlen(old_map[j]));
         else if (!ft_strncmp("SO", old_map[j], 2))
-            map->SO = ft_substr(old_map[j], 2, ft_strlen(old_map[j]));
+            map->SO = ft_substr(old_map[j], ft_ispace(old_map[j], 2), ft_strlen(old_map[j]));
         else if (!ft_strncmp("EA", old_map[j], 2))
-            map->EA = ft_substr(old_map[j], 2, ft_strlen(old_map[j]));
+            map->EA = ft_substr(old_map[j], ft_ispace(old_map[j], 2), ft_strlen(old_map[j]));
         else if (!ft_strncmp("WE", old_map[j], 2))
-            map->WE = ft_substr(old_map[j], 2, ft_strlen(old_map[j]));     
-        else if (!ft_strncmp("F ", old_map[j], 2))
-            map->F = ft_substr(old_map[j], 2, ft_strlen(old_map[j]));
-        else if (!ft_strncmp("C ", old_map[j], 2))
-            map->C = ft_substr(old_map[j], 2, ft_strlen(old_map[j]));
+            map->WE = ft_substr(old_map[j], ft_ispace(old_map[j], 2), ft_strlen(old_map[j]));     
+        else if (!ft_strncmp("F ", old_map[j], 1))
+            map->F = ft_substr(old_map[j], ft_ispace(old_map[j], 1) + 1, ft_strlen(old_map[j]));
+        else if (!ft_strncmp("C ", old_map[j], 1))
+            map->C = ft_substr(old_map[j], ft_ispace(old_map[j], 1) + 1, ft_strlen(old_map[j]));
         j++;
     }
+    check_files(map);
+}
+
+void    check_files(t_map *map)
+{
+    int fd;
+
+    fd = open(map->NO, O_RDONLY);
+    if (fd < 0)
+        m_erro("Texture doesn't exist.");
+    fd = open(map->SO, O_RDONLY);
+    if (fd < 0)
+        m_erro("Texture doesn't exist.");
+    fd = open(map->WE, O_RDONLY);
+    if (fd < 0)
+        m_erro("Texture doesn't exist.");
+    fd = open(map->EA, O_RDONLY);
+    if (fd < 0)
+        m_erro("Texture doesn't exist.");
+}
+
+
+int ft_ispace(char *str, int size)
+{
+    int i;
+
+    i = size;
+    while((str[i] == ' ') || (str[i] == '\t') || (str[i] > 'A' && str[i] < 'Z'))
+        i++;
+    return (i);
 }
 
 char    **creating_map(char **valid_map, t_map *map)
