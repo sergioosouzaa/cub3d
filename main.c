@@ -126,9 +126,14 @@ int main(int argc, char **argv)
         new_map = creating_map(old_map, &pos);
         get_pos(new_map, &pos);
         invalid_map(new_map, &pos);
-        printf("MAP \n NO %s\n SO %s\n WE %s\n EA %s\n F %s\n C %s\n POS_X %f\n POS_Y %f\n", pos.NO, pos.SO, pos.WE, pos.EA, pos.F, pos.C, pos.pos_x, pos.pos_y);
+        printf("MAP \n NO %s\n SO %s\n WE %s\n EA %s\n F %s\n C %s\n POS_X %f\n POS_Y %f\n ORIENTACAO X %f\n ORIENTACAO Y %f \
+			\n LINES = %zu\n COLUMNS = %zu\n", pos.NO, pos.SO, pos.WE, pos.EA, pos.F, pos.C, pos.pos_x, pos.pos_y, pos.dir_x, pos.dir_y, \
+			pos.lines, pos.columns);
     	get_sprites(&pos, &game);
 		invalid_config(&pos);
+		color_rgb(pos.F, &game, 0);
+		color_rgb(pos.C, &game, 1);
+		printf("COLORS: %d\n  %d\n", game.ceiling_color, game.floor_color);
 		game.mlx = mlx_init();
 		game.mlx_win = mlx_new_window(game.mlx, screenWidth, screenHeight, "window");
 		game.size_txt = texWidth;
@@ -136,8 +141,6 @@ int main(int argc, char **argv)
 		game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length,
 								&game.img.endian);
 		game.map = pos;
-		game.ceiling_color =  0x000000FF;
-		game.floor_color =  0x00F00FFF;
 		raycast(game);
 		mlx_hook(game.mlx_win, 17, 1L << 17, exit_close, &game);
 		mlx_hook(game.mlx_win, 2, (1L<<0), &handle_press,  &game);

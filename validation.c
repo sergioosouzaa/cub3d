@@ -2,8 +2,8 @@
 
 void	invalid_map(char **new_map, t_map *map)
 {
-	(void) map;
 	invalid_char(new_map);
+	get_mapsize(new_map, map);
 }
 
 char    **get_map(char **argv)
@@ -73,10 +73,9 @@ void	get_pos(char **valid_map, t_map *map)
 			{
 				map->pos_x = i;
 				map->pos_y = j;
-				map->dir_x = -1.0;
-				map->dir_y = 0.0;
 				map->plane_x = 0.0;
 				map->plane_y = 0.66;
+				get_direction(valid_map[j][i], map);
 				size++;
 			}
 			i++;
@@ -93,22 +92,26 @@ void	invalid_config(t_map *map)
 		m_erro("Map configuration\n");
 }
 
-
-// void	is_walls(char **str_map, t_map *map)
-// {
-// 	int	i;
-// 	int	j;
-// 	int	rows;
-// 	int	cols;
-
-// 	i = 0;
-// 	j = 0;
-// 	rows = map->lines - 1;
-// 	cols = map->column - 1;
-// 	while (str_map[i][0] == '1' && str_map[i][cols] == '1' && i < rows)
-// 		i++;
-// 	while (str_map[0][j] == '1' && str_map[rows][j] == '1' && j <= cols)
-// 		j++;
-// 	if (i != rows || j - 1 != cols)
-// 		m_erro("Invalid map: walls.\n");
-// }
+void	get_direction(char player, t_map *map)
+{
+	if (player == 'N')
+	{
+		map->dir_x = 0;
+		map->dir_y = 1;
+	}
+	else if (player == 'W')
+	{
+		map->dir_x = -1;
+		map->dir_y = 0;
+	}
+	else if (player == 'E')
+	{
+		map->dir_x = 1;
+		map->dir_y = 0;
+	}
+	else if (player == 'S')
+	{
+		map->dir_x = 0;
+		map->dir_y = -1;
+	}
+}

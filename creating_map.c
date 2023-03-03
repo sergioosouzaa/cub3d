@@ -18,9 +18,9 @@ void    check_map(char **old_map, int size, t_map *map)
         else if (!ft_strncmp("WE", old_map[j], 2))
             map->WE = ft_substr(old_map[j], ft_ispace(old_map[j], 2), ft_strlen(old_map[j]));     
         else if (!ft_strncmp("F ", old_map[j], 1))
-            map->F = ft_substr(old_map[j], ft_ispace(old_map[j], 1) + 1, ft_strlen(old_map[j]));
+            map->F = ft_substr(old_map[j], ft_ispace(old_map[j], 1), ft_strlen(old_map[j]));
         else if (!ft_strncmp("C ", old_map[j], 1))
-            map->C = ft_substr(old_map[j], ft_ispace(old_map[j], 1) + 1, ft_strlen(old_map[j]));
+            map->C = ft_substr(old_map[j], ft_ispace(old_map[j], 1), ft_strlen(old_map[j]));
         j++;
     }
     check_files(map);
@@ -81,4 +81,26 @@ char    **creating_map(char **valid_map, t_map *map)
     }
     new_map[size] = NULL;
     return (new_map);
+}
+
+void    get_mapsize(char **str, t_map *map)
+{
+    int i;
+    int j;
+    int columns;
+
+    i = 0;
+    j = 0;
+    columns = 0;
+    while(str[j])
+    {
+        i = 0;
+        while(str[j][i])
+            i++;
+        if (i > columns)
+            columns = i;
+        j++;
+    }
+    map->lines = j;
+    map->columns = columns;
 }

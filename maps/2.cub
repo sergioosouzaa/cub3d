@@ -1,7 +1,7 @@
-NO ./textures/mini1.xpm
-SO ./textures/mini1.xpm
-WE ./textures/mini2.xpm
-EA ./textures/mini2.xpm
+NO         ./sprits/Brick.xpm
+SO        ./sprits/Circle.xpm
+WE    ./sprits/wood.xpm
+EA       ./sprits/Yellow.xpm
 
 F 17,134,40
 C 0,180,253

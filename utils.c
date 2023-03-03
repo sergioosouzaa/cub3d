@@ -1,5 +1,38 @@
 #include "cube.h"
 
+void	color_rgb(char *str, t_game *game, int var)
+{
+	char	**colors;
+	int		r;
+	int		g;
+	int		b;
+	
+	r = 0;
+	g = 0;
+	b = 0;
+	(void)game;
+	(void)var;
+	colors = ft_split(str, ',');
+	if (colors[0])
+		r = ft_atoi(colors[0]);
+	if (colors[1])
+		g = ft_atoi(colors[1]);
+	if (colors[2])
+		b = ft_atoi(colors[2]);
+	create_rgb(r, g, b, game, var);
+}
+
+void	create_rgb(int r, int g, int b, t_game *game, int var)
+{
+	int	RGB;
+
+	RGB = (r << 16 | g << 8 | b);
+	if (var == 1)
+		game->ceiling_color = RGB;
+	else if (var == 0)
+		game->floor_color = RGB;
+}
+
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;

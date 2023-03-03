@@ -44,6 +44,8 @@ typedef struct	s_map {
 	double	dir_y;
 	double	plane_x;
 	double	plane_y;
+	size_t	lines;
+	size_t	columns;
 	char	*NO;
 	char	*SO;
 	char	*WE;
@@ -58,6 +60,9 @@ typedef	struct	s_game {
 	void	*mlx;
 	void	*mlx_win;
 	int		size_txt;
+	unsigned long	color_r;
+	unsigned long	color_g;
+	unsigned long	color_b;
 	t_data	img;
 	t_data	img_NO;
 	t_data	img_SO;
@@ -122,6 +127,14 @@ void	init_map(t_map *map);
 int		exit_close(void);
 int 	ft_ispace(char *str, int size);
 void    check_files(t_map *map);
+void	get_direction(char player, t_map *map);
+void    get_mapsize(char **str, t_map *map);
+void	create_rgb(int r, int g, int b, t_game *game, int var);
+unsigned long	color_b(int nbr);
+unsigned long	color_g(int nbr);
+unsigned long	color_r(int nbr);
+void	color_rgb(char *str, t_game *game, int var);
+
 
 int worldMap[mapWidth][mapHeight];
 
