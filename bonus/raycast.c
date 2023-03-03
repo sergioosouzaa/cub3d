@@ -219,7 +219,7 @@ void	raycast(t_game game)
 	int	max_end;
 	max_end = 0;
 	// if (rand() % 2 == 0)
-	if (get_first_time() - last_time > 50)
+	if (get_first_time() - last_time > 100)
 	{
 		f = (f + 1) % 7;
 		last_time = get_first_time();
@@ -228,8 +228,8 @@ void	raycast(t_game game)
 	{
 		ray_init(&ray, game, x);
 		side_dist_init(&ray, game.map);
-		dda(&ray);
-		calc_texture(&ray, game);
+		dda(&ray, game, f);
+		calc_texture(&ray, game, f);
 		y = 0;
 		while (y++ < ray. draw_start)
 			my_mlx_pixel_put(&game.img, x, y, sky_color(x, y));
@@ -266,12 +266,15 @@ void	raycast(t_game game)
 	mlx_put_image_to_window(game.mlx, game.mlx_win, game.img.img, 0, 0);
 	mlx_put_image_to_window(game.mlx, game.mlx_win, game.minimap.img, x_mini, y_mini);
 	//mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[game.sprites->sprite].img, screenWidth/2, screenHeight - 64);
-	if (game.key.rotate_l == 1)
-		mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[2].img, screenWidth/2, screenHeight - 64);
-	else if (game.key.rotate_r == 1)
-		mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[1].img, screenWidth/2, screenHeight - 64);
-	else
-		mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[0].img, screenWidth/2, screenHeight - 64);
+	if (perpedist[screenWidth / 2] >= 1)
+	{
+		if (game.key.rotate_l == 1)
+			mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[2].img, screenWidth/2, screenHeight - 63);
+		else if (game.key.rotate_r == 1)
+			mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[1].img, screenWidth/2, screenHeight - 63);
+		else
+			mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[0].img, screenWidth/2, screenHeight - 63);
+	}
 	
 }
 
@@ -295,7 +298,7 @@ void	ray_init(t_ray *ray, t_game game, int x)
 	ray->pitch = 100;
 }
 
-void	calc_texture(t_ray *ray, t_game game)
+void	calc_texture(t_ray *ray, t_game game, int f)
 {
 	ray->line_heigh = (int)(screenHeight / ray->perpwalldist);
 	ray->draw_start = -ray->line_heigh / 2 + screenHeight / 2 + ray->pitch;
@@ -310,7 +313,10 @@ void	calc_texture(t_ray *ray, t_game game)
 	else
 		ray->wall_x = game.map.pos_x + ray->perpwalldist * ray->raydir_x;
 	ray->wall_x -= floor((ray->wall_x));
-	ray->tex_x = (int)(ray->wall_x * (double)texWidth);
+	if (worldMap[ray->map_x][ray->map_y] == 9)
+		ray->tex_x = (int)((ray->wall_x  + (f * (1.0 / 7))) * (double)texWidth);
+	else
+		ray->tex_x = (int)(ray->wall_x * (double)texWidth);
 	if (ray->side == 0 && ray->raydir_x > 0)
 		ray->tex_x = texWidth - ray->tex_x - 1;
 	if (ray->side == 1 && ray->raydir_y < 0)
@@ -345,8 +351,26 @@ void	side_dist_init(t_ray *ray, t_map map)
 	}
 }
 
-void	dda(t_ray *ray)
+void 	door_dda(t_ray *ray, t_game game, int f)
 {
+	double wall;
+
+	ray->door = 1;
+	if (ray->side == 0)
+		wall = game.map.pos_y + (ray->sidedist_x - ray->deltadist_x) * ray->raydir_y;
+	else
+		wall = game.map.pos_x + (ray->sidedist_x - ray->deltadist_x)  * ray->raydir_x;
+	wall -= floor((wall));
+	if (wall < f * (1.0 / 7))
+		ray->hit = 0;
+	else
+		ray->hit = 1;
+
+}
+
+void	dda(t_ray *ray, t_game game, int f)
+{
+	ray->door = 0;
 	while (ray->hit == 0)
 	{
 		if(ray->sidedist_x < ray->sidedist_y)
@@ -361,7 +385,9 @@ void	dda(t_ray *ray)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 		}
-		if(worldMap[ray->map_x][ray->map_y] > 0)
+		if (worldMap[ray->map_x][ray->map_y] == 9)
+			door_dda(ray, game, f);
+		else if(worldMap[ray->map_x][ray->map_y] > 0)
 			ray->hit = 1;
 	}
 	if(ray->side == 0)
@@ -374,6 +400,11 @@ t_data	get_texture(t_ray  ray, t_game game)
 {
 	t_data	texture;
 
+	if (worldMap[ray.map_x][ray.map_y] == 9)
+	{
+		texture = game.door;
+		return (texture);
+	}
 	if (ray.side == 1)
 	{
 		if (ray.raydir_y > 0)

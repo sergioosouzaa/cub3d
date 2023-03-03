@@ -8,6 +8,7 @@
         "iterator": "c",
         "stdlib.h": "c",
         "__locale": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "cube.h": "c"
     }
 }

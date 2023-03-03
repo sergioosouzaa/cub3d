@@ -17,6 +17,41 @@ unsigned int get_color(t_data *data, int x, int y)
 	return (*(unsigned int*)dst);
 }
 
+void create_sprites(t_game *game)
+{
+	game->sprites = malloc(sizeof(t_sprite));
+	game->sprites->pos_x = 6;
+	game->sprites->pos_y = 0;
+	game->sprites->dir_x= game->map.dir_x;
+	game->sprites->dir_y= game->map.dir_y;
+	game->sprites->texture = malloc(3 *sizeof(t_data));
+	game->sprites->sprite = 0;
+	game->sprites->texture[0].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mariogay.xpm", &game->size_txt, &game->size_txt);
+	game->sprites->texture[0].addr=  mlx_get_data_addr(game->sprites->texture[0].img, &game->sprites->texture[0].bits_per_pixel, &game->sprites->texture[0].line_length,
+							&game->sprites->texture[0].endian);
+	game->sprites->texture[1].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mario2.xpm", &game->size_txt, &game->size_txt);
+	game->sprites->texture[1].addr=  mlx_get_data_addr(game->sprites->texture[1].img, &game->sprites->texture[1].bits_per_pixel, &game->sprites->texture[1].line_length,
+							&game->sprites->texture[1].endian);
+	game->sprites->texture[2].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mario3.xpm", &game->size_txt, &game->size_txt);
+	game->sprites->texture[2].addr=  mlx_get_data_addr(game->sprites->texture[2].img, &game->sprites->texture[2].bits_per_pixel, &game->sprites->texture[2].line_length,
+							&game->sprites->texture[2].endian);	
+
+}
+
+void game_init(t_game *game, t_map pos)
+{
+	game->mlx = mlx_init();
+	game->mlx_win = mlx_new_window(game->mlx, screenWidth, screenHeight, "window");
+	game->size_txt = texWidth;
+	get_sprites(game);
+	game->img.img = mlx_new_image(game->mlx, screenWidth, screenHeight);
+	game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length,
+								&game->img.endian);
+	game->map = pos;
+
+
+}
+
 void	print_floor(t_data *img, int floor_color, int ceiling_color)
 {
 	int i;
@@ -59,9 +94,9 @@ void	get_sprites(t_game *game)
 		side = 0.2 * screenWidth;
 	}
 	title_size = (side / max_side) / 256;
-	game->sky.img = mlx_xpm_file_to_image(game->mlx, "./sprits/sky.xpm", &x, &y);
-	game->sky.addr=  mlx_get_data_addr(game->sky.img, &game->sky.bits_per_pixel, &game->sky.line_length,
-							&game->sky.endian);
+	game->door.img = mlx_xpm_file_to_image(game->mlx, "./sprits/door.xpm", &x, &y);
+	game->door.addr=  mlx_get_data_addr(game->door.img, &game->door.bits_per_pixel, &game->door.line_length,
+							&game->door.endian);
 	game->img_1.img = mlx_xpm_file_to_image(game->mlx, "./sprits/star_road1.xpm", &game->size_txt, &game->size_txt);
 	game->img_1.addr = mlx_get_data_addr(game->img_1.img, &game->img_1.bits_per_pixel, &game->img_1.line_length,
 							&game->img_1.endian);

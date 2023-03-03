@@ -15,7 +15,7 @@
 #define texHeight 64
 #define mapWidth 24
 #define mapHeight 24
-#define rot 0.08	
+#define rot 0.05	
 
 enum	mac_e_key_codes
 {
@@ -67,19 +67,20 @@ typedef struct	s_map {
 }				t_map;
 
 typedef	struct	s_game {
-	int		floor_color;
-	int		ceiling_color;
-	void	*mlx;
-	void	*mlx_win;
-	int		size_txt;
-	t_data	img;
-	t_data	img_1;
-	t_data	img_2;
-	t_data	img_3;
-	t_data	img_4;
-	t_data	sky;
-	t_data	minimap;
-	t_map	map;
+	int			floor_color;
+	int			ceiling_color;
+	void		*mlx;
+	void		*mlx_win;
+	int			size_txt;
+	long long	first_time;
+	t_data		img;
+	t_data		img_1;
+	t_data		img_2;
+	t_data		img_3;
+	t_data		img_4;
+	t_data		door;
+	t_data		minimap;
+	t_map		map;
 	t_keys		key;
 	t_sprite	*sprites;
 	int			sprite_num;
@@ -112,6 +113,7 @@ typedef struct s_ray {
 	double			tex_pos;
 	int				tex_y;
 	unsigned int	color;
+	int				door;
 
 
 	// Floor and ceiling
@@ -144,9 +146,9 @@ void			get_sprites(t_game *game);
 
 
 t_data	get_texture(t_ray  ray, t_game game);
-void	dda(t_ray *ray);
+void	dda(t_ray *ray, t_game game, int f);
 void	side_dist_init(t_ray *ray, t_map map);
-void	calc_texture(t_ray *ray, t_game game);
+void	calc_texture(t_ray *ray, t_game game, int f);
 void	ray_init(t_ray *ray, t_game game, int x);
 void	raycast(t_game game);
 void	 cpy_img(t_game *game);
@@ -156,8 +158,22 @@ void	put_img( t_game game);
 //int	hsv_to_rgb(float h, float s, float v);
 int	hsv_to_rgb(int hue, double saturation, double value);
 
+
+
+
+/*    					Time Utils 						*/
+
 long long	time_return(long long first_time);
 long long	get_first_time(void);
+void		initialize_chaos(void);
+
+
+void create_sprites(t_game *game);
+void game_init(t_game *game, t_map pos);
+
+
+
+
 
 int worldMap[mapWidth][mapHeight];
 
