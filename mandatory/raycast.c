@@ -11,7 +11,7 @@ void	raycast(t_game game)
 	{
 		ray_init(&ray, game, x);
 		side_dist_init(&ray, game.map);
-		dda(&ray);
+		dda(&ray, game);
 		calc_texture(&ray, game);
 		y = 0;
 		while (y < screenHeight)
@@ -26,6 +26,7 @@ void	raycast(t_game game)
 				if (ray.tex_y > texHeight  - 1)
 					ray.tex_y = texHeight  - 1;
 				ray.tex_pos += ray.step;
+
 				ray.color = get_color(&ray.texture,  ray.tex_x, ray.tex_y);
 				if (ray.side == 1)
 					ray.color = (ray.color >> 1) & 8355711;
@@ -108,7 +109,7 @@ void	side_dist_init(t_ray *ray, t_map map)
 	}
 }
 
-void	dda(t_ray *ray)
+void	dda(t_ray *ray, t_game game)
 {
 	while (ray->hit == 0)
 	{
@@ -124,7 +125,7 @@ void	dda(t_ray *ray)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 		}
-		if(worldMap[ray->map_x][ray->map_y] > 0)
+		if(game.world_map[ray->map_x % game.map.lines][ray->map_y % game.map.columns] > 0)
 			ray->hit = 1;
 	}
 	if(ray->side == 0)

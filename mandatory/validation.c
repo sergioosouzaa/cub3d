@@ -9,12 +9,12 @@ void	invalid_map(char **new_map, t_map *map)
 char    **get_map(char **argv)
 {
 	int		fd;
-	int		i;
+	// int		i;
 	char	*str;
 	char	*get;
 
 	str = ft_strdup("");
-	i = 0;
+	// i = 0;
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 		m_erro("Invalid file.\n");
@@ -98,20 +98,28 @@ void	get_direction(char player, t_map *map)
 	{
 		map->dir_x = 0;
 		map->dir_y = 1;
+		map->plane_x = 0.66;
+		map->plane_y = 0;
 	}
 	else if (player == 'W')
 	{
 		map->dir_x = -1;
 		map->dir_y = 0;
+		map->plane_x = 0.0;
+		map->plane_y = 0.66;
 	}
 	else if (player == 'E')
 	{
 		map->dir_x = 1;
 		map->dir_y = 0;
+		map->plane_x = 0.0;
+		map->plane_y = 0.66;
 	}
 	else if (player == 'S')
 	{
 		map->dir_x = 0;
 		map->dir_y = -1;
+		map->plane_x = 0.66;
+		map->plane_y = 0;
 	}
 }

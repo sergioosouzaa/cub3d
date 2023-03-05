@@ -162,7 +162,7 @@ void	dda(t_ray *ray)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 		}
-		if(worldMap[ray->map_x][ray->map_y] > 0)
+		if(game.world_map[ray->map_x][ray->map_y] > 0)
 			ray->hit = 1;
 	}
 	if(ray->side == 0)

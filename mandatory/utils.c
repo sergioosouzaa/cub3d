@@ -49,31 +49,30 @@ unsigned int get_color(t_data *data, int x, int y)
 	return (*(unsigned int*)dst);
 }
 
-void	print_floor(t_data *img, int floor_color, int ceiling_color)
-{
-	int i;
-	int	j;
-	i = 0;
-	j = 0;
-	while (i < screenWidth)
-	{
-		j = 0;
-		while (j < screenHeight)
-		{
-			if (j < (screenHeight / 4) * 3)
-				my_mlx_pixel_put(img, i, j, floor_color);
-			else
-				my_mlx_pixel_put(img, i, j, ceiling_color);
-			j++;
-		}
-		i++;
-	}
-}
+// void	print_floor(t_data *img, int floor_color, int ceiling_color)
+// {
+// 	int i;
+// 	int	j;
+// 	i = 0;
+// 	j = 0;
+// 	while (i < screenWidth)
+// 	{
+// 		j = 0;
+// 		while (j < screenHeight)
+// 		{
+// 			if (j < (screenHeight / 4) * 3)
+// 				my_mlx_pixel_put(img, i, j, floor_color);
+// 			else
+// 				my_mlx_pixel_put(img, i, j, ceiling_color);
+// 			j++;
+// 		}
+// 		i++;
+// 	}
+// }
 
 void	get_sprites(t_map *map, t_game *game)
 {
 	game->img_NO.img = mlx_xpm_file_to_image(game->mlx, map->NO, &game->size_txt, &game->size_txt);
-
 	game->img_NO.addr = mlx_get_data_addr(game->img_NO.img, &game->img_NO.bits_per_pixel, &game->img_NO.line_length,
 							&game->img_NO.endian);
 	game->img_SO.img = mlx_xpm_file_to_image(game->mlx, map->SO, &game->size_txt, &game->size_txt);
@@ -82,14 +81,14 @@ void	get_sprites(t_map *map, t_game *game)
 	game->img_WE.img = mlx_xpm_file_to_image(game->mlx, map->WE, &game->size_txt, &game->size_txt);
 	game->img_WE.addr = mlx_get_data_addr(game->img_WE.img, &game->img_WE.bits_per_pixel, &game->img_WE.line_length,
 							&game->img_WE.endian);
-	game->img_EA.img = mlx_xpm_file_to_image(game->mlx, map->EA, &game->size_txt, &game->size_txt);
+	game->img_EA.img = mlx_xpm_file_to_image(game->mlx,  map->EA, &game->size_txt, &game->size_txt);
 	game->img_EA.addr = mlx_get_data_addr(game->img_EA.img, &game->img_EA.bits_per_pixel, &game->img_EA.line_length,
 							&game->img_EA.endian);
 }
 
 int	ft_strrncmp(const char *s1, const char *s2, size_t n)
 {
-	unsigned int	i;
+	// unsigned int	i;
 	unsigned char	*str;
 	unsigned char	*str1;
 	size_t			size_s1;
@@ -101,7 +100,7 @@ int	ft_strrncmp(const char *s1, const char *s2, size_t n)
 	size_s2 = ft_strlen(s2);
 	if (n == 0)
 		return (0);
-	i = 0;
+	// i = 0;
 	while (n--)
 	{
 		if (str[size_s1] != str1[size_s2])
@@ -140,8 +139,23 @@ void	init_map(t_map *map)
 	map->F = 0;
 }
 	
-int	exit_close(void)
+int	exit_close(t_game *game)
 {
+	int i;
+	
+	i  = 0;
+	while (i < (int)game->map.lines)
+	{
+		free(game->world_map[i]);
+		i++;
+	}
+	free(game->world_map);
+	mlx_destroy_image(game->mlx, game->img.img);
+	mlx_destroy_image(game->mlx, game->img_EA.img);
+	mlx_destroy_image(game->mlx, game->img_NO.img);
+	mlx_destroy_image(game->mlx, game->img_SO.img);
+	mlx_destroy_image(game->mlx, game->img_WE.img);
+	mlx_clear_window(game->mlx, game->mlx_win);
 	exit(0);
 	return (0);
 }

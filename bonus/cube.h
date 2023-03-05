@@ -114,12 +114,11 @@ void			get_sprites(t_game *game);
 
 
 t_data	get_texture(t_ray  ray, t_game game);
-void	dda(t_ray *ray);
+void	dda(t_ray *ray, t_game game);
 void	side_dist_init(t_ray *ray, t_map map);
 void	calc_texture(t_ray *ray, t_game game);
 void	ray_init(t_ray *ray, t_game game, int x);
 void	raycast(t_game game);
 
-int worldMap[mapWidth][mapHeight];
 
 #endif

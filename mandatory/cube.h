@@ -15,9 +15,8 @@
 #define screenHeight 480
 #define texWidth 256
 #define texHeight 256
-#define mapWidth 24
-#define mapHeight 24
-#define rot 0.08	
+#define rot 0.08
+
 enum	mac_e_key_codes
 {
 	KEY_DOWN = 125,
@@ -28,6 +27,14 @@ enum	mac_e_key_codes
 	KEY_RESET = 15,
 };
 
+
+typedef	struct s_keys {
+	int up;
+	int	down;
+	int	esc;
+	int	rotate_r;
+	int	rotate_l;
+}				t_keys;
 
 typedef struct	s_data {
 	void	*img;
@@ -63,12 +70,14 @@ typedef	struct	s_game {
 	unsigned long	color_r;
 	unsigned long	color_g;
 	unsigned long	color_b;
+	char 	**world_map;
 	t_data	img;
 	t_data	img_NO;
 	t_data	img_SO;
 	t_data	img_WE;
 	t_data	img_EA;
 	t_map	map;
+	t_keys	key;
 }				t_game;
 
 typedef struct s_ray {
@@ -107,7 +116,7 @@ void			my_mlx_pixel_put(t_data *data, int x, int y, int color);
 void			print_floor(t_data *img, int floor_color, int ceiling_color);
 
 t_data	get_texture(t_ray  ray, t_game game);
-void	dda(t_ray *ray);
+void	dda(t_ray *ray, t_game game);
 void	side_dist_init(t_ray *ray, t_map map);
 void	calc_texture(t_ray *ray, t_game game);
 void	ray_init(t_ray *ray, t_game game, int x);
@@ -124,7 +133,7 @@ void	invalid_map(char **new_map, t_map *map);
 void	invalid_config(t_map *map);
 void	get_sprites(t_map *map, t_game *game);
 void	init_map(t_map *map);
-int		exit_close(void);
+int		exit_close(t_game *game);
 int 	ft_ispace(char *str, int size);
 void    check_files(t_map *map);
 void	get_direction(char player, t_map *map);
@@ -136,6 +145,15 @@ unsigned long	color_r(int nbr);
 void	color_rgb(char *str, t_game *game, int var);
 
 
-int worldMap[mapWidth][mapHeight];
+
+
+
+int	handle_press(int key, t_game *game);
+int handle_release(int key, t_game *game);
+int	handle_key(t_game *game);
+int	game_loop(t_game *game);
+t_keys	init_keys(void);
+
+
 
 #endif
