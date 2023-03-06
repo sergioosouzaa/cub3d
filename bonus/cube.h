@@ -66,8 +66,6 @@ typedef struct s_char
 	t_data	texture_2;
 	t_data	texture_3;
 	t_data	texture_4;
-	t_data	texture_5;
-	t_data	texture_6;
 }	t_char;
 
 typedef struct	s_map {
@@ -88,6 +86,8 @@ typedef	struct	s_game {
 	long long	first_time;
 	int			mode;
 	double		speed;
+	int			char_select;
+	t_data		*my_char;
 	t_data		*menu;
 	t_data		img;
 	t_data		img_1;
