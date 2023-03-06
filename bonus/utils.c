@@ -20,8 +20,8 @@ unsigned int get_color(t_data *data, int x, int y)
 void create_sprites(t_game *game)
 {
 	game->sprites = malloc(sizeof(t_sprite));
-	game->sprites->pos_x = 6;
-	game->sprites->pos_y = 0;
+	game->sprites->pos_x = 10;
+	game->sprites->pos_y = 4;
 	game->sprites->dir_x= game->map.dir_x;
 	game->sprites->dir_y= game->map.dir_y;
 	game->sprites->texture = malloc(3 *sizeof(t_data));

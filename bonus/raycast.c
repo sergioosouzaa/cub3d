@@ -87,10 +87,8 @@ void 	draw_sprites(int *perpedist, t_game *game)
 		int sprite_pos_x = (int)((screenWidth / 2) * (1 + new_x / new_y));
 		int	udiv = 1;
 		int vdiv = 1;
-		double vmove = (screenHeight - 64.0);
-
+		double vmove = 0;
 		int v_move_screen =  (int)(vmove / new_y);
-
 		int sprite_height = abs((int)(screenHeight / new_y)) / vdiv;
 		int draw_start_y = -sprite_height / 2 + screenHeight / 2 + v_move_screen;
 		if (draw_start_y < 0)
@@ -118,9 +116,10 @@ void 	draw_sprites(int *perpedist, t_game *game)
 				{
 					int d = (p - v_move_screen) * 256 - screenHeight * 128 + sprite_height * 128;
 					int tex_y = ((d * texHeight / 4) / sprite_height) / 256;
-					int color = get_color(&game->sprites[i].texture[0], tex_x, tex_y);
+					int color = get_color(&game->img_2, tex_x, tex_y);
 					if (((color >> 24) & 0xFF) != 0xFF)
 						my_mlx_pixel_put(&game->img, stripe, p, color);
+					
 					p++;
 				}
 			}
@@ -216,8 +215,8 @@ void	raycast(t_game game)
 	// long long time;
 	
 	x = 0;
-	int	max_end;
-	max_end = 0;
+	// int	max_end;
+	// max_end = 0;
 	// if (rand() % 2 == 0)
 	if (get_first_time() - last_time > 100)
 	{
@@ -256,25 +255,25 @@ void	raycast(t_game game)
 		x++;
 	}
 	game.sprite_num = 1;
-	//draw_sprites(perpedist, &game);
-	int x_mini;
-	int y_mini;
+	draw_sprites(perpedist, &game);
+	// int x_mini;
+	// int y_mini;
 
-	x_mini = 2000;
-	y_mini = 2000;
-	draw_minimap(game, &x_mini, &y_mini);
+	// x_mini = 2000;
+	// y_mini = 2000;
+	// draw_minimap(game, &x_mini, &y_mini);
 	mlx_put_image_to_window(game.mlx, game.mlx_win, game.img.img, 0, 0);
-	mlx_put_image_to_window(game.mlx, game.mlx_win, game.minimap.img, x_mini, y_mini);
+	// mlx_put_image_to_window(game.mlx, game.mlx_win, game.minimap.img, x_mini, y_mini);
 	//mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[game.sprites->sprite].img, screenWidth/2, screenHeight - 64);
-	if (perpedist[screenWidth / 2] >= 1)
-	{
-		if (game.key.rotate_l == 1)
-			mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[2].img, screenWidth/2, screenHeight - 63);
-		else if (game.key.rotate_r == 1)
-			mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[1].img, screenWidth/2, screenHeight - 63);
-		else
-			mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[0].img, screenWidth/2, screenHeight - 63);
-	}
+	// if (perpedist[screenWidth / 2] >= 1)
+	// {
+	// 	if (game.key.rotate_l == 1)
+	// 		mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[2].img, screenWidth/2, screenHeight - 63);
+	// 	else if (game.key.rotate_r == 1)
+	// 		mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[1].img, screenWidth/2, screenHeight - 63);
+	// 	else
+	// 		mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[0].img, screenWidth/2, screenHeight - 63);
+	// }
 	
 }
 
