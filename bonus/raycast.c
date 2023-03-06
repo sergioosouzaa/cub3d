@@ -1,5 +1,9 @@
 #include "cube.h"
 
+
+ /// JUNTAR FUNCÇOES ////////
+
+
 int sky_color(int x, int y)
 {
 	static int offset;
@@ -37,6 +41,8 @@ int floor_color(int y, int f)
 	return (h[(f + (y % p) / j) % 7]);
 }
 
+
+/* Arquivo sprites  */
 void	sort_sprites(int *sprite_order, int *sprite_dist, int sprite_num)
 {
 	int i;
@@ -60,7 +66,7 @@ void	sort_sprites(int *sprite_order, int *sprite_dist, int sprite_num)
 	}
 }
 
-
+/* arquivo sprites  */
 void 	draw_sprites(int *perpedist, t_game *game)
 {
 	int	sprite_order[game->sprite_num];
@@ -129,6 +135,9 @@ void 	draw_sprites(int *perpedist, t_game *game)
 	}
 }
 
+
+
+/* função sprite */
 void draw_square(int x_screen, int y_screen, int color, int title_size, t_game game)
 {
 	int i;
@@ -146,6 +155,9 @@ void draw_square(int x_screen, int y_screen, int color, int title_size, t_game g
 		i++;
 	}
 }
+
+
+/* função minimap */
 
 void	draw_minimap(t_game game, int *pos_x, int *pos_y)
 {
@@ -204,6 +216,22 @@ void	draw_minimap(t_game game, int *pos_x, int *pos_y)
 	}
 }
 
+/*   Ok */
+void	put_char_to_window(t_game *game, int *perp_dist)
+{
+	if (perp_dist[screenWidth / 2] >= 1)
+	{
+		if (game->key.rotate_l == 1)
+			mlx_put_image_to_window(game->mlx, game->mlx_win, game->sprites->texture[2].img, screenWidth/2, screenHeight - 40);
+		else if (game->key.rotate_r == 1)
+			mlx_put_image_to_window(game->mlx, game->mlx_win, game->sprites->texture[1].img, screenWidth/2, screenHeight - 40);
+		else
+			mlx_put_image_to_window(game->mlx, game->mlx_win, game->sprites->texture[0].img, screenWidth/2, screenHeight - 40);
+	}
+}
+
+
+/*antes de rodar o raycast fazer a função de checar minimapa que muda o f da porta dcriar um f e por num struct da porta*/
 void	raycast(t_game game)
 {
 	t_ray	ray;
@@ -218,6 +246,7 @@ void	raycast(t_game game)
 	// int	max_end;
 	// max_end = 0;
 	// if (rand() % 2 == 0)
+	my_mlx_pixel_put(&game.img, 0, 0,0x00FF0000);
 	if (get_first_time() - last_time > 100)
 	{
 		f = (f + 1) % 7;
@@ -225,6 +254,7 @@ void	raycast(t_game game)
 	}
 	while (x < screenWidth)
 	{
+
 		ray_init(&ray, game, x);
 		side_dist_init(&ray, game.map);
 		dda(&ray, game, f);
@@ -255,29 +285,24 @@ void	raycast(t_game game)
 		x++;
 	}
 	game.sprite_num = 1;
-	draw_sprites(perpedist, &game);
-	// int x_mini;
-	// int y_mini;
+	// draw_sprites(perpedist, &game);
+	int x_mini;
+	int y_mini;
 
-	// x_mini = 2000;
-	// y_mini = 2000;
-	// draw_minimap(game, &x_mini, &y_mini);
+	x_mini = 2000;
+	y_mini = 2000;
+	draw_minimap(game, &x_mini, &y_mini);
 	mlx_put_image_to_window(game.mlx, game.mlx_win, game.img.img, 0, 0);
-	// mlx_put_image_to_window(game.mlx, game.mlx_win, game.minimap.img, x_mini, y_mini);
+	mlx_put_image_to_window(game.mlx, game.mlx_win, game.minimap.img, x_mini, y_mini);
 	//mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[game.sprites->sprite].img, screenWidth/2, screenHeight - 64);
-	// if (perpedist[screenWidth / 2] >= 1)
-	// {
-	// 	if (game.key.rotate_l == 1)
-	// 		mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[2].img, screenWidth/2, screenHeight - 63);
-	// 	else if (game.key.rotate_r == 1)
-	// 		mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[1].img, screenWidth/2, screenHeight - 63);
-	// 	else
-	// 		mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[0].img, screenWidth/2, screenHeight - 63);
-	// }
+	put_char_to_window(&game, perpedist);
 	
 }
 
 
+
+
+/*     ok  */
 void	ray_init(t_ray *ray, t_game game, int x)
 {
 	ray->camera_x = 2 * x / (double)(screenWidth) - 1;
@@ -297,6 +322,10 @@ void	ray_init(t_ray *ray, t_game game, int x)
 	ray->pitch = 100;
 }
 
+
+
+
+/*    ok  */
 void	calc_texture(t_ray *ray, t_game game, int f)
 {
 	ray->line_heigh = (int)(screenHeight / ray->perpwalldist);
@@ -325,7 +354,7 @@ void	calc_texture(t_ray *ray, t_game game, int f)
 }
 
 
-
+/*  Ok */
 void	side_dist_init(t_ray *ray, t_map map)
 {
 	if(ray->raydir_x < 0)
@@ -350,6 +379,7 @@ void	side_dist_init(t_ray *ray, t_map map)
 	}
 }
 
+/* Ok */
 void 	door_dda(t_ray *ray, t_game game, int f)
 {
 	double wall;
@@ -360,13 +390,14 @@ void 	door_dda(t_ray *ray, t_game game, int f)
 	else
 		wall = game.map.pos_x + (ray->sidedist_x - ray->deltadist_x)  * ray->raydir_x;
 	wall -= floor((wall));
-	if (wall < f * (1.0 / 7))
+	if (wall < f * 0.1)
 		ray->hit = 0;
 	else
 		ray->hit = 1;
-
 }
 
+
+/*  OK  */
 void	dda(t_ray *ray, t_game game, int f)
 {
 	ray->door = 0;
@@ -395,30 +426,7 @@ void	dda(t_ray *ray, t_game game, int f)
 		ray->perpwalldist = (ray->sidedist_y - ray->deltadist_y);
 }
 
-t_data	get_texture(t_ray  ray, t_game game)
-{
-	t_data	texture;
 
-	if (worldMap[ray.map_x][ray.map_y] == 9)
-	{
-		texture = game.door;
-		return (texture);
-	}
-	if (ray.side == 1)
-	{
-		if (ray.raydir_y > 0)
-			texture = game.img_1;
-		else
-			texture = game.img_2;
-	}
-	else
-	{
-		if (ray.raydir_x > 0)
-			texture = game.img_3;
-		else
-			texture = game.img_4;
 
-	}
-	return (texture);
-}
+
 

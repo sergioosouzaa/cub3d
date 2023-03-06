@@ -35,7 +35,7 @@ void create_sprites(t_game *game)
 	game->sprites->texture[2].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mario3.xpm", &game->size_txt, &game->size_txt);
 	game->sprites->texture[2].addr=  mlx_get_data_addr(game->sprites->texture[2].img, &game->sprites->texture[2].bits_per_pixel, &game->sprites->texture[2].line_length,
 							&game->sprites->texture[2].endian);	
-
+	game->mode = 1;
 }
 
 void game_init(t_game *game, t_map pos)
@@ -48,8 +48,6 @@ void game_init(t_game *game, t_map pos)
 	game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length,
 								&game->img.endian);
 	game->map = pos;
-
-
 }
 
 void	print_floor(t_data *img, int floor_color, int ceiling_color)

@@ -24,6 +24,8 @@ enum	mac_e_key_codes
 	KEY_ESC = 53,
 	KEY_RIGHT = 123,
 	KEY_LEFT = 124,
+	KEY_SPACE = 49,
+	KEY_SHIFT = 57,
 	KEY_RESET = 15,
 };
 
@@ -33,8 +35,9 @@ typedef	struct s_keys {
 	int	esc;
 	int	rotate_r;
 	int	rotate_l;
+	int	space;
+	int	shift;
 }				t_keys;
-
 
 typedef struct	s_data {
 	void	*img;
@@ -54,8 +57,18 @@ typedef	struct s_sprite
 	t_data	*texture;
 	t_data	texture_1;
 	t_data	texture_2;
-	t_data	texture_3;
 }   t_sprite;
+
+typedef struct s_char
+{
+	t_data	*texture;
+	t_data	texture_1;
+	t_data	texture_2;
+	t_data	texture_3;
+	t_data	texture_4;
+	t_data	texture_5;
+	t_data	texture_6;
+}	t_char;
 
 typedef struct	s_map {
 	double	pos_x;
@@ -73,6 +86,9 @@ typedef	struct	s_game {
 	void		*mlx_win;
 	int			size_txt;
 	long long	first_time;
+	int			mode;
+	double		speed;
+	t_data		*menu;
 	t_data		img;
 	t_data		img_1;
 	t_data		img_2;
@@ -176,5 +192,9 @@ void game_init(t_game *game, t_map pos);
 
 
 int worldMap[mapWidth][mapHeight];
+
+
+t_data	get_texture(t_ray  ray, t_game game);
+
 
 #endif
