@@ -183,106 +183,8 @@ int	handle_key(t_game *game)
 	return (0);
 }
 
-int	handle_menu(t_game *game)
-{
-	int screen_width;
-	int screen_height;
-
-	screen_width = screenWidth;
-	screen_height = screenHeight;
-	if (game->key.space)
-	{
-		mlx_destroy_image(game->mlx, game->menu[0].img);
-		mlx_destroy_image(game->mlx, game->menu[1].img);
-		mlx_destroy_image(game->mlx, game->menu[2].img);
-		free(game->menu);
-		game->mode = 2;
-		game->menu = malloc(sizeof(t_data) * 5);
-		game->menu[0].img = mlx_xpm_file_to_image(game->mlx,"./sprits/thais_menu.xpm" , &screen_width, &screen_height);
-		game->menu[0].addr=  mlx_get_data_addr(game->menu[0].img, &game->menu[0].bits_per_pixel, &game->menu[0].line_length,
-								&game->menu[0].endian);	
-		game->menu[1].img = mlx_xpm_file_to_image(game->mlx,"./sprits/thais_menu2.xpm" , &screen_width, &screen_height);
-		game->menu[1].addr=  mlx_get_data_addr(game->menu[1].img, &game->menu[1].bits_per_pixel, &game->menu[1].line_length,
-								&game->menu[1].endian);	
-		game->menu[2].img = mlx_xpm_file_to_image(game->mlx,"./sprits/luigi_menu.xpm" , &screen_width, &screen_height);
-		game->menu[2].addr=  mlx_get_data_addr(game->menu[2].img, &game->menu[2].bits_per_pixel, &game->menu[2].line_length,
-								&game->menu[2].endian);	
-		game->menu[3].img = mlx_xpm_file_to_image(game->mlx,"./sprits/luigi_menu2.xpm" , &screen_width, &screen_height);
-		game->menu[3].addr=  mlx_get_data_addr(game->menu[3].img, &game->menu[3].bits_per_pixel, &game->menu[3].line_length,
-								&game->menu[3].endian);	
-		game->menu[4].img = mlx_xpm_file_to_image(game->mlx,"./sprits/start1.xpm" , &screen_width, &screen_height);
-		game->menu[4].addr=  mlx_get_data_addr(game->menu[4].img, &game->menu[4].bits_per_pixel, &game->menu[4].line_length,
-								&game->menu[4].endian);	
-		game->char_select = 0;
-		game->key.space = 0;
-		usleep(20000);
-	}
-	return (0);
-}
-
-void	display_menu(t_game *game)
-{
-	static long long last_time;
-	static	int			i;
-
-	if (get_first_time() - last_time > 150)
-	{
-		i = (i + 1) % 3;
-		last_time = get_first_time();
-	}
-	mlx_put_image_to_window(game->mlx, game->mlx_win, game->menu[i].img, 0, 0);
-
-}
 
 
-/// carregar os sprites
-void	handle_char_select(t_game *game)
-{
-	if(game->key.rotate_l)
-	{
-		game->char_select = 0;
-	}
-	if(game->key.rotate_r)
-	{
-		game->char_select = 1;
-	}
-	if(game->key.space)
-	{
-		game->mode = 3;
-		// game->my_char =  malloc(sizeof(t_data) * 4);
-		// if (game->char_select == 0)
-		// {
-		// 	game->my_char[0].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mariogay.xpm", &game->size_txt, &game->size_txt);
-		// 	game->my_char[0].addr=  mlx_get_data_addr(game->my_char[0].img, &game->my_char[0].bits_per_pixel, &game->my_char[0].line_length,
-		// 							&game->my_char[0].endian);
-		// 	game->my_char[1].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mario2.xpm", &game->size_txt, &game->size_txt);
-		// 	game->my_char[1].addr=  mlx_get_data_addr(game->my_char[1].img, &game->my_char[1].bits_per_pixel, &game->my_char[1].line_length,
-		// 							&game->my_char[1].endian);
-		// 	game->my_char[2].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mario3.xpm", &game->size_txt, &game->size_txt);
-		// 	game->my_char[2].addr=  mlx_get_data_addr(game->my_char[2].img, &game->my_char[2].bits_per_pixel, &game->my_char[2].line_length,
-		// 							&game->my_char[2].endian);	
-		// 	game->my_char[3].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mario3.xpm", &game->size_txt, &game->size_txt);
-		// 	game->my_char[3].addr=  mlx_get_data_addr(game->my_char[3].img, &game->my_char[3].bits_per_pixel, &game->my_char[3].line_length,
-		// 							&game->my_char[3].endian);	
-		// }
-		// else
-		// {
-		// 	game->my_char[0].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mariogay.xpm", &game->size_txt, &game->size_txt);
-		// 	game->my_char[0].addr=  mlx_get_data_addr(game->my_char[0].img, &game->my_char[0].bits_per_pixel, &game->my_char[0].line_length,
-		// 							&game->my_char[0].endian);
-		// 	game->my_char[1].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mario2.xpm", &game->size_txt, &game->size_txt);
-		// 	game->my_char[1].addr=  mlx_get_data_addr(game->my_char[1].img, &game->my_char[1].bits_per_pixel, &game->my_char[1].line_length,
-		// 							&game->my_char[1].endian);
-		// 	game->my_char[2].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mario3.xpm", &game->size_txt, &game->size_txt);
-		// 	game->my_char[2].addr=  mlx_get_data_addr(game->my_char[2].img, &game->my_char[2].bits_per_pixel, &game->my_char[2].line_length,
-		// 							&game->my_char[2].endian);	
-		// 	game->my_char[3].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mario3.xpm", &game->size_txt, &game->size_txt);
-		// 	game->my_char[3].addr=  mlx_get_data_addr(game->my_char[3].img, &game->my_char[3].bits_per_pixel, &game->my_char[3].line_length,
-		// 							&game->my_char[3].endian);	
-		// }
-		// game->my_char
-	}
-}
 
 
 
@@ -346,35 +248,23 @@ t_keys	init_keys(void)
 }
 
 
+
 int main(void)
 {
 	t_map	pos;
 	t_game	game;
 
-	
 	game.first_time = get_first_time();
 	initialize_chaos();
 	pos = get_pos();
 	game_init(&game, pos);
 	create_sprites(&game);
-	
-	game.ceiling_color =  0x000000FF;
-	game.floor_color =  0x00F00FFF;
 	game.key = init_keys();
-	// game.time = time;
 	game.mode = 1;
 	game.menu = malloc(sizeof(t_data) * 3);
-	int screen_width = screenWidth * 3;
-	int screen_height = screenHeight * 3;
-	game.menu[0].img = mlx_xpm_file_to_image(game.mlx,"./sprits/menu1.xpm" , &screen_width, &screen_height);
-	game.menu[0].addr=  mlx_get_data_addr(game.menu[0].img, &game.menu[0].bits_per_pixel, &game.menu[0].line_length,
-							&game.menu[0].endian);	
-	game.menu[1].img = mlx_xpm_file_to_image(game.mlx,"./sprits/menu2.xpm" , &screen_width, &screen_height);
-	game.menu[1].addr=  mlx_get_data_addr(game.menu[1].img, &game.menu[1].bits_per_pixel, &game.menu[1].line_length,
-							&game.menu[1].endian);	
-	game.menu[2].img = mlx_xpm_file_to_image(game.mlx,"./sprits/menu3.xpm" , &screen_width, &screen_height);
-	game.menu[2].addr=  mlx_get_data_addr(game.menu[2].img, &game.menu[2].bits_per_pixel, &game.menu[2].line_length,
-							&game.menu[2].endian);	
+
+	open_menu(&game);
+	
 	mlx_hook(game.mlx_win, 2, (1L<<0), &handle_press,  &game);
 	mlx_hook(game.mlx_win, 3, (1L<<1), &handle_release,  &game);
 	mlx_loop_hook(game.mlx, &game_loop, &game);

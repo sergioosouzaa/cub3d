@@ -51,10 +51,7 @@ typedef	struct s_sprite
 {
 	double	pos_x;
 	double	pos_y;
-	double	dir_x;
-	double	dir_y;
 	int		sprite;
-	t_data	*texture;
 	t_data	texture_1;
 	t_data	texture_2;
 }   t_sprite;
@@ -62,10 +59,10 @@ typedef	struct s_sprite
 typedef struct s_char
 {
 	t_data	*texture;
-	t_data	texture_1;
-	t_data	texture_2;
-	t_data	texture_3;
-	t_data	texture_4;
+	t_data	txt1;
+	t_data	txt2;
+	t_data	txt3;
+	t_data	txt4;
 }	t_char;
 
 typedef struct	s_map {
@@ -87,7 +84,7 @@ typedef	struct	s_game {
 	int			mode;
 	double		speed;
 	int			char_select;
-	t_data		*my_char;
+	t_char		my_char;
 	t_data		*menu;
 	t_data		img;
 	t_data		img_1;
@@ -188,11 +185,17 @@ void create_sprites(t_game *game);
 void game_init(t_game *game, t_map pos);
 
 
+void	display_menu(t_game *game);
+void	open_menu(t_game *game);
+int	handle_menu(t_game *game);
+void    open_char_select(t_game *game);
 
 
+void	handle_char_select(t_game *game);
+void	open_peach(t_game *game, int title_size);
+void	open_luigi(t_game *game, int title_size);
 
 int worldMap[mapWidth][mapHeight];
-
 
 t_data	get_texture(t_ray  ray, t_game game);
 

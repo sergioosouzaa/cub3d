@@ -19,22 +19,13 @@ unsigned int get_color(t_data *data, int x, int y)
 
 void create_sprites(t_game *game)
 {
-	game->sprites = malloc(sizeof(t_sprite));
-	game->sprites->pos_x = 10;
-	game->sprites->pos_y = 4;
-	game->sprites->dir_x= game->map.dir_x;
-	game->sprites->dir_y= game->map.dir_y;
-	game->sprites->texture = malloc(3 *sizeof(t_data));
+	game->sprites = malloc(sizeof(t_sprite) * 2);
+	game->sprites[0].pos_x = 10;
+	game->sprites[0.]pos_y = 4;
+	game->sprites[1].pos_x = 10;
+	game->sprites[1.]pos_y = 4;
 	game->sprites->sprite = 0;
-	game->sprites->texture[0].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mariogay.xpm", &game->size_txt, &game->size_txt);
-	game->sprites->texture[0].addr=  mlx_get_data_addr(game->sprites->texture[0].img, &game->sprites->texture[0].bits_per_pixel, &game->sprites->texture[0].line_length,
-							&game->sprites->texture[0].endian);
-	game->sprites->texture[1].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mario2.xpm", &game->size_txt, &game->size_txt);
-	game->sprites->texture[1].addr=  mlx_get_data_addr(game->sprites->texture[1].img, &game->sprites->texture[1].bits_per_pixel, &game->sprites->texture[1].line_length,
-							&game->sprites->texture[1].endian);
-	game->sprites->texture[2].img = mlx_xpm_file_to_image(game->mlx, "./sprits/mario3.xpm", &game->size_txt, &game->size_txt);
-	game->sprites->texture[2].addr=  mlx_get_data_addr(game->sprites->texture[2].img, &game->sprites->texture[2].bits_per_pixel, &game->sprites->texture[2].line_length,
-							&game->sprites->texture[2].endian);	
+	
 	game->mode = 1;
 }
 
@@ -73,25 +64,7 @@ void	print_floor(t_data *img, int floor_color, int ceiling_color)
 
 void	get_sprites(t_game *game)
 {
-	int x;
-	int y;
-	int	max_side;
-	int	side;
-	int title_size;
 
-	x = screenWidth;
-	y = screenHeight;
-	if (mapHeight > mapWidth)
-	{
-		max_side = mapHeight;
-		side = 0.2 * screenHeight;
-	}
-	else
-	{
-		max_side = mapWidth;
-		side = 0.2 * screenWidth;
-	}
-	title_size = (side / max_side) / 256;
 	game->door.img = mlx_xpm_file_to_image(game->mlx, "./sprits/door.xpm", &x, &y);
 	game->door.addr=  mlx_get_data_addr(game->door.img, &game->door.bits_per_pixel, &game->door.line_length,
 							&game->door.endian);
@@ -107,7 +80,4 @@ void	get_sprites(t_game *game)
 	game->img_4.img = mlx_xpm_file_to_image(game->mlx, "./sprits/star_road2.xpm", &game->size_txt, &game->size_txt);
 	game->img_4.addr = mlx_get_data_addr(game->img_4.img, &game->img_4.bits_per_pixel, &game->img_4.line_length,
 							&game->img_4.endian);
-	game->minimap.img = mlx_xpm_file_to_image(game->mlx, "./sprits/profile.xpm", &title_size, &title_size);
-	game->minimap.addr = mlx_get_data_addr(game->minimap.img, &game->minimap.bits_per_pixel, &game->minimap.line_length,
-							&game->minimap.endian);
 }
