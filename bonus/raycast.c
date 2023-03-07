@@ -33,12 +33,13 @@ int sky_color(int x, int y)
 	return (0x00000000);
 }
 
-int floor_color(int y, int f)
+int floor_color(int y, int x, int f)
 {
-	int p = 70;
-	int j = p / 7;
+	int j;
 	int h[7] = {0xf94144, 0xf3722c, 0xf8961e, 0xf9844a, 0xf9c74f, 0x90be6d, 0x43aa8b};
-	return (h[(f + (y % p) / j) % 7]);
+	(void)y;
+	j = ((y / 30) + (x / 30));
+	return (h[(f + j) % 7]);
 }
 
 
@@ -222,11 +223,11 @@ void	put_char_to_window(t_game *game, int *perp_dist)
 	if (perp_dist[screenWidth / 2] >= 1)
 	{
 		if (game->key.rotate_l == 1)
-			mlx_put_image_to_window(game->mlx, game->mlx_win, game->sprites->texture[2].img, screenWidth/2, screenHeight - 40);
+			mlx_put_image_to_window(game->mlx, game->mlx_win, game->my_char.txt1.img, screenWidth/2, screenHeight - 40);
 		else if (game->key.rotate_r == 1)
-			mlx_put_image_to_window(game->mlx, game->mlx_win, game->sprites->texture[1].img, screenWidth/2, screenHeight - 40);
+			mlx_put_image_to_window(game->mlx, game->mlx_win, game->my_char.txt2.img, screenWidth/2, screenHeight - 40);
 		else
-			mlx_put_image_to_window(game->mlx, game->mlx_win, game->sprites->texture[0].img, screenWidth/2, screenHeight - 40);
+			mlx_put_image_to_window(game->mlx, game->mlx_win, game->my_char.txt3.img, screenWidth/2, screenHeight - 40);
 	}
 }
 
@@ -278,7 +279,7 @@ void	raycast(t_game game)
 		y = ray.draw_end;
 		while (y < screenHeight)
 		{
-			my_mlx_pixel_put(&game.img, x, y, floor_color(y, f));
+			my_mlx_pixel_put(&game.img, x, y, floor_color(y, x, f));
 			y++;
 		}
 		perpedist[x] = ray.perpwalldist;

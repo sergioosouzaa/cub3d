@@ -21,9 +21,9 @@ void create_sprites(t_game *game)
 {
 	game->sprites = malloc(sizeof(t_sprite) * 2);
 	game->sprites[0].pos_x = 10;
-	game->sprites[0.]pos_y = 4;
+	game->sprites[0].pos_y = 4;
 	game->sprites[1].pos_x = 10;
-	game->sprites[1.]pos_y = 4;
+	game->sprites[1].pos_y = 4;
 	game->sprites->sprite = 0;
 	
 	game->mode = 1;
@@ -64,8 +64,11 @@ void	print_floor(t_data *img, int floor_color, int ceiling_color)
 
 void	get_sprites(t_game *game)
 {
+	// int x;
+	// int	y;
 
-	game->door.img = mlx_xpm_file_to_image(game->mlx, "./sprits/door.xpm", &x, &y);
+	// x 
+	game->door.img = mlx_xpm_file_to_image(game->mlx, "./sprits/door.xpm", &game->size_txt, &game->size_txt);
 	game->door.addr=  mlx_get_data_addr(game->door.img, &game->door.bits_per_pixel, &game->door.line_length,
 							&game->door.endian);
 	game->img_1.img = mlx_xpm_file_to_image(game->mlx, "./sprits/star_road1.xpm", &game->size_txt, &game->size_txt);

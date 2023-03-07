@@ -187,7 +187,7 @@ void game_init(t_game *game, t_map pos);
 
 void	display_menu(t_game *game);
 void	open_menu(t_game *game);
-int	handle_menu(t_game *game);
+int		handle_menu(t_game *game);
 void    open_char_select(t_game *game);
 
 
