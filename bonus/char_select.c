@@ -17,7 +17,7 @@ void    open_char_select(t_game *game)
 	game->menu[2].img = mlx_xpm_file_to_image(game->mlx,"./sprits/luigi_menu.xpm" , &screen_width, &screen_height);
 	game->menu[2].addr=  mlx_get_data_addr(game->menu[2].img, &game->menu[2].bits_per_pixel, &game->menu[2].line_length,
 						&game->menu[2].endian);	
-	game->menu[3].img = mlx_xpm_file_to_image(game->mlx,"./sprits/luigi_menu2.xpm" , &screen_width, &screen_height);
+	game->menu[3].img = mlx_xpm_file_to_image(game->mlx, "./sprits/luigi_menu2.xpm", &screen_width, &screen_height);
 	game->menu[3].addr=  mlx_get_data_addr(game->menu[3].img, &game->menu[3].bits_per_pixel, &game->menu[3].line_length,
 						&game->menu[3].endian);	
 	game->menu[4].img = mlx_xpm_file_to_image(game->mlx,"./sprits/char_select.xpm" , &screen_width, &screen_height);
@@ -66,17 +66,9 @@ void	open_peach(t_game *game, int title_size)
 
 void	handle_char_select(t_game *game)
 {
-	int	max_side;
 	int	side;
 
-	max_side = mapWidth;
-	side = 0.3 * screenWidth;
-	if (mapHeight > mapWidth)
-	{
-		max_side = mapHeight;
-		side = 0.3 * screenHeight;
-	}
-	side = (side / max_side) / 256;
+	side = 256;
 	if(game->key.rotate_l)
 		game->char_select = 0;
 	if(game->key.rotate_r)
@@ -93,10 +85,8 @@ void	handle_char_select(t_game *game)
 			open_luigi(game, side);
 		else
 			open_peach(game, side);
-		max_side = screenHeight;
-		side = screenWidth;
 		game->menu = malloc(sizeof(t_data));
-		game->menu[0].img = mlx_xpm_file_to_image(game->mlx,"./sprits/controls.xpm" , &side, &max_side);
+		game->menu[0].img = mlx_xpm_file_to_image(game->mlx,"./sprits/controls.xpm" , &side, &side);
 		game->menu[0].addr=  mlx_get_data_addr(game->menu[0].img, &game->menu[0].bits_per_pixel, &game->menu[0].line_length,
 							&game->menu[0].endian);
 	}

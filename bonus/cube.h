@@ -74,6 +74,14 @@ typedef struct	s_map {
 	double	plane_y;
 }				t_map;
 
+typedef struct 	s_door {
+	int	pos_x;
+	int	pos_y;
+	int	mode;
+	long long first_time;
+	double	x;
+} t_door;
+
 typedef	struct	s_game {
 	int			floor_color;
 	int			ceiling_color;
@@ -84,6 +92,8 @@ typedef	struct	s_game {
 	int			mode;
 	double		speed;
 	int			char_select;
+	int			door_num;
+	t_door		*doors;
 	t_char		my_char;
 	t_data		*menu;
 	t_data		img;
@@ -158,9 +168,9 @@ void			get_sprites(t_game *game);
 
 
 t_data	get_texture(t_ray  ray, t_game game);
-void	dda(t_ray *ray, t_game game, int f);
+void	dda(t_ray *ray, t_game game);
 void	side_dist_init(t_ray *ray, t_map map);
-void	calc_texture(t_ray *ray, t_game game, int f);
+void	calc_texture(t_ray *ray, t_game game);
 void	ray_init(t_ray *ray, t_game game, int x);
 void	raycast(t_game game);
 void	 cpy_img(t_game *game);
@@ -199,5 +209,13 @@ void	display_controls(t_game *game);
 void	handle_controls(t_game *game);
 t_data	get_texture(t_ray  ray, t_game game);
 
+#include "cube.h"
+
+
+//if in front of door return the door index, if not in front of any door return -1;
+
+int handle_doors(t_game *game);
+int    get_door_index(t_game *game, int x, int y);
+int    check_doors(t_game *game);
 
 #endif

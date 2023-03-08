@@ -6,9 +6,9 @@ int	worldMap[mapWidth][mapHeight]=
 	{ 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,7,7,7,7,7,7,7,7 },
 	{ 4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7 },
 	{ 4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7 },
-	{ 4,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7 },
+	{ 4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7 },
 	{ 4,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7 },
-	{ 4,0,4,0,0,0,0,5,9,5,5,5,5,5,5,5,7,7,0,7,7,7,7,7 },
+	{ 4,0,4,0,0,0,0,5,5,5,9,5,5,5,5,5,7,7,0,7,7,7,7,7 },
 	{ 4,0,5,0,0,0,0,5,0,5,0,5,0,5,0,5,7,0,0,0,7,7,7,1 },
 	{ 4,0,6,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8 },
 	{ 4,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,1 },
@@ -94,10 +94,10 @@ int check_valid_cam(t_game *game, int signal)
 
 	ray_init(&ray_1, *game, (screenWidth / 2) - 2 );
 	side_dist_init(&ray_1, game->map);
-	dda(&ray_1, *game, 0);
+	dda(&ray_1, *game);
 	ray_init(&ray_2, *game, (screenWidth / 2) + 2 );
 	side_dist_init(&ray_2, game->map);
-	dda(&ray_2, *game, 0);
+	dda(&ray_2, *game);
 
 	aux_1 = game->map.dir_x;
 	aux_3 = game->map.dir_y;
@@ -129,10 +129,10 @@ int check_valid_pos(t_game *game, int signal, double speed)
 
 	ray_init(&ray_1, *game, (screenWidth / 2) - 2 );
 	side_dist_init(&ray_1, game->map);
-	dda(&ray_1, *game, 0);
+	dda(&ray_1, *game);
 	ray_init(&ray_2, *game, (screenWidth / 2) + 2 );
 	side_dist_init(&ray_2, game->map);
-	dda(&ray_2, *game, 0);
+	dda(&ray_2, *game);
 	if (game->key.shift)
 		speed = 0.12;
 	pos_x = (int)(game->map.pos_x + signal * game->map.dir_x * speed);
@@ -215,6 +215,7 @@ int	game_loop(t_game *game)
 	if (game->mode == 4)
 	{
 		handle_key(game);
+		handle_doors(game);
 		raycast(*game);
 	}
 	else if (game->mode == 1)
@@ -226,7 +227,6 @@ int	game_loop(t_game *game)
 	{
 		display_char_select(game);
 		handle_char_select(game);
-		game->key.space = 0;
 	}
 	else if (game->mode == 3)
 	{
@@ -267,7 +267,13 @@ int main(void)
 	game.menu = malloc(sizeof(t_data) * 3);
 
 	open_menu(&game);
-	
+	game.doors = malloc(sizeof(t_door));
+	game.door_num = 1;
+	game.doors[0].pos_x = 5;
+	game.doors[0].pos_y = 10;
+	game.doors[0].first_time = 0;
+	game.doors[0].mode = 1;
+	game.doors[0].x = 1;
 	mlx_hook(game.mlx_win, 2, (1L<<0), &handle_press,  &game);
 	mlx_hook(game.mlx_win, 3, (1L<<1), &handle_release,  &game);
 	mlx_loop_hook(game.mlx, &game_loop, &game);

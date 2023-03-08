@@ -263,8 +263,8 @@ void	raycast(t_game game)
 
 		ray_init(&ray, game, x);
 		side_dist_init(&ray, game.map);
-		dda(&ray, game, f);
-		calc_texture(&ray, game, f);
+		dda(&ray, game);
+		calc_texture(&ray, game);
 		y = 0;
 		while (y++ < ray. draw_start)
 			my_mlx_pixel_put(&game.img, x, y, sky_color(x, y));
@@ -332,7 +332,7 @@ void	ray_init(t_ray *ray, t_game game, int x)
 
 
 /*    ok  */
-void	calc_texture(t_ray *ray, t_game game, int f)
+void	calc_texture(t_ray *ray, t_game game)
 {
 	ray->line_heigh = (int)(screenHeight / ray->perpwalldist);
 	ray->draw_start = -ray->line_heigh / 2 + screenHeight / 2 + ray->pitch;
@@ -348,7 +348,7 @@ void	calc_texture(t_ray *ray, t_game game, int f)
 		ray->wall_x = game.map.pos_x + ray->perpwalldist * ray->raydir_x;
 	ray->wall_x -= floor((ray->wall_x));
 	if (worldMap[ray->map_x][ray->map_y] == 9)
-		ray->tex_x = (int)((ray->wall_x  + (f * (1.0 / 7))) * (double)texWidth);
+		ray->tex_x = (int)((ray->wall_x  - (game.doors[0].x)) * (double)texWidth);
 	else
 		ray->tex_x = (int)(ray->wall_x * (double)texWidth);
 	if (ray->side == 0 && ray->raydir_x > 0)
@@ -386,9 +386,12 @@ void	side_dist_init(t_ray *ray, t_map map)
 }
 
 /* Ok */
-void 	door_dda(t_ray *ray, t_game game, int f)
+void 	door_dda(t_ray *ray, t_game game)
 {
-	double wall;
+	double 	wall;
+	//int		index;
+
+	//index = get_door_index(&game, ray->map_x, ray->map_y);
 
 	ray->door = 1;
 	if (ray->side == 0)
@@ -396,7 +399,7 @@ void 	door_dda(t_ray *ray, t_game game, int f)
 	else
 		wall = game.map.pos_x + (ray->sidedist_x - ray->deltadist_x)  * ray->raydir_x;
 	wall -= floor((wall));
-	if (wall < f * 0.1)
+	if (wall > game.doors[0].x)
 		ray->hit = 0;
 	else
 		ray->hit = 1;
@@ -404,9 +407,13 @@ void 	door_dda(t_ray *ray, t_game game, int f)
 
 
 /*  OK  */
-void	dda(t_ray *ray, t_game game, int f)
+void	dda(t_ray *ray, t_game game)
 {
+	int index;
+
 	ray->door = 0;
+	index = get_door_index(&game, ray->map_x, ray->map_y);
+	// game.doors[index].mode ==
 	while (ray->hit == 0)
 	{
 		if(ray->sidedist_x < ray->sidedist_y)
@@ -421,9 +428,9 @@ void	dda(t_ray *ray, t_game game, int f)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 		}
-		if (worldMap[ray->map_x][ray->map_y] == 9)
-			door_dda(ray, game, f);
-		else if(worldMap[ray->map_x][ray->map_y] > 0)
+		if (worldMap[ray->map_x][ray->map_y] == 9 && game.doors[0].mode != 4)
+			door_dda(ray, game);
+		else if(worldMap[ray->map_x][ray->map_y] > 0 && game.doors[0].mode != 4)
 			ray->hit = 1;
 	}
 	if(ray->side == 0)
