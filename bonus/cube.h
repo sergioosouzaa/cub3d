@@ -153,7 +153,6 @@ typedef struct s_ray {
 
 unsigned int	get_color(t_data *data, int x, int y);
 void			my_mlx_pixel_put(t_data *data, int x, int y, int color);
-void			print_floor(t_data *img, int floor_color, int ceiling_color);
 void			get_sprites(t_game *game);
 
 
@@ -196,7 +195,8 @@ void	open_peach(t_game *game, int title_size);
 void	open_luigi(t_game *game, int title_size);
 
 int worldMap[mapWidth][mapHeight];
-
+void	display_controls(t_game *game);
+void	handle_controls(t_game *game);
 t_data	get_texture(t_ray  ray, t_game game);
 
 

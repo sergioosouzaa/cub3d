@@ -41,46 +41,21 @@ void game_init(t_game *game, t_map pos)
 	game->map = pos;
 }
 
-void	print_floor(t_data *img, int floor_color, int ceiling_color)
-{
-	int i;
-	int	j;
-	i = 0;
-	j = 0;
-	while (i < screenWidth)
-	{
-		j = 0;
-		while (j < screenHeight)
-		{
-			if (j < (screenHeight / 4) * 3)
-				my_mlx_pixel_put(img, i, j, floor_color);
-			else
-				my_mlx_pixel_put(img, i, j, ceiling_color);
-			j++;
-		}
-		i++;
-	}
-}
-
 void	get_sprites(t_game *game)
 {
-	// int x;
-	// int	y;
-
-	// x 
 	game->door.img = mlx_xpm_file_to_image(game->mlx, "./sprits/door.xpm", &game->size_txt, &game->size_txt);
 	game->door.addr=  mlx_get_data_addr(game->door.img, &game->door.bits_per_pixel, &game->door.line_length,
 							&game->door.endian);
-	game->img_1.img = mlx_xpm_file_to_image(game->mlx, "./sprits/star_road1.xpm", &game->size_txt, &game->size_txt);
+	game->img_1.img = mlx_xpm_file_to_image(game->mlx, "./sprits/sprite1.xpm", &game->size_txt, &game->size_txt);
 	game->img_1.addr = mlx_get_data_addr(game->img_1.img, &game->img_1.bits_per_pixel, &game->img_1.line_length,
 							&game->img_1.endian);
-	game->img_2.img = mlx_xpm_file_to_image(game->mlx, "./sprits/star_road1.xpm", &game->size_txt, &game->size_txt);
+	game->img_2.img = mlx_xpm_file_to_image(game->mlx, "./sprits/sprite2.xpm", &game->size_txt, &game->size_txt);
 	game->img_2.addr = mlx_get_data_addr(game->img_2.img, &game->img_2.bits_per_pixel, &game->img_2.line_length,
 							&game->img_2.endian);
-	game->img_3.img = mlx_xpm_file_to_image(game->mlx, "./sprits/star_road1.xpm", &game->size_txt, &game->size_txt);
+	game->img_3.img = mlx_xpm_file_to_image(game->mlx, "./sprits/sprite3.xpm", &game->size_txt, &game->size_txt);
 	game->img_3.addr = mlx_get_data_addr(game->img_3.img, &game->img_3.bits_per_pixel, &game->img_3.line_length,
 							&game->img_3.endian);
-	game->img_4.img = mlx_xpm_file_to_image(game->mlx, "./sprits/star_road2.xpm", &game->size_txt, &game->size_txt);
+	game->img_4.img = mlx_xpm_file_to_image(game->mlx, "./sprits/sprite4.xpm", &game->size_txt, &game->size_txt);
 	game->img_4.addr = mlx_get_data_addr(game->img_4.img, &game->img_4.bits_per_pixel, &game->img_4.line_length,
 							&game->img_4.endian);
 }

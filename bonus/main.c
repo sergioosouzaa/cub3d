@@ -35,7 +35,7 @@ t_map	get_pos(void)
 
 	map.pos_x = 8.0;
 	map.pos_y = 4.0;
-	map.dir_x = -0.5;
+	map.dir_x = -0.7;
 	map.dir_y = 0.0;
 	map.plane_x = 0.00;
 	map.plane_y = 0.66;
@@ -185,9 +185,6 @@ int	handle_key(t_game *game)
 
 
 
-
-
-
 void	display_char_select(t_game *game)
 {
 	static long long last_time;
@@ -215,7 +212,7 @@ void	display_char_select(t_game *game)
 
 int	game_loop(t_game *game)
 {
-	if (game->mode == 3)
+	if (game->mode == 4)
 	{
 		handle_key(game);
 		raycast(*game);
@@ -229,6 +226,12 @@ int	game_loop(t_game *game)
 	{
 		display_char_select(game);
 		handle_char_select(game);
+		game->key.space = 0;
+	}
+	else if (game->mode == 3)
+	{
+		display_controls(game);
+		handle_controls(game);
 	}
 	return (0);
 }
