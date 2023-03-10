@@ -98,9 +98,9 @@ void	draw_sprites(int *ZBuffer, t_game *game)
       int spriteScreenX = (int)((screenHeight / 2) * (1 + transformX / transformY));
 
       //parameters for scaling and moving the sprites
-      #define uDiv 4
-      #define vDiv 4
-      #define vMove screenHeight * 1.0
+      #define uDiv 8
+      #define vDiv 8
+      #define vMove 64
       int vMoveScreen = (int)(vMove / transformY);
 
       //calculate height of the sprite on screen
@@ -403,7 +403,7 @@ void	ray_init(t_ray *ray, t_game game, int x)
 		ray->deltadist_y = 1e30;
 	else
 		ray->deltadist_y = fabs( 1 / ray->raydir_y);
-	ray->pitch = 100;
+	ray->pitch = 0;
 }
 
 

@@ -209,6 +209,23 @@ void	display_char_select(t_game *game)
 	}
 }
 
+void move_bowser(t_game *game)
+{
+	static long long time;
+
+	if (get_first_time() - time > 100)
+	{
+		time = get_first_time();
+		if (game->sprites[0].pos_x < game->map.pos_x && worldMap[(int)(game->sprites[0].pos_x + 0.08)][(int)game->sprites[0].pos_x] < 1)
+			game->sprites[0].pos_x = game->sprites[0].pos_x + 0.08;
+		if (game->sprites[0].pos_x > game->map.pos_x && worldMap[(int)(game->sprites[0].pos_x - 0.08)][(int)game->sprites[0].pos_y] < 1)
+			game->sprites[0].pos_x = game->sprites[0].pos_x - 0.08;
+		if (game->sprites[0].pos_y < game->map.pos_y && worldMap[(int)game->sprites[0].pos_x][(int)(game->sprites[0].pos_y + 0.08)] < 1)
+			game->sprites[0].pos_y = game->sprites[0].pos_y + 0.08;
+		if (game->sprites[0].pos_y > game->map.pos_y && worldMap[(int)game->sprites[0].pos_x][(int)(game->sprites[0].pos_y - 0.08)] < 1)
+			game->sprites[0].pos_y = game->sprites[0].pos_y - 0.08;
+	}
+}
 
 int	game_loop(t_game *game)
 {
@@ -216,6 +233,7 @@ int	game_loop(t_game *game)
 	{
 		handle_key(game);
 		handle_doors(game);
+		move_bowser(game);
 		raycast(*game);
 	}
 	else if (game->mode == 1)
