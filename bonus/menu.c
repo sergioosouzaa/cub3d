@@ -35,11 +35,11 @@ void	display_menu(t_game *game)
 
 int	handle_menu(t_game *game)
 {
-	int screen_width;
-	int screen_height;
+	// int screen_width;
+	// int screen_height;
 
-	screen_width = screenWidth;
-	screen_height = screenHeight;
+	// screen_width = screenWidth;
+	// screen_height = screenHeight;
 	if (game->key.space)
 	{
 		mlx_destroy_image(game->mlx, game->menu[0].img);

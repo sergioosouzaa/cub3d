@@ -57,6 +57,8 @@ int	handle_press(int key, t_game *game)
 		game->key.space = 1;
 	if (key == KEY_SHIFT)
 		game->key.shift = 1;
+	if (key == KEY_ESC)
+		game->key.esc = 1;
 	return (0);
 }
 
@@ -80,6 +82,7 @@ int handle_release(int key, t_game *game)
 		game->key.space = 0;
 	if (key == KEY_SHIFT)
 		game->key.shift = 0;
+	//mouse_rotate(game);
 	return (0);
 }
 
@@ -179,17 +182,30 @@ int	handle_key(t_game *game)
 	{
 		check_valid_cam(game, 1);
 	}
-
+	if (game->key.esc)
+		exit_close();
 	return (0);
 }
 
+
+// void	mouse_rotate(t_game *game)
+// {
+// 	mlx_mouse_get_pos(game->mlx, &x, &y);
+// 	if (x - y > 0)
+// 	{
+// 		game->key.rotate_l = 1;
+// 		usleep(30);
+// 		game->key.rotate_l = 0;
+// 	}
+// 	mlx_mouse_move(game->mlx, screenWidth / 2, screenHeight / 2);
+// }
 
 
 void	display_char_select(t_game *game)
 {
 	static long long last_time;
 	static	int			i;
-
+	
 	if (get_first_time() - last_time > 150)
 	{
 		i = (i + 1) % 2;
@@ -214,6 +230,12 @@ int	game_loop(t_game *game)
 {
 	if (game->mode == 4)
 	{
+		if (game->song == 1)
+		{
+			system("killall afplay");
+			system("afplay ./sounds/game.mp3 &");
+			game->song = 2;
+		}
 		handle_key(game);
 		handle_doors(game);
 		raycast(*game);
@@ -227,6 +249,7 @@ int	game_loop(t_game *game)
 	{
 		display_char_select(game);
 		handle_char_select(game);
+		game->song = 1;
 	}
 	else if (game->mode == 3)
 	{
@@ -250,8 +273,6 @@ t_keys	init_keys(void)
 	return (key);
 }
 
-
-
 int main(void)
 {
 	t_map	pos;
@@ -263,7 +284,10 @@ int main(void)
 	game_init(&game, pos);
 	create_sprites(&game);
 	game.key = init_keys();
+	//mlx_mouse_get_pos(game.mlx_win, &game.mouse_pos_x, &game.mouse_pos_y);
+	//printf("%d\n %d\n", game.(&mouse_pos_x), game.(&mouse_pos_y));
 	game.mode = 1;
+	system("afplay ./sounds/init.mp3 &");
 	game.menu = malloc(sizeof(t_data) * 3);
 
 	open_menu(&game);

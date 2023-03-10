@@ -50,3 +50,10 @@ int	mlx_mouse_get_pos(mlx_win_list_t *win, int *x, int *y)
   *y = NSHeight(pos) - 1 - point.y;
   return (0);
 }
+
+// void mlx_set_mouse_pos(void *win_ptr, int x, int y)
+// {
+// 	MLX_NONNULL(win_ptr);
+
+// 	glfwSetCursorPos(win_ptr, (double)x, (double)y);
+// }

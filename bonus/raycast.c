@@ -409,10 +409,8 @@ void 	door_dda(t_ray *ray, t_game game)
 /*  OK  */
 void	dda(t_ray *ray, t_game game)
 {
-	int index;
 
 	ray->door = 0;
-	index = get_door_index(&game, ray->map_x, ray->map_y);
 	// game.doors[index].mode ==
 	while (ray->hit == 0)
 	{

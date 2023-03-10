@@ -59,3 +59,10 @@ void	get_sprites(t_game *game)
 	game->img_4.addr = mlx_get_data_addr(game->img_4.img, &game->img_4.bits_per_pixel, &game->img_4.line_length,
 							&game->img_4.endian);
 }
+
+int exit_close()
+{
+	system("killall afplay");
+	exit(0);
+	return (0);
+}

@@ -90,6 +90,7 @@ typedef	struct	s_game {
 	int			size_txt;
 	long long	first_time;
 	int			mode;
+	int			song;
 	double		speed;
 	int			char_select;
 	int			door_num;
@@ -108,6 +109,8 @@ typedef	struct	s_game {
 	t_sprite	*sprites;
 	int			sprite_num;
 	long long	time;
+	int			mouse_pos_x;
+	int			mouse_pos_y;
 }				t_game;
 
 
@@ -208,6 +211,8 @@ int worldMap[mapWidth][mapHeight];
 void	display_controls(t_game *game);
 void	handle_controls(t_game *game);
 t_data	get_texture(t_ray  ray, t_game game);
+int exit_close();
+void	mouse_rotate(t_game *game);
 
 #include "cube.h"
 
