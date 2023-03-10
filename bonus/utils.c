@@ -20,12 +20,19 @@ unsigned int get_color(t_data *data, int x, int y)
 void create_sprites(t_game *game)
 {
 	game->sprites = malloc(sizeof(t_sprite) * 2);
-	game->sprites[0].pos_x = 10;
-	game->sprites[0].pos_y = 4;
-	game->sprites[1].pos_x = 10;
-	game->sprites[1].pos_y = 4;
-	game->sprites->sprite = 0;
-	
+	game->sprites[0].pos_x = 21.5;
+	game->sprites[0].pos_y = 1.5;
+	game->sprites[1].pos_x = 3;
+	game->sprites[1].pos_y = 8;
+	int size = 64;
+	game->sprite_num = 1;
+	// game->sprites->sprite = 0;
+	game->sprites[0].texture_1.img = mlx_xpm_file_to_image(game->mlx, "./sprits/bowser1.xpm", &size, &size);
+	game->sprites[0].texture_1.addr=  mlx_get_data_addr(game->sprites[0].texture_1.img, &game->sprites[0].texture_1.bits_per_pixel, &game->sprites[0].texture_1.line_length,
+							&game->sprites[0].texture_1.endian);
+	game->sprites[1].texture_1.img = mlx_xpm_file_to_image(game->mlx, "./sprits/bowser1.xpm", &size, &size);
+	game->sprites[1].texture_1.addr=  mlx_get_data_addr(game->sprites[1].texture_1.img, &game->sprites[1].texture_1.bits_per_pixel, &game->sprites[1].texture_1.line_length,
+							&game->sprites[1].texture_1.endian);
 	game->mode = 1;
 }
 

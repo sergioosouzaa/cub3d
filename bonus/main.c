@@ -33,9 +33,9 @@ t_map	get_pos(void)
 {
 	t_map	map;
 
-	map.pos_x = 8.0;
-	map.pos_y = 4.0;
-	map.dir_x = -0.7;
+	map.pos_x = 22.0;
+	map.pos_y = 11.5;
+	map.dir_x = -1.0;
 	map.dir_y = 0.0;
 	map.plane_x = 0.00;
 	map.plane_y = 0.66;
@@ -137,7 +137,7 @@ int check_valid_pos(t_game *game, int signal, double speed)
 		speed = 0.12;
 	pos_x = (int)(game->map.pos_x + signal * game->map.dir_x * speed);
 	pos_y = (int)(game->map.pos_y + signal * game->map.dir_y * speed);
-	if (pos_x > 0 && pos_x < mapWidth && pos_y > 0 && pos_y < mapHeight && worldMap[pos_x][pos_y] < 1)
+	if (pos_x > 0 && pos_x < mapWidth && pos_y > 0 && pos_y < mapHeight && (worldMap[pos_x][pos_y] < 1 || worldMap[pos_x][pos_y] == 9))
 	{
 		if ((ray_1.perpwalldist >= 1.5 &&  ray_2.perpwalldist >= 1.5)|| signal == -1)
 			return (1);

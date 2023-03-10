@@ -1,9 +1,5 @@
 #include "cube.h"
 
-
- /// JUNTAR FUNCÇOES ////////
-
-
 int sky_color(int x, int y)
 {
 	static int offset;
@@ -70,74 +66,156 @@ void	sort_sprites(int *sprite_order, int *sprite_dist, int sprite_num)
 	}
 }
 
-/* arquivo sprites  */
-void 	draw_sprites(int *perpedist, t_game *game)
+void	draw_sprites(int *ZBuffer, t_game *game)
 {
-	int	sprite_order[game->sprite_num];
-	int	sprite_dist[game->sprite_num];
-	int i;
+	int spriteOrder[ game->sprite_num];
+	int spriteDistance[ game->sprite_num];
 
-	i  = 0;
-	while(i < game->sprite_num)
-	{
-		sprite_order[i] = i;
-		sprite_dist[i] = ((game->map.pos_x - game->sprites[i].pos_x) * (game->map.pos_x - game->sprites[i].pos_x)) + ((game->map.pos_y - game->sprites[i].pos_y) * (game->map.pos_y - game->sprites[i].pos_y));
-		i++;
-	}
-	sort_sprites(sprite_order, sprite_dist, game->sprite_num);
-	i = 0;
-	while (i < game->sprite_num)
-	{
-		double sprite_x = game->sprites[sprite_order[i]].pos_x - game->map.pos_x;
-		double sprite_y = game->sprites[sprite_order[i]].pos_y - game->map.pos_y;
-		double invers_det = 1.0 / (game->map.plane_x * game->map.dir_y - game->map.plane_y * game->map.dir_x);
-		double	new_x =  invers_det * (game->map.dir_y * sprite_x - game->map.dir_x * sprite_y);
-		double	new_y =  invers_det * (-game->map.plane_y * sprite_x - game->map.plane_x * sprite_y);
+	for(int i = 0; i < game->sprite_num; i++)
+    {
+      spriteOrder[i] = i;
+      spriteDistance[i] = ((game->map.pos_x - game->sprites[i].pos_x) * (game->map.pos_x - game->sprites[i].pos_x) + (game->map.pos_y - game->sprites[i].pos_y) * (game->map.pos_y - game->sprites[i].pos_y)); //sqrt not taken, unneeded
+    }
+    sort_sprites(spriteOrder, spriteDistance, game->sprite_num);
 
-		int sprite_pos_x = (int)((screenWidth / 2) * (1 + new_x / new_y));
-		int	udiv = 1;
-		int vdiv = 1;
-		double vmove = 0;
-		int v_move_screen =  (int)(vmove / new_y);
-		int sprite_height = abs((int)(screenHeight / new_y)) / vdiv;
-		int draw_start_y = -sprite_height / 2 + screenHeight / 2 + v_move_screen;
-		if (draw_start_y < 0)
-			draw_start_y = 0;
-		int draw_end_y = sprite_height / 2 + screenHeight / 2 + v_move_screen;
-		if (draw_start_y >= screenHeight)
-			draw_start_y = screenHeight - 1;
+    //after sorting the sprites, do the projection and draw them
+    for(int i = 0; i < game->sprite_num; i++)
+    {
+      //translate sprite position to relative to camera
+      double spriteX = game->sprites[spriteOrder[i]].pos_x - game->map.pos_x;
+      double spriteY = game->sprites[spriteOrder[i]].pos_y - game->map.pos_y;
 
-		int	sprite_width = abs((int)(screenHeight / new_y)) / udiv;
-		int	draw_start_x = -sprite_width / 2 + sprite_pos_x;
-		if (draw_start_x < 0)
-			draw_start_x = 0;
-		int draw_end_x = sprite_width / 2 + sprite_pos_x;
-		if (draw_end_x > screenWidth - 1)
-			draw_end_x = screenWidth - 1;
-		int stripe = draw_start_x;
-		while (stripe < draw_end_x)
-		{
-			int tex_x =  (int)(256 * (stripe - (-sprite_width / 2 + sprite_pos_x)) * (texWidth / 4) / sprite_width) / 256;
-			if (new_y > 0 && new_y < perpedist[stripe] && stripe > 0 && stripe < screenWidth)
-			{
-				int p;
-				p = draw_start_y;
-				while (p < draw_end_y)
-				{
-					int d = (p - v_move_screen) * 256 - screenHeight * 128 + sprite_height * 128;
-					int tex_y = ((d * texHeight / 4) / sprite_height) / 256;
-					int color = get_color(&game->img_2, tex_x, tex_y);
-					if (((color >> 24) & 0xFF) != 0xFF)
-						my_mlx_pixel_put(&game->img, stripe, p, color);
-					
-					p++;
-				}
-			}
-			stripe++;
-		}
-		i++;
-	}
+      //transform sprite with the inverse camera matrix
+      // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
+      // [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
+      // [ planeY   dirY ]                                          [ -planeY  planeX ]
+
+      double invDet = 1.0 / (game->map.plane_x * game->map.dir_y - game->map.dir_x * game->map.plane_y); //required for correct matrix multiplication
+
+      double transformX = invDet * (game->map.dir_y * spriteX - game->map.dir_x * spriteY);
+      double transformY = invDet * (-game->map.plane_y * spriteX + game->map.plane_x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
+
+      int spriteScreenX = (int)((screenHeight / 2) * (1 + transformX / transformY));
+
+      //parameters for scaling and moving the sprites
+      #define uDiv 1
+      #define vDiv 1
+      #define vMove 0.0
+      int vMoveScreen = (int)(vMove / transformY);
+
+      //calculate height of the sprite on screen
+      int spriteHeight = abs((int)(screenHeight / (transformY))) / vDiv; //using "transformY" instead of the real distance prevents fisheye
+      //calculate lowest and highest pixel to fill in current stripe
+      int drawStartY = -spriteHeight / 2 + screenHeight / 2 + vMoveScreen;
+      if(drawStartY < 0) drawStartY = 0;
+      int drawEndY = spriteHeight / 2 + screenHeight / 2 + vMoveScreen;
+      if(drawEndY >= screenHeight) drawEndY = screenHeight - 1;
+
+      //calculate width of the sprite
+      int spriteWidth = abs((int) (screenHeight / (transformY))) / uDiv; // same as height of sprite, given that it's square
+      int drawStartX = -spriteWidth / 2 + spriteScreenX;
+      if(drawStartX < 0) drawStartX = 0;
+      int drawEndX = spriteWidth / 2 + spriteScreenX;
+      if(drawEndX > screenWidth) drawEndX = screenWidth;
+
+      //loop through every vertical stripe of the sprite on screen
+      for(int stripe = drawStartX; stripe < drawEndX; stripe++)
+      {
+        int texX = (int)(256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth) / 256;
+        //the conditions in the if are:
+        //1) it's in front of camera plane so you don't see things behind you
+        //2) ZBuffer, with perpendicular distance
+        if(transformY > 0 && transformY < ZBuffer[stripe])
+        {
+          for(int y = drawStartY; y < drawEndY; y++) //for every pixel of the current stripe
+          {
+            int d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
+            int texY = ((d * texHeight) / spriteHeight) / 256;
+            int color = get_color(&game->sprites[spriteOrder[i]].texture_1,texX,  texY);    //get current color from the texture
+            if((color & 0x00FFFFFF) != 0) my_mlx_pixel_put(&game->img, stripe, y, color); //paint pixel if it isn't black, black is the invisible color
+          }
+        }
+      }
+    }
 }
+
+// /* arquivo sprites  */
+// void 	draw_sprites(int *perpedist, t_game *game)
+// {
+// 	int	sprite_order[game->sprite_num];
+// 	int	sprite_dist[game->sprite_num];
+// 	int i;
+
+// 	i  = 0;
+// 	while(i < game->sprite_num)
+// 	{
+// 		sprite_order[i] = i;
+// 		sprite_dist[i] = ((game->map.pos_x - game->sprites[i].pos_x) * (game->map.pos_x - game->sprites[i].pos_x)) + ((game->map.pos_y - game->sprites[i].pos_y) * (game->map.pos_y - game->sprites[i].pos_y));
+// 		i++;
+// 	}
+// 	sort_sprites(sprite_order, sprite_dist, game->sprite_num);
+// 	i = 0;
+// 	while (i < game->sprite_num)
+// 	{
+// 		double sprite_x = game->sprites[sprite_order[i]].pos_x - game->map.pos_x;
+// 		double sprite_y = game->sprites[sprite_order[i]].pos_y - game->map.pos_y;
+// 		double invers_det = 1.0 / (game->map.plane_x * game->map.dir_y - game->map.plane_y * game->map.dir_x);
+// 		double	new_x =  invers_det * (game->map.dir_y * sprite_x - game->map.dir_x * sprite_y);
+// 		double	new_y =  invers_det * (-game->map.plane_y * sprite_x - game->map.plane_x * sprite_y);
+
+// 		int sprite_pos_x = (int)((screenWidth / 2) * (1 + new_x / new_y));
+// 		double vmove = screenHeight;
+// 		int v_move_screen =  (int)(vmove / new_y);
+// 		int sprite_height = (abs((int)(screenHeight / new_y)))/4;
+// 		int draw_start_y = -sprite_height / 2 + screenHeight / 2;
+// 		if (draw_start_y < 0)
+// 			draw_start_y = 0;
+// 		int draw_end_y = sprite_height / 2 + screenHeight / 2 + v_move_screen;
+// 		if (draw_start_y >= screenHeight)
+// 			draw_start_y = screenHeight - 1;
+
+// 		int	sprite_width = (abs((int)(screenHeight / new_y)) / 4);
+// 		int	draw_start_x = -sprite_width / 2 + sprite_pos_x;
+// 		if (draw_start_x < 0)
+// 			draw_start_x = 0;
+// 		int draw_end_x = sprite_width / 2 + sprite_pos_x;
+// 		if (draw_end_x > screenWidth - 1)
+// 			draw_end_x = screenWidth - 1;
+// 		int stripe = draw_start_x;
+// 		while (stripe < draw_end_x)
+// 		{
+// 			int tex_x = (64 / (draw_end_x - draw_start_x)) * (stripe - draw_start_x); 
+// 			// (int)(256 * (stripe - (-sprite_width / 2 + sprite_pos_x)) * (texWidth) / sprite_width) / 256;
+// 			if (new_y > 0 && new_y < perpedist[stripe] && stripe > 0 && stripe < screenWidth)
+// 			{
+// 				int p;
+// 				p = draw_start_y;
+// 				while (p < draw_end_y)
+// 				{
+// 					// int d = (p) * 256 - screenHeight * 128 + sprite_height * 128;
+// 					int tex_y = (((p  - draw_start_y) * 64) / (draw_end_y - draw_start_y));
+// 					if (tex_x > 63)
+// 						tex_x = 63;
+// 					if (tex_x < 0)
+// 						tex_x = 0;
+// 					if (tex_y > 63)
+// 						tex_y = 63;
+// 					if (tex_y < 0)
+// 						tex_y = 0;
+// 					// printf("%d %d\n", tex_x, tex_y);
+// 					int color = get_color(&game->sprites[i].texture_1, tex_x, tex_y);
+// 					if (((color >> 24) & 0xFF) != 0xFF)
+// 						my_mlx_pixel_put(&game->img, stripe, p, color);
+					
+// 					p++;
+// 				}
+// 				// printf("%d %d \n", draw_start_y, draw_end_y);
+// 			}
+// 			stripe++;
+// 		}
+// 		i++;
+// 	}
+// }
 
 
 
@@ -291,7 +369,7 @@ void	raycast(t_game game)
 		x++;
 	}
 	game.sprite_num = 1;
-	// draw_sprites(perpedist, &game);
+	draw_sprites(perpedist, &game);
 	int x_mini;
 	int y_mini;
 
@@ -409,10 +487,10 @@ void 	door_dda(t_ray *ray, t_game game)
 /*  OK  */
 void	dda(t_ray *ray, t_game game)
 {
-	int index;
+	// int index;
 
 	ray->door = 0;
-	index = get_door_index(&game, ray->map_x, ray->map_y);
+	// index = get_door_index(&game, ray->map_x, ray->map_y);
 	// game.doors[index].mode ==
 	while (ray->hit == 0)
 	{
@@ -428,9 +506,9 @@ void	dda(t_ray *ray, t_game game)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 		}
-		if (worldMap[ray->map_x][ray->map_y] == 9 && game.doors[0].mode != 4)
+		if (worldMap[ray->map_x][ray->map_y] == 9)
 			door_dda(ray, game);
-		else if(worldMap[ray->map_x][ray->map_y] > 0 && game.doors[0].mode != 4)
+		else if(worldMap[ray->map_x][ray->map_y] > 0)
 			ray->hit = 1;
 	}
 	if(ray->side == 0)
