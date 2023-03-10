@@ -98,9 +98,9 @@ void	draw_sprites(int *ZBuffer, t_game *game)
       int spriteScreenX = (int)((screenHeight / 2) * (1 + transformX / transformY));
 
       //parameters for scaling and moving the sprites
-      #define uDiv 1
-      #define vDiv 1
-      #define vMove 0.0
+      #define uDiv 4
+      #define vDiv 4
+      #define vMove screenHeight * 1.0
       int vMoveScreen = (int)(vMove / transformY);
 
       //calculate height of the sprite on screen

@@ -33,8 +33,8 @@ t_map	get_pos(void)
 {
 	t_map	map;
 
-	map.pos_x = 22.0;
-	map.pos_y = 11.5;
+	map.pos_x = 5.0;
+	map.pos_y = 10.5;
 	map.dir_x = -1.0;
 	map.dir_y = 0.0;
 	map.plane_x = 0.00;
