@@ -52,6 +52,9 @@ typedef	struct s_sprite
 	double	pos_x;
 	double	pos_y;
 	int		sprite;
+	int		u_div;
+	int		v_div;
+	t_data	*texture;
 	t_data	texture_1;
 	t_data	texture_2;
 }   t_sprite;

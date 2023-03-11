@@ -77,14 +77,14 @@ void	draw_sprites(int *ZBuffer, t_game *game)
       spriteDistance[i] = ((game->map.pos_x - game->sprites[i].pos_x) * (game->map.pos_x - game->sprites[i].pos_x) + (game->map.pos_y - game->sprites[i].pos_y) * (game->map.pos_y - game->sprites[i].pos_y)); //sqrt not taken, unneeded
     }
     sort_sprites(spriteOrder, spriteDistance, game->sprite_num);
-
+	spriteOrder[0] = 1;
+	spriteOrder[1] = 0;
     //after sorting the sprites, do the projection and draw them
     for(int i = 0; i < game->sprite_num; i++)
     {
       //translate sprite position to relative to camera
       double spriteX = game->sprites[spriteOrder[i]].pos_x - game->map.pos_x;
       double spriteY = game->sprites[spriteOrder[i]].pos_y - game->map.pos_y;
-
       //transform sprite with the inverse camera matrix
       // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
       // [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
@@ -368,7 +368,7 @@ void	raycast(t_game game)
 		perpedist[x] = ray.perpwalldist;
 		x++;
 	}
-	game.sprite_num = 1;
+	game.sprite_num = 2;
 	draw_sprites(perpedist, &game);
 	int x_mini;
 	int y_mini;

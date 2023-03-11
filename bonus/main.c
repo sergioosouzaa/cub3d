@@ -216,15 +216,23 @@ void move_bowser(t_game *game)
 	if (get_first_time() - time > 100)
 	{
 		time = get_first_time();
-		if (game->sprites[0].pos_x < game->map.pos_x && worldMap[(int)(game->sprites[0].pos_x + 0.08)][(int)game->sprites[0].pos_x] < 1)
-			game->sprites[0].pos_x = game->sprites[0].pos_x + 0.08;
-		if (game->sprites[0].pos_x > game->map.pos_x && worldMap[(int)(game->sprites[0].pos_x - 0.08)][(int)game->sprites[0].pos_y] < 1)
-			game->sprites[0].pos_x = game->sprites[0].pos_x - 0.08;
-		if (game->sprites[0].pos_y < game->map.pos_y && worldMap[(int)game->sprites[0].pos_x][(int)(game->sprites[0].pos_y + 0.08)] < 1)
-			game->sprites[0].pos_y = game->sprites[0].pos_y + 0.08;
-		if (game->sprites[0].pos_y > game->map.pos_y && worldMap[(int)game->sprites[0].pos_x][(int)(game->sprites[0].pos_y - 0.08)] < 1)
-			game->sprites[0].pos_y = game->sprites[0].pos_y - 0.08;
+		if (game->sprites[1].pos_x < game->sprites[0].pos_x && worldMap[(int)(game->sprites[1].pos_x + 0.08)][(int)game->sprites[1].pos_x] < 1)
+			game->sprites[1].pos_x = game->sprites[1].pos_x + 0.08;
+		if (game->sprites[1].pos_x > game->sprites[0].pos_x && worldMap[(int)(game->sprites[1].pos_x - 0.08)][(int)game->sprites[1].pos_y] < 1)
+			game->sprites[1].pos_x = game->sprites[1].pos_x - 0.08;
+		if (game->sprites[1].pos_y < game->sprites[0].pos_y && worldMap[(int)game->sprites[1].pos_x][(int)(game->sprites[1].pos_y + 0.08)] < 1)
+			game->sprites[1].pos_y = game->sprites[1].pos_y + 0.08;
+		if (game->sprites[1].pos_y > game->sprites[0].pos_y && worldMap[(int)game->sprites[1].pos_x][(int)(game->sprites[1].pos_y - 0.08)] < 1)
+			game->sprites[1].pos_y = game->sprites[1].pos_y - 0.08;
 	}
+	double camera_x = 2 * (screenWidth / 5  * 3.7) / (double)(screenWidth) - 1;
+	double raydir_x = game->map.dir_x + (game->map.plane_x * camera_x);
+	double raydir_y = game->map.dir_y + (game->map.plane_y * camera_x);
+	double vector = sqrt( raydir_x *  raydir_x +  raydir_y *  raydir_y );
+	game->sprites[0].pos_x = game->map.pos_x +  (raydir_x/ vector) * 0.4;
+	game->sprites[0].pos_y = game->map.pos_y +   (raydir_y / vector) * 0.4;
+	// printf("CHAR %f %f \n", game->map.pos_x,  game->map.pos_y);
+	// printf("%f %f \n", game->sprites[1].pos_x, game->sprites[1].pos_y);
 }
 
 int	game_loop(t_game *game)
