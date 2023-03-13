@@ -1,27 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   validation.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/13 18:36:50 by thsousa           #+#    #+#             */
+/*   Updated: 2023/03/13 18:36:51 by thsousa          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cube.h"
 
-void	invalid_map(char **new_map, t_map *map)
-{
-	(void) map;
-	invalid_char(new_map);
-}
-
-char    **get_map(char **argv)
+char	**get_map(char **argv)
 {
 	int		fd;
-	int		i;
 	char	*str;
 	char	*get;
 
 	str = ft_strdup("");
-	i = 0;
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 		m_erro("Invalid file.\n");
 	if (ft_strrncmp(".cub", argv[1], 4) != 0)
 	{
 		m_erro("Invalid extension.\n");
-		return NULL;
+		return (NULL);
 	}
 	if (!ft_strrncmp(".cub", argv[1], 4))
 	{
@@ -36,79 +40,99 @@ char    **get_map(char **argv)
 	return (ft_split(str, '\n'));
 }
 
-void	invalid_char(char **str_map)
+void	get_pos(char **valid_map, t_map *map)
 {
 	int	i;
 	int	j;
+	int	size;
 
-	j = 0;
-	while (str_map[j])
-	{
-		i = 0;
-		while (str_map[j][i])
-		{
-			if (!ft_strchr("01NS EW", str_map[j][i]))
-				m_erro("Invalid char.\n");
-			i++;
-		}
-		j++;
-	}
-}
-
-void	get_pos(char **valid_map, t_map *map)
-{
-	int		i;
-	int		j;
-	int		size;
-
-	i = 0;
 	j = 0;
 	size = 0;
-	while(valid_map[j])
-	{	
-		i = 0;
-		while(valid_map[j][i])
+	while (valid_map[j])
+	{
+		i = -1;
+		while (valid_map[j][++i])
 		{
-			if (valid_map[j][i] == 'N' || valid_map[j][i] == 'E' ||valid_map[j][i] == 'S' || valid_map[j][i] == 'W')
+			if (valid_map[j][i] == 'N' || valid_map[j][i] == 'E'
+				|| valid_map[j][i] == 'S' || valid_map[j][i] == 'W')
 			{
-				map->pos_x = i;
-				map->pos_y = j;
-				map->dir_x = -1.0;
-				map->dir_y = 0.0;
-				map->plane_x = 0.0;
-				map->plane_y = 0.66;
+				map->pos_x = j;
+				map->pos_y = i;
+				get_direction(valid_map[j][i], map);
 				size++;
 			}
-			i++;
 		}
-	j++;
+		j++;
 	}
 	if (size > 1)
 		m_erro("Invalid player.\n");
 }
 
-void	invalid_config(t_map *map)
+void	get_direction(char player, t_map *map)
 {
-	if ((!map->SO) || (!map->NO) || (!map->WE) || (!map->EA) || (!map->C) || (!map->F) || (!map->pos_x) || (!map->pos_y))
-		m_erro("Map configuration\n");
+	map->dir_x = 0;
+	map->dir_y = 1;
+	if (player == 'N')
+		set_direction(map->dir_y, 1);
+	else if (player == 'W')
+		set_direction(map->dir_x, -1);
+	else if (player == 'E')
+		set_direction(map->dir_x, 1);
+	else if (player == 'S')
+		set_direction(map->dir_y, -1);
+	if (map->dir_x != 0)
+	{
+		map->plane_y = 0.66;
+		map->plane_x = 0;
+	}
+	else
+	{
+		map->plane_y = 0;
+		map->plane_x = 0.66;
+	}
 }
 
+void	fill_map(char **map, t_map *mapa)
+{
+	char	**new;
+	size_t	i;
+	int		j;
 
-// void	is_walls(char **str_map, t_map *map)
-// {
-// 	int	i;
-// 	int	j;
-// 	int	rows;
-// 	int	cols;
+	new = malloc((mapa->lines + 2) * sizeof(char **));
+	j = -1;
+	i = 0;
+	new[i] = ft_strdup(map[0]);
+	while (new[i][++j])
+		new[i][j] = '3';
+	j = 0;
+	while (i < mapa->lines)
+		new[++i] = ft_strdup(map[j++]);
+	new[++i] = ft_strdup(map[0]);
+	j = -1;
+	while (new[i][++j])
+		new[i][j] = '3';
+	new[++i] = NULL;
+	map_border(new, mapa);
+	fill_walls(new, 0, 0, mapa);
+}
 
-// 	i = 0;
-// 	j = 0;
-// 	rows = map->lines - 1;
-// 	cols = map->column - 1;
-// 	while (str_map[i][0] == '1' && str_map[i][cols] == '1' && i < rows)
-// 		i++;
-// 	while (str_map[0][j] == '1' && str_map[rows][j] == '1' && j <= cols)
-// 		j++;
-// 	if (i != rows || j - 1 != cols)
-// 		m_erro("Invalid map: walls.\n");
-// }
+void	fill_walls(char **map, int row, int col, t_map *info)
+{
+	int	y;
+	int	x;
+
+	y = (int)info->lines + 2;
+	x = (int)info->columns + 2;
+	{
+		if ((row < 0 || col < 0 || row >= y || col >= x)
+			|| (map[row][col] != '3' && map[row][col] != '0'))
+			return ;
+		if (map[row][col] == '0')
+			m_erro("Not closed by walls.\n");
+		map[row][col] = '2';
+		fill_walls(map, row + 1, col, info);
+		fill_walls(map, row, col + 1, info);
+		fill_walls(map, row - 1, col, info);
+		fill_walls(map, row, col - 1, info);
+	}
+}

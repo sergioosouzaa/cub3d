@@ -1,29 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   check_space.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/03 14:37:01 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/13 17:38:28 by thsousa          ###   ########.fr       */
+/*   Created: 2023/03/13 18:36:04 by thsousa           #+#    #+#             */
+/*   Updated: 2023/03/13 18:36:05 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "cube.h"
 
-char	*ft_strchr(const char *s, int c)
+int	ft_ispace(char *str)
 {
-	char	*str;
-	char	find;
+	int	i;
 
-	str = (char *)s;
-	find = (char)c;
-	while (*str != find)
-	{
-		if (*str == 0)
-			return (0);
-		str++;
-	}
-	return (str);
+	i = 0;
+	while ((str[i] == ' ') || (str[i] == '\t')
+		|| (str[i] >= 'A' && str[i] <= 'Z'))
+	i++;
+	return (i);
+}
+
+size_t	still_space(char *str)
+{
+	int	len;
+
+	len = ft_strlen(str);
+	while (!ft_isalnum(str[len]))
+		len--;
+	return (len - ft_ispace(str) + 1);
 }

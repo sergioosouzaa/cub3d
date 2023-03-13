@@ -6,21 +6,20 @@
 /*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 14:37:55 by thsousa           #+#    #+#             */
-/*   Updated: 2022/05/24 09:51:12 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/13 17:29:00 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
-char	*ft_strnstr(const char	*str, const char	*needle, size_t n)
+char	*ft_strnstr(const char *str, const char *needle, size_t n)
 {
 	unsigned int	i;
 	unsigned int	j;
 	char			*str1;
-	char			*str2;
 
 	i = 0;
-	str2 = (char *) needle;
-	str1 = (char *) str;
+	str1 = (char *)str;
 	if (needle[i] == '\0')
 		return (&str1[i]);
 	while (str1[i] != '\0' && n > i)
@@ -36,6 +35,6 @@ char	*ft_strnstr(const char	*str, const char	*needle, size_t n)
 			}
 		}
 		i++;
-	}	
+	}
 	return (0);
 }

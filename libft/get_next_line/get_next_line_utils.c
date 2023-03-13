@@ -6,7 +6,7 @@
 /*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 11:17:25 by thsousa           #+#    #+#             */
-/*   Updated: 2022/08/23 13:26:03 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/13 17:37:34 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,11 @@ char	*ft_strchr(const char *s, int c)
 {
 	char	*str;
 	char	find;
-	int		i;
 
 	if (!s)
 		return (NULL);
-	str = (char *) s;
-	find = (char) c;
-	i = 0;
+	str = (char *)s;
+	find = (char)c;
 	while (*str != find)
 	{
 		if (*str == 0)

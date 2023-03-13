@@ -1,12 +1,5 @@
 {
     "files.associations": {
-        "mlx.h": "c",
-        "array": "c",
-        "string": "c",
-        "string_view": "c",
-        "vector": "c",
-        "iterator": "c",
-        "stdlib.h": "c",
-        "cube.h": "c"
+        "stddef.h": "c"
     }
 }
