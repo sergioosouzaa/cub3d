@@ -9,15 +9,9 @@ void	open_menu(t_game *game)
 	screen_height = screenHeight;
 
 	game->menu = malloc(sizeof(t_data) * 3);
-	game->menu[0].img = mlx_xpm_file_to_image(game->mlx,"./sprits/menu1.xpm" , &screen_width, &screen_height);
-	game->menu[0].addr=  mlx_get_data_addr(game->menu[0].img, &game->menu[0].bits_per_pixel, &game->menu[0].line_length,
-							&game->menu[0].endian);	
-	game->menu[1].img = mlx_xpm_file_to_image(game->mlx,"./sprits/menu2.xpm" , &screen_width, &screen_height);
-	game->menu[1].addr=  mlx_get_data_addr(game->menu[1].img, &game->menu[1].bits_per_pixel, &game->menu[1].line_length,
-							&game->menu[1].endian);	
-	game->menu[2].img = mlx_xpm_file_to_image(game->mlx,"./sprits/menu3.xpm" , &screen_width, &screen_height);
-	game->menu[2].addr=  mlx_get_data_addr(game->menu[2].img, &game->menu[2].bits_per_pixel, &game->menu[2].line_length,
-							&game->menu[2].endian);
+	open_image(&game->menu[0], "./sprits/menu1.xpm", game);
+	open_image(&game->menu[1], "./sprits/menu2.xpm", game);
+	open_image(&game->menu[2], "./sprits/menu3.xpm", game);
 }
 
 void	display_menu(t_game *game)
@@ -35,11 +29,6 @@ void	display_menu(t_game *game)
 
 int	handle_menu(t_game *game)
 {
-	// int screen_width;
-	// int screen_height;
-
-	// screen_width = screenWidth;
-	// screen_height = screenHeight;
 	if (game->key.space)
 	{
 		mlx_destroy_image(game->mlx, game->menu[0].img);

@@ -42,47 +42,6 @@ t_map	get_pos(void)
 	return (map);
 }
 
-int	handle_press(int key, t_game *game)
-{
-
-	if (key == KEY_LEFT)
-		game->key.rotate_l = 1;
-	if (key == KEY_RIGHT)	
-		game->key.rotate_r = 1;
-	if (key == KEY_DOWN)
-		game->key.down = 1;
-	if (key == KEY_UP)
-		game->key.up = 1;
-	if (key == KEY_SPACE)
-		game->key.space = 1;
-	if (key == KEY_SHIFT)
-		game->key.shift = 1;
-	return (0);
-}
-
-int handle_release(int key, t_game *game)
-{
-	if (key == KEY_LEFT)
-	{
-		game->key.rotate_l = 0;
-		game->sprites->sprite = 1;
-	}
-	if (key == KEY_RIGHT)
-	{
-		game->key.rotate_r = 0;
-		game->sprites->sprite = 1;
-	}
-	if (key == KEY_DOWN)
-		game->key.down = 0;
-	if (key == KEY_UP)
-		game->key.up = 0;
-	if (key == KEY_SPACE)
-		game->key.space = 0;
-	if (key == KEY_SHIFT)
-		game->key.shift = 0;
-	return (0);
-}
-
 int check_valid_cam(t_game *game, int signal)
 {
 	double aux_1;
@@ -213,36 +172,152 @@ void move_bowser(t_game *game)
 {
 	static long long time;
 
-	if (get_first_time() - time > 100)
+	if (game->sprites[1].hp <= 0)
+	{
+		game->sprites[1].pos_x = -1;
+		game->sprites[1].pos_y = -1;
+	}
+	if (game->sprites[0].hp <= 0)
+	{
+		printf("Game Over\n");
+	}
+	if (get_first_time() - time > 10)
 	{
 		time = get_first_time();
-		if (game->sprites[1].pos_x < game->sprites[0].pos_x && worldMap[(int)(game->sprites[1].pos_x + 0.08)][(int)game->sprites[1].pos_x] < 1)
-			game->sprites[1].pos_x = game->sprites[1].pos_x + 0.08;
-		if (game->sprites[1].pos_x > game->sprites[0].pos_x && worldMap[(int)(game->sprites[1].pos_x - 0.08)][(int)game->sprites[1].pos_y] < 1)
-			game->sprites[1].pos_x = game->sprites[1].pos_x - 0.08;
-		if (game->sprites[1].pos_y < game->sprites[0].pos_y && worldMap[(int)game->sprites[1].pos_x][(int)(game->sprites[1].pos_y + 0.08)] < 1)
-			game->sprites[1].pos_y = game->sprites[1].pos_y + 0.08;
-		if (game->sprites[1].pos_y > game->sprites[0].pos_y && worldMap[(int)game->sprites[1].pos_x][(int)(game->sprites[1].pos_y - 0.08)] < 1)
-			game->sprites[1].pos_y = game->sprites[1].pos_y - 0.08;
+		if (game->sprites[1].pos_x >= 0 && game->sprites[1].pos_y >= 0)
+		{
+			if (fabs(game->sprites[1].pos_x - game->sprites[0].pos_x ) > 0.016)
+			{
+				if (game->sprites[1].pos_x < game->sprites[0].pos_x && worldMap[(int)(game->sprites[1].pos_x + 0.016)][(int)game->sprites[1].pos_y] < 1)
+					game->sprites[1].pos_x = game->sprites[1].pos_x + 0.016;
+				if (game->sprites[1].pos_x > game->sprites[0].pos_x && worldMap[(int)(game->sprites[1].pos_x - 0.016)][(int)game->sprites[1].pos_y] < 1)
+					game->sprites[1].pos_x = game->sprites[1].pos_x - 0.016;
+			}
+			if (fabs(game->sprites[1].pos_y - game->sprites[0].pos_y ) > 0.016)
+			{
+				if (game->sprites[1].pos_y < game->sprites[0].pos_y && worldMap[(int)game->sprites[1].pos_x][(int)(game->sprites[1].pos_y + 0.016)] < 1)
+					game->sprites[1].pos_y = game->sprites[1].pos_y + 0.016;
+				if (game->sprites[1].pos_y > game->sprites[0].pos_y && worldMap[(int)game->sprites[1].pos_x][(int)(game->sprites[1].pos_y - 0.016)] < 1)
+					game->sprites[1].pos_y = game->sprites[1].pos_y - 0.016;
+			}
+		}
 	}
 	double camera_x = 2 * (screenWidth / 5  * 3.7) / (double)(screenWidth) - 1;
 	double raydir_x = game->map.dir_x + (game->map.plane_x * camera_x);
 	double raydir_y = game->map.dir_y + (game->map.plane_y * camera_x);
 	double vector = sqrt( raydir_x *  raydir_x +  raydir_y *  raydir_y );
-	game->sprites[0].pos_x = game->map.pos_x +  (raydir_x/ vector) * 0.4;
+	game->sprites[0].pos_x = game->map.pos_x +  (raydir_x / vector) * 0.4;
 	game->sprites[0].pos_y = game->map.pos_y +   (raydir_y / vector) * 0.4;
-	// printf("CHAR %f %f \n", game->map.pos_x,  game->map.pos_y);
-	// printf("%f %f \n", game->sprites[1].pos_x, game->sprites[1].pos_y);
+	if (game->key.space)
+	{
+		game->sprites[2].pos_x = game->sprites[0].pos_x;
+		game->sprites[2].pos_y = game->sprites[0].pos_y;
+		game->sprites[2].dir_x = raydir_x;
+		game->sprites[2].dir_y = raydir_y;
+	}
+	if (game->sprites[2].pos_x > 0 && game->sprites[2].pos_y > 0)
+	{
+		vector = sqrt(game->sprites[2].dir_x * game->sprites[2].dir_x + game->sprites[2].dir_y * game->sprites[2].dir_y);
+		if (worldMap[(int)(game->sprites[2].pos_x + (game->sprites[2].dir_x / vector))][(int)(game->sprites[2].pos_y + (game->sprites[2].dir_y / vector))] > 0)
+		{
+			double aux_1 = game->sprites[2].dir_x;
+			game->sprites[2].dir_x =  game->sprites[2].dir_x * cos(0.78) -  game->sprites[2].dir_y * sin(0.78);
+			game->sprites[2].dir_y = aux_1 * sin(0.78) +  game->sprites[2].dir_y * cos(0.78);
+		}
+		else
+		{
+			game->sprites[2].pos_x = game->sprites[2].pos_x + (game->sprites[2].dir_x / vector) * 0.08;
+			game->sprites[2].pos_y = game->sprites[2].pos_y + (game->sprites[2].dir_y / vector) * 0.08;
+		}
+	}
+}
+
+void	animate(t_game *game)
+{
+	static long long time_1;
+	static long long time_2;
+	static	int			i;
+	static	int			j;
+
+	if (game->key.rotate_l)
+		game->sprites[0].texture = &game->sprites[0].texture_2;
+	else if (game->key.rotate_r)
+		game->sprites[0].texture = &game->sprites[0].texture_3;
+	else if (game->key.down)
+		game->sprites[0].texture = &game->sprites[0].texture_4;
+	else
+		game->sprites[0].texture = &game->sprites[0].texture_1;
+	if (get_first_time() -  time_1 > 100)
+	{
+		i = (i + 1) % 2;
+		if (i == 0)
+			game->sprites[1].texture = &game->sprites[1].texture_1;
+		else
+			game->sprites[1].texture = &game->sprites[1].texture_2	;
+		time_1 = get_first_time();
+	}
+	if (get_first_time() -  time_2 > 100)
+	{
+		j = (j + 1) % 3;
+		if (j == 0)
+			game->sprites[2].texture = &game->sprites[2].texture_1;
+		else if (j == 1)
+			game->sprites[2].texture = &game->sprites[2].texture_2;
+		else
+			game->sprites[2].texture = &game->sprites[2].texture_3;
+		time_2 = get_first_time();
+	}
+}
+
+void	check_hp(t_game *game)
+{
+	static long long time;
+
+	if (game->sprites[1].hp > 0)
+	{
+		if (fabs(game->sprites[1].pos_x - game->sprites[2].pos_x) < 0.08)
+		{
+			if (fabs(game->sprites[1].pos_y - game->sprites[2].pos_y) < 0.08)
+			{
+				if (get_first_time() - time > 400)
+				{
+					game->sprites[1].hp = game->sprites[1].hp - 1;
+					time = get_first_time();
+					game->sprites[2].pos_x = -1;
+					game->sprites[2].pos_y = -1;
+				}
+			}
+		}
+	}
+	if (fabs(game->sprites[1].pos_x - game->sprites[0].pos_x) < 0.08)
+	{
+		if (fabs(game->sprites[1].pos_y - game->sprites[0].pos_y) < 0.08)
+		{
+			if (get_first_time() - time > 400)
+			{
+				game->sprites[0].hp = game->sprites[0].hp - 1;
+				time = get_first_time();
+			}
+		}
+	}
 }
 
 int	game_loop(t_game *game)
 {
+	long long time;
+	char	*fps;
+
 	if (game->mode == 4)
 	{
+		time = get_first_time();
 		handle_key(game);
 		handle_doors(game);
 		move_bowser(game);
+		animate(game);
+		check_hp(game);
 		raycast(*game);
+		fps = ft_itoa(60 / (get_first_time() - time));
+		mlx_string_put(game->mlx, game->mlx_win, 5, 10, 0x00FF00FF, fps);
 	}
 	else if (game->mode == 1)
 	{
@@ -261,22 +336,6 @@ int	game_loop(t_game *game)
 	}
 	return (0);
 }
-
-t_keys	init_keys(void)
-{
-	t_keys	key;
-
-	key.up = 0;
-	key.down = 0;
-	key.esc = 0;
-	key.rotate_r = 0;
-	key.rotate_l = 0;
-	key.space	= 0;
-	key.shift = 0;
-	return (key);
-}
-
-
 
 int main(void)
 {

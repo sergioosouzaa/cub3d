@@ -16,7 +16,7 @@
 #define mapWidth 24
 #define mapHeight 24
 #define rot 0.05	
-
+#define vMove 80
 enum	mac_e_key_codes
 {
 	KEY_DOWN = 125,
@@ -28,6 +28,28 @@ enum	mac_e_key_codes
 	KEY_SHIFT = 57,
 	KEY_RESET = 15,
 };
+
+
+typedef	struct s_draw_sprites
+{
+	double	sprite_x;
+	double	sprite_y;
+	double	inv_det;
+	double	transform_x; 
+	double	transform_y; 
+	int		sprite_screen_x; 
+	int		v_move;
+	int		sprite_height;
+	int		draw_start_y;
+	int		draw_end_y;
+	int		sprite_width;
+	int		draw_start_x;
+	int		draw_end_x;
+	int		tex_x;
+	int		tex_y;
+	int		d;
+	int		color;			
+} 				t_draw;
 
 typedef	struct s_keys {
 	int up;
@@ -54,9 +76,14 @@ typedef	struct s_sprite
 	int		sprite;
 	int		u_div;
 	int		v_div;
+	double	dir_x;
+	double	dir_y;
+	int		hp;
 	t_data	*texture;
 	t_data	texture_1;
 	t_data	texture_2;
+	t_data	texture_3;
+	t_data	texture_4;
 }   t_sprite;
 
 typedef struct s_char
@@ -164,8 +191,6 @@ typedef struct s_ray {
 
 /* 								Utils 								*/
 
-unsigned int	get_color(t_data *data, int x, int y);
-void			my_mlx_pixel_put(t_data *data, int x, int y, int color);
 void			get_sprites(t_game *game);
 
 
@@ -200,19 +225,10 @@ void game_init(t_game *game, t_map pos);
 void	display_menu(t_game *game);
 void	open_menu(t_game *game);
 int		handle_menu(t_game *game);
-void    open_char_select(t_game *game);
 
-
-void	handle_char_select(t_game *game);
-void	open_peach(t_game *game, int title_size);
-void	open_luigi(t_game *game, int title_size);
 
 int worldMap[mapWidth][mapHeight];
-void	display_controls(t_game *game);
-void	handle_controls(t_game *game);
 t_data	get_texture(t_ray  ray, t_game game);
-
-#include "cube.h"
 
 
 //if in front of door return the door index, if not in front of any door return -1;
@@ -221,4 +237,30 @@ int handle_doors(t_game *game);
 int    get_door_index(t_game *game, int x, int y);
 int    check_doors(t_game *game);
 
+
+/* Open char Select */
+
+void			open_char_select(t_game *game);
+void			open_luigi(t_game *game);
+void			open_peach(t_game *game);
+void			handle_char_select(t_game *game);
+
+
+/* Image Utils */
+
+void			open_image(t_data *img_ptr, char *path, t_game *game);
+unsigned int	get_color(t_data *data, int x, int y);
+void			my_mlx_pixel_put(t_data *data, int x, int y, int color);
+
+/* Controls */
+
+void			display_controls(t_game *game);
+void			handle_controls(t_game *game);
+
+
+int				handle_press(int key, t_game *game);
+int				handle_release(int key, t_game *game);
+t_keys			init_keys(void);
+void	open_image_size(t_data *img_ptr, char *path, t_game *game, int size);
+char	*ft_itoa(int n);
 #endif

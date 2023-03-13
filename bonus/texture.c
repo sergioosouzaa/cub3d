@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   texture.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/13 11:29:14 by sdos-san          #+#    #+#             */
+/*   Updated: 2023/03/13 11:30:18 by sdos-san         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cube.h"
 
 /*     Ok  */
 
-t_data	get_texture(t_ray  ray, t_game game)
+t_data	get_texture(t_ray ray, t_game game)
 {
 	t_data	texture;
 
@@ -24,7 +36,6 @@ t_data	get_texture(t_ray  ray, t_game game)
 			texture = game.img_3;
 		else
 			texture = game.img_4;
-
 	}
 	return (texture);
 }

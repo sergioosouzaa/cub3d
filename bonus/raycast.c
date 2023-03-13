@@ -1,5 +1,7 @@
 #include "cube.h"
 
+char	*ft_itoa(int n);
+
 int sky_color(int x, int y)
 {
 	static int offset;
@@ -45,14 +47,14 @@ int floor_color(int y, int x, int f)
 /* Arquivo sprites  */
 void	sort_sprites(int *sprite_order, int *sprite_dist, int sprite_num)
 {
-	int i;
+	int	i;
+	int aux;
 
 	i = 0;
 	while (i < sprite_num - 1)
 	{
 		if (sprite_dist[i] < sprite_dist[i + 1])
 		{
-			int aux;
 			aux = sprite_order[i + 1];
 			sprite_order[i + 1] = sprite_order[i];
 			sprite_order[i] = aux;
@@ -66,158 +68,91 @@ void	sort_sprites(int *sprite_order, int *sprite_dist, int sprite_num)
 	}
 }
 
-void	draw_sprites(int *ZBuffer, t_game *game)
+void	sort_order(int *sprite_order, int size)
 {
-	int spriteOrder[ game->sprite_num];
-	int spriteDistance[ game->sprite_num];
+	int	i;
+	int	aux;
 
-	for(int i = 0; i < game->sprite_num; i++)
-    {
-      spriteOrder[i] = i;
-      spriteDistance[i] = ((game->map.pos_x - game->sprites[i].pos_x) * (game->map.pos_x - game->sprites[i].pos_x) + (game->map.pos_y - game->sprites[i].pos_y) * (game->map.pos_y - game->sprites[i].pos_y)); //sqrt not taken, unneeded
-    }
-    sort_sprites(spriteOrder, spriteDistance, game->sprite_num);
-	spriteOrder[0] = 1;
-	spriteOrder[1] = 0;
-    //after sorting the sprites, do the projection and draw them
-    for(int i = 0; i < game->sprite_num; i++)
-    {
-      //translate sprite position to relative to camera
-      double spriteX = game->sprites[spriteOrder[i]].pos_x - game->map.pos_x;
-      double spriteY = game->sprites[spriteOrder[i]].pos_y - game->map.pos_y;
-      //transform sprite with the inverse camera matrix
-      // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
-      // [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
-      // [ planeY   dirY ]                                          [ -planeY  planeX ]
-
-      double invDet = 1.0 / (game->map.plane_x * game->map.dir_y - game->map.dir_x * game->map.plane_y); //required for correct matrix multiplication
-
-      double transformX = invDet * (game->map.dir_y * spriteX - game->map.dir_x * spriteY);
-      double transformY = invDet * (-game->map.plane_y * spriteX + game->map.plane_x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
-
-      int spriteScreenX = (int)((screenHeight / 2) * (1 + transformX / transformY));
-
-      //parameters for scaling and moving the sprites
-      #define uDiv 8
-      #define vDiv 8
-      #define vMove 64
-      int vMoveScreen = (int)(vMove / transformY);
-
-      //calculate height of the sprite on screen
-      int spriteHeight = abs((int)(screenHeight / (transformY))) / vDiv; //using "transformY" instead of the real distance prevents fisheye
-      //calculate lowest and highest pixel to fill in current stripe
-      int drawStartY = -spriteHeight / 2 + screenHeight / 2 + vMoveScreen;
-      if(drawStartY < 0) drawStartY = 0;
-      int drawEndY = spriteHeight / 2 + screenHeight / 2 + vMoveScreen;
-      if(drawEndY >= screenHeight) drawEndY = screenHeight - 1;
-
-      //calculate width of the sprite
-      int spriteWidth = abs((int) (screenHeight / (transformY))) / uDiv; // same as height of sprite, given that it's square
-      int drawStartX = -spriteWidth / 2 + spriteScreenX;
-      if(drawStartX < 0) drawStartX = 0;
-      int drawEndX = spriteWidth / 2 + spriteScreenX;
-      if(drawEndX > screenWidth) drawEndX = screenWidth;
-
-      //loop through every vertical stripe of the sprite on screen
-      for(int stripe = drawStartX; stripe < drawEndX; stripe++)
-      {
-        int texX = (int)(256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth) / 256;
-        //the conditions in the if are:
-        //1) it's in front of camera plane so you don't see things behind you
-        //2) ZBuffer, with perpendicular distance
-        if(transformY > 0 && transformY < ZBuffer[stripe])
-        {
-          for(int y = drawStartY; y < drawEndY; y++) //for every pixel of the current stripe
-          {
-            int d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
-            int texY = ((d * texHeight) / spriteHeight) / 256;
-            int color = get_color(&game->sprites[spriteOrder[i]].texture_1,texX,  texY);    //get current color from the texture
-            if((color & 0x00FFFFFF) != 0) my_mlx_pixel_put(&game->img, stripe, y, color); //paint pixel if it isn't black, black is the invisible color
-          }
-        }
-      }
-    }
+	i = 0;
+	while (sprite_order[i] != 0)
+		i++;
+	while (i < size - 1)
+	{
+		aux = sprite_order[i];
+		sprite_order[i] = sprite_order[i + 1];
+		sprite_order[i + 1] = aux;
+		i++;
+	}
 }
 
-// /* arquivo sprites  */
-// void 	draw_sprites(int *perpedist, t_game *game)
-// {
-// 	int	sprite_order[game->sprite_num];
-// 	int	sprite_dist[game->sprite_num];
-// 	int i;
+void	draw_sprites(int *ZBuffer, t_game *game)
+{
+	int		*sprite_order;
+	int		*sprite_distance;
+	t_draw	sprites;
+	int		i;
+	int		stripe;
+	int		y;
 
-// 	i  = 0;
-// 	while(i < game->sprite_num)
-// 	{
-// 		sprite_order[i] = i;
-// 		sprite_dist[i] = ((game->map.pos_x - game->sprites[i].pos_x) * (game->map.pos_x - game->sprites[i].pos_x)) + ((game->map.pos_y - game->sprites[i].pos_y) * (game->map.pos_y - game->sprites[i].pos_y));
-// 		i++;
-// 	}
-// 	sort_sprites(sprite_order, sprite_dist, game->sprite_num);
-// 	i = 0;
-// 	while (i < game->sprite_num)
-// 	{
-// 		double sprite_x = game->sprites[sprite_order[i]].pos_x - game->map.pos_x;
-// 		double sprite_y = game->sprites[sprite_order[i]].pos_y - game->map.pos_y;
-// 		double invers_det = 1.0 / (game->map.plane_x * game->map.dir_y - game->map.plane_y * game->map.dir_x);
-// 		double	new_x =  invers_det * (game->map.dir_y * sprite_x - game->map.dir_x * sprite_y);
-// 		double	new_y =  invers_det * (-game->map.plane_y * sprite_x - game->map.plane_x * sprite_y);
-
-// 		int sprite_pos_x = (int)((screenWidth / 2) * (1 + new_x / new_y));
-// 		double vmove = screenHeight;
-// 		int v_move_screen =  (int)(vmove / new_y);
-// 		int sprite_height = (abs((int)(screenHeight / new_y)))/4;
-// 		int draw_start_y = -sprite_height / 2 + screenHeight / 2;
-// 		if (draw_start_y < 0)
-// 			draw_start_y = 0;
-// 		int draw_end_y = sprite_height / 2 + screenHeight / 2 + v_move_screen;
-// 		if (draw_start_y >= screenHeight)
-// 			draw_start_y = screenHeight - 1;
-
-// 		int	sprite_width = (abs((int)(screenHeight / new_y)) / 4);
-// 		int	draw_start_x = -sprite_width / 2 + sprite_pos_x;
-// 		if (draw_start_x < 0)
-// 			draw_start_x = 0;
-// 		int draw_end_x = sprite_width / 2 + sprite_pos_x;
-// 		if (draw_end_x > screenWidth - 1)
-// 			draw_end_x = screenWidth - 1;
-// 		int stripe = draw_start_x;
-// 		while (stripe < draw_end_x)
-// 		{
-// 			int tex_x = (64 / (draw_end_x - draw_start_x)) * (stripe - draw_start_x); 
-// 			// (int)(256 * (stripe - (-sprite_width / 2 + sprite_pos_x)) * (texWidth) / sprite_width) / 256;
-// 			if (new_y > 0 && new_y < perpedist[stripe] && stripe > 0 && stripe < screenWidth)
-// 			{
-// 				int p;
-// 				p = draw_start_y;
-// 				while (p < draw_end_y)
-// 				{
-// 					// int d = (p) * 256 - screenHeight * 128 + sprite_height * 128;
-// 					int tex_y = (((p  - draw_start_y) * 64) / (draw_end_y - draw_start_y));
-// 					if (tex_x > 63)
-// 						tex_x = 63;
-// 					if (tex_x < 0)
-// 						tex_x = 0;
-// 					if (tex_y > 63)
-// 						tex_y = 63;
-// 					if (tex_y < 0)
-// 						tex_y = 0;
-// 					// printf("%d %d\n", tex_x, tex_y);
-// 					int color = get_color(&game->sprites[i].texture_1, tex_x, tex_y);
-// 					if (((color >> 24) & 0xFF) != 0xFF)
-// 						my_mlx_pixel_put(&game->img, stripe, p, color);
-					
-// 					p++;
-// 				}
-// 				// printf("%d %d \n", draw_start_y, draw_end_y);
-// 			}
-// 			stripe++;
-// 		}
-// 		i++;
-// 	}
-// }
-
-
+	sprite_order = malloc(sizeof(int) * game->sprite_num);
+	sprite_distance = malloc(sizeof(int) * game->sprite_num);
+	i = 0;
+	while (i < game->sprite_num)
+	{
+		sprite_order[i] = i;
+		sprite_distance[i] = (pow((game->map.pos_x - game->sprites[i].pos_x), 2) + pow((game->map.pos_y - game->sprites[i].pos_y), 2));
+		i++;
+	}
+	sort_sprites(sprite_order, sprite_distance, game->sprite_num);
+	sort_order(sprite_order, game->sprite_num);
+	i = 0;
+	while (i < game->sprite_num)
+	{
+		sprites.sprite_x = game->sprites[sprite_order[i]].pos_x - game->map.pos_x;
+		sprites.sprite_y = game->sprites[sprite_order[i]].pos_y - game->map.pos_y;
+		sprites.inv_det = 1.0 / (game->map.plane_x * game->map.dir_y - game->map.dir_x * game->map.plane_y);
+		sprites.transform_x = sprites.inv_det * (game->map.dir_y * sprites.sprite_x - game->map.dir_x * sprites.sprite_y);
+		sprites.transform_y = sprites.inv_det * (-game->map.plane_y * sprites.sprite_x + game->map.plane_x * sprites.sprite_y); 
+		sprites.sprite_screen_x = (int)((screenHeight / 2) * (1 + sprites.transform_x / sprites.transform_y));
+		sprites.v_move = (int)(vMove / sprites.transform_y);
+		sprites.sprite_height = abs((int)(screenHeight / (sprites.transform_y))) / game->sprites[sprite_order[i]].v_div;
+		sprites.draw_start_y = -sprites.sprite_height / 2 + screenHeight / 2 + sprites.v_move;
+		if(sprites.draw_start_y < 0) 
+			sprites.draw_start_y = 0;
+		sprites.draw_end_y = sprites.sprite_height / 2 + screenHeight / 2 + sprites.v_move;
+		if(sprites.draw_end_y >= screenHeight) 
+			sprites.draw_end_y = screenHeight - 1;
+		sprites.sprite_width = abs((int) (screenHeight / (sprites.transform_y))) / game->sprites[sprite_order[i]].u_div;
+		sprites.draw_start_x = -sprites.sprite_width / 2 + sprites.sprite_screen_x;
+		if(sprites.draw_start_x < 0) 
+			sprites.draw_start_x = 0;
+		sprites.draw_end_x = sprites.sprite_width / 2 + sprites.sprite_screen_x;
+		if(sprites.draw_end_x > screenWidth) 
+			sprites.draw_end_x = screenWidth;
+		stripe = sprites.draw_start_x;
+		while (stripe < sprites.draw_end_x)
+		{
+			sprites.tex_x = (int)(256 * (stripe - (-sprites.sprite_width / 2 + sprites.sprite_screen_x)) * texWidth / sprites.sprite_width) / 256;
+			if(sprites.transform_y > 0 && sprites.transform_y < ZBuffer[stripe])
+			{
+				y = sprites.draw_start_y;
+				while (y < sprites.draw_end_y)
+				{
+					sprites.d = (y - sprites.v_move) * 256 - screenHeight * 128 + sprites.sprite_height * 128; 
+					sprites.tex_y = ((sprites.d * texHeight) / sprites.sprite_height) / 256;
+					sprites.color = get_color(game->sprites[sprite_order[i]].texture, sprites.tex_x, sprites.tex_y);    
+					if(((sprites.color >> 24) & 0xFF) != 0xFF)
+						my_mlx_pixel_put(&game->img, stripe, y, sprites.color); 
+					y++;
+				}
+			}
+			stripe++;
+		}
+		i++;
+	}
+	free (sprite_order);
+	free (sprite_distance);
+}
 
 /* função sprite */
 void draw_square(int x_screen, int y_screen, int color, int title_size, t_game game)
@@ -231,7 +166,7 @@ void draw_square(int x_screen, int y_screen, int color, int title_size, t_game g
 		j = 0;
 		while (j < title_size)
 		{
-			my_mlx_pixel_put(&game.img, x_screen + i, y_screen + j, color);
+			my_mlx_pixel_put(&game.img, (x_screen + i), screenHeight - (y_screen + j), color);
 			j++;
 		}
 		i++;
@@ -249,6 +184,8 @@ void	draw_minimap(t_game game, int *pos_x, int *pos_y)
 	int	y_screen;
 	int x_screen;
 	int color;
+	int pos_1;
+	int pos_2;
 
 	if (mapHeight > mapWidth)
 	{
@@ -271,17 +208,26 @@ void	draw_minimap(t_game game, int *pos_x, int *pos_y)
 		y_screen = screenHeight - (mapHeight * title_size);
 		while (y < mapHeight)
 		{
+			if (x == (int)game.sprites[1].pos_x && y == (int)game.sprites[1].pos_y)
+			{
+				pos_1 = x_screen;
+				pos_2 = screenHeight - y_screen - title_size * 1.5;
+			}
 			if (worldMap[x][y] >= 1)
 			{
 				color = 0x474564;
 			}
-			else if (x == (int)game.map.pos_x && y == (int)game.map.pos_y)
+			else if (x == (int)game.sprites[0].pos_x && y == (int)game.sprites[0].pos_y)
 			{
 				*pos_x = x_screen;
-				*pos_y = y_screen;
+				*pos_y = screenHeight - y_screen - title_size * 1.5;
 				color = 0x00CACACA;
 			}
 			else
+			{
+				color = 0x00CACACA;
+			}
+			if (worldMap[x][y] == 9 && game.doors[0].mode == 4)
 			{
 				color = 0x00CACACA;
 			}
@@ -296,23 +242,25 @@ void	draw_minimap(t_game game, int *pos_x, int *pos_y)
 		x_screen += title_size;
 		x++;
 	}
+	mlx_put_image_to_window(game.mlx, game.mlx_win, game.img.img, 0, 0);
+	mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites[1].texture_3.img, pos_1, pos_2);
 }
 
 /*   Ok */
-void	put_char_to_window(t_game *game, int *perp_dist)
-{
-	if (perp_dist[screenWidth / 2] >= 1)
-	{
-		if (game->key.rotate_l == 1)
-			mlx_put_image_to_window(game->mlx, game->mlx_win, game->my_char.txt2.img, screenWidth/2, screenHeight - 40);
-		else if (game->key.rotate_r == 1)
-			mlx_put_image_to_window(game->mlx, game->mlx_win, game->my_char.txt3.img, screenWidth/2, screenHeight - 40);
-		else if (game->key.down == 1)
-			mlx_put_image_to_window(game->mlx, game->mlx_win, game->my_char.txt4.img, screenWidth/2, screenHeight - 40);
-		else
-			mlx_put_image_to_window(game->mlx, game->mlx_win, game->my_char.txt1.img, screenWidth/2, screenHeight - 40);
-	}
-}
+// void	put_char_to_window(t_game *game, int *perp_dist)
+// {
+// 	if (perp_dist[screenWidth / 2] >= 1)
+// 	{
+// 		// if (game->key.rotate_l == 1)
+// 		// 	mlx_put_image_to_window(game->mlx, game->mlx_win, game->my_char.txt2.img, screenWidth/2, screenHeight - 40);
+// 		// else if (game->key.rotate_r == 1)
+// 		// 	mlx_put_image_to_window(game->mlx, game->mlx_win, game->my_char.txt3.img, screenWidth/2, screenHeight - 40);
+// 		// else if (game->key.down == 1)
+// 		// 	mlx_put_image_to_window(game->mlx, game->mlx_win, game->my_char.txt4.img, screenWidth/2, screenHeight - 40);
+// 		// else
+// 		// 	mlx_put_image_to_window(game->mlx, game->mlx_win, game->my_char.txt1.img, screenWidth/2, screenHeight - 40);
+// 	}
+// }
 
 
 /*antes de rodar o raycast fazer a função de checar minimapa que muda o f da porta dcriar um f e por num struct da porta*/
@@ -324,13 +272,9 @@ void	raycast(t_game game)
 	static int f;
 	int		perpedist[screenWidth];
 	static long long last_time;
-	// long long time;
 	
 	x = 0;
-	// int	max_end;
-	// max_end = 0;
-	// if (rand() % 2 == 0)
-	my_mlx_pixel_put(&game.img, 0, 0,0x00FF0000);
+
 	if (get_first_time() - last_time > 100)
 	{
 		f = (f + 1) % 7;
@@ -368,7 +312,7 @@ void	raycast(t_game game)
 		perpedist[x] = ray.perpwalldist;
 		x++;
 	}
-	game.sprite_num = 2;
+	game.sprite_num = 3;
 	draw_sprites(perpedist, &game);
 	int x_mini;
 	int y_mini;
@@ -376,11 +320,8 @@ void	raycast(t_game game)
 	x_mini = 2000;
 	y_mini = 2000;
 	draw_minimap(game, &x_mini, &y_mini);
-	mlx_put_image_to_window(game.mlx, game.mlx_win, game.img.img, 0, 0);
-	mlx_put_image_to_window(game.mlx, game.mlx_win, game.minimap.img, x_mini, y_mini);
+	mlx_put_image_to_window(game.mlx, game.mlx_win, game.minimap.img, 	x_mini, y_mini);
 	//mlx_put_image_to_window(game.mlx, game.mlx_win, game.sprites->texture[game.sprites->sprite].img, screenWidth/2, screenHeight - 64);
-	put_char_to_window(&game, perpedist);
-	
 }
 
 
@@ -519,5 +460,51 @@ void	dda(t_ray *ray, t_game game)
 
 
 
+static size_t	count(int n)
+{
+	int	i;
+
+	i = 0;
+	if (n <= 0)
+		i = 1;
+	while (n != 0)
+	{
+		n = n / 10;
+		i++;
+	}
+	return (i);
+}
+
+static char	*numb(char *s, unsigned int n, size_t len)
+{
+	while (n > 0)
+	{
+		s[len--] = (n % 10) + '0';
+		n = n / 10;
+	}
+	return (s);
+}
+
+char	*ft_itoa(int n)
+{
+	char	*str;
+	size_t	d;
+
+	d = count(n);
+	str = malloc(d + 1 * sizeof (char));
+	if (!str)
+		return (NULL);
+	str[d--] = '\0';
+	if (n < 0)
+	{	
+		n *= (-1);
+		str[0] = '-';
+	}
+	if (n == 0)
+		str[0] = '0';
+	str = numb(str, n, d);
+	return (str);
+}
 
 
+//VAI ESTAR NA LIBFT
