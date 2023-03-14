@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sprites.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/14 16:18:21 by sdos-san          #+#    #+#             */
+/*   Updated: 2023/03/14 16:24:03 by sdos-san         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cube.h"
 
-void    organize(t_game *game, int *sprite_order, int *sprite_distance)
+void	organize(t_game *game, int *sprite_order, int *sprite_distance)
 {
 	int	i;
 
@@ -8,7 +20,8 @@ void    organize(t_game *game, int *sprite_order, int *sprite_distance)
 	while (i < game->sprite_num)
 	{
 		sprite_order[i] = i;
-		sprite_distance[i] = (pow((game->map.pos_x - game->sprites[i].pos_x), 2) + pow((game->map.pos_y - game->sprites[i].pos_y), 2));
+		sprite_distance[i] = (pow((game->map.pos_x - game->sprites[i].pos_x), \
+		2) + pow((game->map.pos_y - game->sprites[i].pos_y), 2));
 		i++;
 	}
 	sort_sprites(sprite_order, sprite_distance, game->sprite_num);
@@ -17,20 +30,20 @@ void    organize(t_game *game, int *sprite_order, int *sprite_distance)
 
 void	calc_end_start(t_draw *sprites, int *sprite_order, t_game *game, int i)
 {
-	if(sprites->draw_start_y < 0) 
+	if (sprites->draw_start_y < 0)
 		sprites->draw_start_y = 0;
 	sprites->draw_end_y = sprites->sprite_height / 2 + screenHeight / 2 + \
 	sprites->v_move;
-	if(sprites->draw_end_y >= screenHeight) 
+	if (sprites->draw_end_y >= screenHeight)
 		sprites->draw_end_y = screenHeight - 1;
-	sprites->sprite_width = abs((int) (screenHeight / (sprites->transform_y)))\
-	 / game->sprites[sprite_order[i]].u_div;
+	sprites->sprite_width = abs((int)(screenHeight / (sprites->transform_y))) \
+	/ game->sprites[sprite_order[i]].u_div;
 	sprites->draw_start_x = -sprites->sprite_width / 2 + \
 	sprites->sprite_screen_x;
-	if(sprites->draw_start_x < 0) 
+	if (sprites->draw_start_x < 0)
 		sprites->draw_start_x = 0;
 	sprites->draw_end_x = sprites->sprite_width / 2 + sprites->sprite_screen_x;
-	if(sprites->draw_end_x > screenWidth) 
+	if (sprites->draw_end_x > screenWidth)
 		sprites->draw_end_x = screenWidth;
 }
 
@@ -43,15 +56,15 @@ void	init_sprites(t_game *game, int *sprite_order, int i, t_draw *sprites)
 	sprites->transform_x = sprites->inv_det * (game->map.dir_y * \
 	sprites->sprite_x - game->map.dir_x * sprites->sprite_y);
 	sprites->transform_y = sprites->inv_det * (-game->map.plane_y * \
-	sprites->sprite_x + game->map.plane_x * sprites->sprite_y); 
+	sprites->sprite_x + game->map.plane_x * sprites->sprite_y);
 	sprites->sprite_screen_x = (int)((screenHeight / 2) * (1 + \
 	sprites->transform_x / sprites->transform_y));
 	sprites->v_move = (int)(vMove / sprites->transform_y);
 	sprites->sprite_height = abs((int)(screenHeight / (sprites->transform_y))) \
-	 / game->sprites[sprite_order[i]].v_div;
+	/ game->sprites[sprite_order[i]].v_div;
 	sprites->draw_start_y = -sprites->sprite_height / 2 + screenHeight / 2 + \
 	sprites->v_move;
-	calc_end_start(sprites, sprite_order, game, i);	
+	calc_end_start(sprites, sprite_order, game, i);
 }
 
 void	put_sprites(t_draw *sprites, t_game *game, int i, int *z_buffer)
@@ -62,24 +75,26 @@ void	put_sprites(t_draw *sprites, t_game *game, int i, int *z_buffer)
 	stripe = sprites->draw_start_x;
 	while (stripe < sprites->draw_end_x)
 	{
-		sprites->tex_x = (int)(256 * (stripe - (-sprites->sprite_width / 2 + sprites->sprite_screen_x)) * texWidth / sprites->sprite_width) / 256;
-		if(sprites->transform_y > 0 && sprites->transform_y < z_buffer[stripe])
+		sprites->tex_x = (int)(256 * (stripe - (-sprites->sprite_width / 2 + \
+		sprites->sprite_screen_x)) * texWidth / sprites->sprite_width) / 256;
+		if (sprites->transform_y > 0 && sprites->transform_y < z_buffer[stripe])
 		{
-			y = sprites->draw_start_y;
-			while (y < sprites->draw_end_y)
+			y = sprites->draw_start_y - 1;
+			while (++y < sprites->draw_end_y)
 			{
-				sprites->d = (y - sprites->v_move) * 256 - screenHeight * 128 + sprites->sprite_height * 128; 
-				sprites->tex_y = ((sprites->d * texHeight) / sprites->sprite_height) / 256;
-				sprites->color = get_color(game->sprites[i].texture, sprites->tex_x, sprites->tex_y);    
-				if(((sprites->color >> 24) & 0xFF) != 0xFF)
-					my_mlx_pixel_put(&game->img, stripe, y, sprites->color); 
-				y++;
+				sprites->d = (y - sprites->v_move) * 256 - screenHeight * 128 \
+				+ sprites->sprite_height * 128;
+				sprites->tex_y = ((sprites->d * texHeight) / \
+				sprites->sprite_height) / 256;
+				sprites->color = get_color(game->sprites[i].texture, \
+				sprites->tex_x, sprites->tex_y);
+				if (((sprites->color >> 24) & 0xFF) != 0xFF)
+					my_mlx_pixel_put(&game->img, stripe, y, sprites->color);
 			}
 		}
 		stripe++;
 	}
 }
-
 
 void	draw_sprites(int *z_buffer, t_game *game)
 {

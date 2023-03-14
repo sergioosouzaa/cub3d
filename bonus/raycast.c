@@ -1,15 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   raycast.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/14 16:12:14 by sdos-san          #+#    #+#             */
+/*   Updated: 2023/03/14 16:16:40 by sdos-san         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cube.h"
 
 char	*ft_itoa(int n);
 
-int sky_color(void)
+int	sky_color(void)
 {
-	int i;
+	int	i;
 	int	j;
 
 	i = rand() % 2000;
 	j = rand() % 7;
-	if (i  == 10)
+	if (i == 10)
 	{
 		if (j == 0)
 			return (0x9400D3);
@@ -29,9 +41,9 @@ int sky_color(void)
 	return (0x00000000);
 }
 
-int floor_color(int y, int f)
+int	floor_color(int y, int f)
 {
-	int j;
+	int	j;
 	int	h[7];
 
 	h[0] = 0xf94144;
@@ -47,8 +59,8 @@ int floor_color(int y, int f)
 
 int	return_f(void)
 {
-	static int f;
-	static long long last_time;
+	static int			f;
+	static long long	last_time;
 
 	if (get_first_time() - last_time > 100)
 	{
@@ -58,14 +70,39 @@ int	return_f(void)
 	return (f);
 }
 
+void	paint_raycast(t_game game, t_ray *ray, int x, int f)
+{
+	int		y;
+
+	y = 0;
+	while (y < screenHeight)
+	{
+		if (y < ray->draw_start)
+			my_mlx_pixel_put(&game.img, x, y, sky_color());
+		else if (y < ray->draw_end)
+		{
+			ray->tex_y = (int)ray->tex_pos;
+			if (ray->tex_y > texHeight - 1)
+				ray->tex_y = texHeight - 1;
+			ray->tex_pos += ray->step;
+			ray->color = get_color(&ray->texture, ray->tex_x, ray->tex_y);
+			if (ray->side == 1)
+				ray->color = (ray->color >> 1) & 8355711;
+			my_mlx_pixel_put(&game.img, x, y, ray->color);
+		}
+		else
+			my_mlx_pixel_put(&game.img, x, y, floor_color(y, f));
+		y++;
+	}
+}
+
 void	raycast(t_game game)
 {
 	t_ray	ray;
 	int		x;
-	int		y;
 	int		*perpedist;
 	int		f;
-	
+
 	x = 0;
 	f = return_f();
 	perpedist = malloc(sizeof(int) * screenWidth);
@@ -75,26 +112,7 @@ void	raycast(t_game game)
 		side_dist_init(&ray, game.map);
 		dda(&ray, game);
 		calc_texture(&ray, game);
-		y = 0;
-		while (y < screenHeight)
-		{
-			if (y < ray.draw_start)
-				my_mlx_pixel_put(&game.img, x, y, sky_color());
-			else if(y < ray.draw_end)
-			{
-				ray.tex_y = (int)ray.tex_pos;
-				if (ray.tex_y > texHeight  - 1)
-					ray.tex_y = texHeight  - 1;
-				ray.tex_pos += ray.step;
-				ray.color = get_color(&ray.texture,  ray.tex_x, ray.tex_y);
-				if (ray.side == 1)
-					ray.color = (ray.color >> 1) & 8355711;
-				my_mlx_pixel_put(&game.img, x, y, ray.color);
-			}
-			else
-				my_mlx_pixel_put(&game.img, x, y, floor_color(y, f));
-			y++;
-		}
+		paint_raycast(game, &ray, x, f);
 		perpedist[x] = ray.perpwalldist;
 		x++;
 	}
@@ -104,8 +122,6 @@ void	raycast(t_game game)
 	put_pic_minimap(game);
 	free(perpedist);
 }
-
-
 
 //VAI ESTAR NA LIBFT
 
@@ -154,4 +170,3 @@ char	*ft_itoa(int n)
 	str = numb(str, n, d);
 	return (str);
 }
-

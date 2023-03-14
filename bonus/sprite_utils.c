@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sprite_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/14 16:17:35 by sdos-san          #+#    #+#             */
+/*   Updated: 2023/03/14 16:18:06 by sdos-san         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cube.h"
 
 void	sort_sprites(int *sprite_order, int *sprite_dist, int sprite_num)
 {
 	int	i;
-	int aux;
+	int	aux;
 
 	i = 0;
 	while (i < sprite_num - 1)

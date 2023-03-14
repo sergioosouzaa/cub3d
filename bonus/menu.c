@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   menu.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/14 16:53:40 by sdos-san          #+#    #+#             */
+/*   Updated: 2023/03/14 16:55:04 by sdos-san         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cube.h"
 
 void	open_menu(t_game *game)
@@ -10,8 +22,8 @@ void	open_menu(t_game *game)
 
 void	display_menu(t_game *game)
 {
-	static long long last_time;
-	static	int			i;
+	static long long	last_time;
+	static int			i;
 
 	if (get_first_time() - last_time > 150)
 	{
@@ -30,9 +42,9 @@ int	handle_menu(t_game *game)
 		mlx_destroy_image(game->mlx, game->menu[2].img);
 		free(game->menu);
 		game->mode = 2;
-        open_char_select(game);
-        game->char_select = 1;
-        game->key.space = 0;
+		open_char_select(game);
+		game->char_select = 1;
+		game->key.space = 0;
 	}
 	return (0);
 }

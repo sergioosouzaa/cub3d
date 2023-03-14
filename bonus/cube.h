@@ -268,6 +268,6 @@ void	sort_order(int *sprite_order, int size);
 
 void	draw_minimap(t_game game);
 void    put_pic_minimap(t_game game);
-
+int		get_title_size(void);
 
 #endif
