@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   events.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:23 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/13 18:36:23 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/14 11:23:28 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,10 @@ int	handle_press(int key, t_game *game)
 		game->key.up = 1;
 	if (key == KEY_ESC)
 		game->key.esc = 1;
+	if (key == KEY_WALK_LEFT)
+		game->key.left = 1;
+	if (key == KEY_WALK_RIGHT)
+		game->key.right = 1;	
 	return (0);
 }
 
@@ -39,13 +43,25 @@ int	handle_release(int key, t_game *game)
 		game->key.up = 0;
 	if (key == KEY_ESC)
 		game->key.esc = 0;
+	if (key == KEY_WALK_LEFT)
+		game->key.left = 0;
+	if (key == KEY_WALK_RIGHT)
+		game->key.right = 0;	
 	return (0);
 }
 
 void	walk(t_game *game, int signal)
 {
-	game->map.pos_x = game->map.pos_x + (signal) * (game->map.dir_x * 0.05);
-	game->map.pos_y = game->map.pos_y + (signal) * (game->map.dir_y * 0.05);
+	double	pos_x;
+	double	pos_y;
+
+	pos_x = game->map.pos_x + (signal) * (game->map.dir_x * 0.05);
+	pos_y = game->map.pos_y + (signal) * (game->map.dir_y * 0.05);
+	if (game->world_map[(int)pos_x][(int)pos_y] < '1')
+	{
+		game->map.pos_x = pos_x;
+		game->map.pos_y = pos_y;
+	}
 }
 
 void	rotate(t_game *game, int signal)
@@ -70,6 +86,10 @@ int	handle_key(t_game *game)
 		walk(game, -1);
 	if (game->key.up && game->key.down != game->key.up)
 		walk(game, 1);
+	if (game->key.left && game->key.left != game->key.right)
+		walk_side(game, -1);
+	if (game->key.right && game->key.right != game->key.left)
+		walk_side(game, 1);
 	if (game->key.rotate_l && game->key.rotate_l != game->key.rotate_r)
 		rotate(game, -1);
 	if (game->key.rotate_r && game->key.rotate_l != game->key.rotate_r)

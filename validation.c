@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:50 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/13 18:36:51 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/11 17:10:23 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,13 @@ void	get_direction(char player, t_map *map)
 	map->dir_x = 0;
 	map->dir_y = 1;
 	if (player == 'N')
-		set_direction(map->dir_y, 1);
+		set_direction(&map->dir_y, 1);
 	else if (player == 'W')
-		set_direction(map->dir_x, -1);
+		set_direction(&map->dir_x, -1);
 	else if (player == 'E')
-		set_direction(map->dir_x, 1);
+		set_direction(&map->dir_x, 1);
 	else if (player == 'S')
-		set_direction(map->dir_y, -1);
+		set_direction(&map->dir_y, -1);
 	if (map->dir_x != 0)
 	{
 		map->plane_y = 0.66;

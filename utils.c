@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:47 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/13 18:36:47 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/14 11:17:49 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,7 @@ t_keys	init_keys(void)
 	key.esc = 0;
 	key.rotate_r = 0;
 	key.rotate_l = 0;
+	key.right = 0;
+	key.left = 0;
 	return (key);
 }

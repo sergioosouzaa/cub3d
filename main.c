@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:26 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/13 18:36:27 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/14 11:25:53 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,24 @@ int	main(int argc, char **argv)
 		mlx_loop(game.mlx);
 	}
 	printf("Map not found\n");
+}
+
+void	walk_side(t_game *game, int signal)
+{
+	double	pos_x;
+	double	pos_y;
+	double	dir_x;
+	double	dir_y;
+
+	dir_x = game->map.dir_x * cos((signal) * (1.571))
+		- game->map.dir_y * sin((signal) * (1.571));
+	dir_y = game->map.dir_x  * sin((signal) *(1.571)) + game->map.dir_y
+		* cos((signal) *(1.571));
+	pos_x = game->map.pos_x + (dir_x * 0.05);
+	pos_y = game->map.pos_y + (dir_y * 0.05);
+	if (game->world_map[(int)pos_x][(int)pos_y] < '1')
+	{
+		game->map.pos_x = pos_x;
+		game->map.pos_y = pos_y;
+	}
 }

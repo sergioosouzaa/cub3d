@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:41 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/13 18:36:41 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/11 17:09:56 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ void	invalid_config(t_map *map)
 		m_erro("Missing map configuration.\n");
 }
 
-void	set_direction(double dir, int nbr)
+void	set_direction(double *dir, int nbr)
 {
-	dir = nbr;
+	*dir = nbr;
 }
 
 void	map_border(char **new_map, t_map *map)

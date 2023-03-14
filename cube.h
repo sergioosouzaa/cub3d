@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cube.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:20 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/13 18:36:20 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/14 11:20:30 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,22 @@
 
 enum e_mac_e_key_codes
 {
-	KEY_DOWN = 125,
-	KEY_UP = 126,
+	KEY_DOWN = 1,
+	KEY_UP = 13,
 	KEY_ESC = 53,
 	KEY_RIGHT = 123,
 	KEY_LEFT = 124,
 	KEY_RESET = 15,
+	KEY_WALK_RIGHT = 0,
+	KEY_WALK_LEFT = 2,
 };
 
 typedef struct s_keys
 {
 	int	up;
 	int	down;
+	int	right;
+	int	left;
 	int	esc;
 	int	rotate_r;
 	int	rotate_l;
@@ -167,8 +171,9 @@ int				handle_release(int key, t_game *game);
 int				handle_key(t_game *game);
 int				game_loop(t_game *game);
 t_keys			init_keys(void);
-void			set_direction(double dir, int nbr);
+void			set_direction(double *dir, int nbr);
 void			map_border(char **new_map, t_map *map);
 void			functions_pixel(t_ray *ray, t_game game, int x, int y);
+void			walk_side(t_game *game, int signal);
 
 #endif
