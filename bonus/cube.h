@@ -167,24 +167,6 @@ typedef struct s_ray {
 	int				tex_y;
 	unsigned int	color;
 	int				door;
-
-
-	// Floor and ceiling
-	// float 			ray_dir_x0;
-	// float 			ray_dir_y0;
-	// float 			ray_dir_x1;
-	// float 			ray_dir_y1;
-	// int 			pos_p;
-	// int				pos_camera;
-	// float			row_dist;
-	// float			floor_step_x;
-	// float			floor_step_y;
-	// float			floor_x;
-	// float			floor_y;
-	// int 			cell_x;
-	// int 			cell_y;
-	// int 			t_x;
-    // int 			t_y;
 	t_data			texture;
 }				t_ray;
 
@@ -263,4 +245,29 @@ int				handle_release(int key, t_game *game);
 t_keys			init_keys(void);
 void	open_image_size(t_data *img_ptr, char *path, t_game *game, int size);
 char	*ft_itoa(int n);
+
+
+void	calc_texture(t_ray *ray, t_game game);
+void	ray_init(t_ray *ray, t_game game, int x);
+void	side_dist_init(t_ray *ray, t_map map);
+void 	door_dda(t_ray *ray, t_game game);
+void	dda(t_ray *ray, t_game game);
+
+
+
+// sprites
+
+void    organize(t_game *game, int *sprite_order, int *sprite_distance);
+void	calc_end_start(t_draw *sprites, int *sprite_order, t_game *game, int i);
+void	init_sprites(t_game *game, int *sprite_order, int i, t_draw *sprites);
+void	put_sprites(t_draw *sprites, t_game *game, int i, int *z_buffer);
+void	draw_sprites(int *z_buffer, t_game *game);
+
+void	sort_sprites(int *sprite_order, int *sprite_dist, int sprite_num);
+void	sort_order(int *sprite_order, int size);
+
+void	draw_minimap(t_game game);
+void    put_pic_minimap(t_game game);
+
+
 #endif

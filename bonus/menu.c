@@ -2,12 +2,6 @@
 
 void	open_menu(t_game *game)
 {
-	int screen_width;
-	int screen_height;
-
-	screen_width = screenWidth;
-	screen_height = screenHeight;
-
 	game->menu = malloc(sizeof(t_data) * 3);
 	open_image(&game->menu[0], "./sprits/menu1.xpm", game);
 	open_image(&game->menu[1], "./sprits/menu2.xpm", game);

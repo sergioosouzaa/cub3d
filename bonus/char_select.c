@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 10:49:58 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/13 10:49:59 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/14 14:37:44 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,6 @@
 
 void	open_char_select(t_game *game)
 {
-	int	screen_width;
-	int	screen_height;
-
-	screen_width = screenWidth;
-	screen_height = screenHeight;
 	game->menu = malloc(sizeof(t_data) * 5);
 	open_image(&game->menu[0], "./sprits/peach_menu.xpm", game);
 	open_image(&game->menu[1], "./sprits/peach_menu2.xpm", game);
