@@ -6,7 +6,7 @@
 /*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 11:25:12 by thsousa           #+#    #+#             */
-/*   Updated: 2022/06/13 12:08:28 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/14 18:09:07 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*ft_read(char *line)
 		return (NULL);
 	while (line[i] != '\n' && line[i])
 		i++;
-	str = malloc((i + 2) * sizeof(char));
+	str = malloc((i + 1) * sizeof(char));
 	if (!str)
 		return (NULL);
 	i = 0;

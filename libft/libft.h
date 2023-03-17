@@ -6,7 +6,7 @@
 /*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 09:31:51 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/13 18:30:41 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/14 17:07:58 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strdup(const char *s1);
 void	*ft_calloc(size_t count, size_t size);
-char	*ft_strjoin_(char const *s1, char const *s2);
+char	*ft_strjoin_(char *s1, char *s2);
 char	**ft_split(char const *s, char c);
 char	*ft_itoa(int c);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));

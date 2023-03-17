@@ -1,32 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin_.c                                      :+:      :+:    :+:   */
+/*   check_space.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/11 14:36:28 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/14 17:44:30 by thsousa          ###   ########.fr       */
+/*   Created: 2023/03/13 18:36:04 by thsousa           #+#    #+#             */
+/*   Updated: 2023/03/14 17:50:45 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "cube.h"
 
-char	*ft_strjoin_(char *s1, char *s2)
+int	ft_ispace(char *str)
 {
-	size_t	i;
-	size_t	j;
-	char	*dest;
+	int	i;
 
-	dest = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!dest)
-		return (NULL);
-	i = -1;
-	while (s1[++i] != '\0')
-		dest[i] = s1[i];
-	j = 0;
-	while (s2[j] != '\0')
-		dest[i++] = s2[j++];
-	dest[i] = '\0';
-	return (dest);
+	i = 0;
+	while ((str[i] == ' ') || (str[i] == '\t')
+		|| (str[i] >= 'A' && str[i] <= 'Z'))
+	i++;
+	return (i);
+}
+
+size_t	still_space(char *str)
+{
+	int	len;
+
+	len = ft_strlen(str);
+	while (!ft_isalnum(str[len]))
+		len--;
+	return (len - ft_ispace(str) + 1);
+}
+
+void	free_matriz(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i++])
+		free (str[i]);
+	str = NULL;
 }
