@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gaming.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 16:58:45 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/17 19:06:53 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/18 17:46:03 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ void    start_game(t_game *game)
     time = get_first_time();
     mlx_mouse_get_pos(game->mlx_win, &x, &y);
     if (x > game->init_x)
-        check_valid_cam(game, -1);
+        check_valid_cam(game, -1, rot);
     else if (x < game->init_x)
-        check_valid_cam(game, 1);
+        check_valid_cam(game, 1, rot);
     game->init_x = x;
 	handle_key(game);
 	handle_doors(game);

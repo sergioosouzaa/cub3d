@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 11:38:43 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/17 18:40:01 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/14 16:33:32 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,8 @@ int main(int argc, char **argv)
 		open_menu(&game);
 		game.doors = malloc(sizeof(t_door));
 		game.door_num = 1;
-		game.doors[0].pos_x = 5;
-		game.doors[0].pos_y = 10;
+		game.doors[0].pos_x = 13;
+		game.doors[0].pos_y = 13;
 		game.doors[0].first_time = 0;
 		game.doors[0].mode = 1;
 		game.doors[0].x = 1;

@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 10:49:58 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/17 15:29:27 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/14 16:53:37 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ void	open_peach(t_game *game)
 
 void	handle_char_select(t_game *game)
 {
-	if (game->key.rotate_l)
+	if (game->key.rotate_l || game->key.walk_l)
 		game->char_select = 0;
-	if (game->key.rotate_r)
+	if (game->key.rotate_r || game->key.walk_r)
 		game->char_select = 1;
 	if (game->key.space || game->key.esc)
 	{

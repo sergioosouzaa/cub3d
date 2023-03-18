@@ -19,18 +19,19 @@
 #define mapHeight 24
 #define rot 0.05	
 #define vMove 80
-enum	mac_e_key_codes
+
+enum e_mac_e_key_codes
 {
-	KEY_DOWN = 125,
-	KEY_UP = 126,
+	KEY_DOWN = 1,
+	KEY_UP = 13,
 	KEY_ESC = 53,
 	KEY_RIGHT = 123,
 	KEY_LEFT = 124,
-	KEY_SPACE = 49,
-	KEY_SHIFT = 57,
 	KEY_RESET = 15,
+	KEY_WALK_RIGHT = 0,
+	KEY_WALK_LEFT = 2,
+	KEY_SPACE = 49,
 };
-
 
 typedef	struct s_draw_sprites
 {
@@ -59,8 +60,9 @@ typedef	struct s_keys {
 	int	esc;
 	int	rotate_r;
 	int	rotate_l;
+	int	walk_l;
+	int	walk_r;
 	int	space;
-	int	shift;
 }				t_keys;
 
 typedef struct	s_data {
@@ -329,7 +331,7 @@ int		get_title_size(t_map *map);
 
 
 int	handle_key(t_game *game);
-int check_valid_cam(t_game *game, int signal);
+int check_valid_cam(t_game *game, int signal, double rotation);
 int check_valid_pos(t_game *game, int signal, double speed);
 
 #endif

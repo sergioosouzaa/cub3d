@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 10:56:39 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/17 13:35:21 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/18 17:29:17 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@ int	handle_press(int key, t_game *game)
 		game->key.up = 1;
 	if (key == KEY_SPACE)
 		game->key.space = 1;
-	if (key == KEY_SHIFT)
-		game->key.shift = 1;
+	if (key == KEY_WALK_LEFT)
+		game->key.walk_l = 1;
+	if (key == KEY_WALK_RIGHT)
+		game->key.walk_r = 1;
 	if (key == KEY_ESC)
 	{
 		system("killall afplay");
@@ -44,13 +46,13 @@ int	handle_release(int key, t_game *game)
 	if (key == KEY_DOWN)
 		game->key.down = 0;
 	if (key == KEY_UP)
-	{
 		game->key.up = 0;
-	}
 	if (key == KEY_SPACE)
 		game->key.space = 0;
-	if (key == KEY_SHIFT)
-		game->key.shift = 0;
+	if (key == KEY_WALK_LEFT)
+		game->key.walk_l = 0;
+	if (key == KEY_WALK_RIGHT)
+		game->key.walk_r = 0;	
 	return (0);
 }
 
@@ -64,6 +66,7 @@ t_keys	init_keys(void)
 	key.rotate_r = 0;
 	key.rotate_l = 0;
 	key.space = 0;
-	key.shift = 0;
+	key.walk_r = 0;
+	key.walk_l = 0;
 	return (key);
 }
