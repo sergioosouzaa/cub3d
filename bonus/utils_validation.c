@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_validation.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:44 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/17 19:25:30 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/19 16:18:13 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,9 @@ int	exit_close(t_game *game)
 		i++;
 	}
 	free(game->world_map);
-	mlx_destroy_image(game->mlx, game->img.img);
-	mlx_destroy_image(game->mlx, game->img_east.img);
-	mlx_destroy_image(game->mlx, game->img_north.img);
-	mlx_destroy_image(game->mlx, game->img_south.img);
-	mlx_destroy_image(game->mlx, game->img_west.img);
+	free(game->doors);
+	free(game->sprites);
+	destroy_imgs(game);
 	mlx_clear_window(game->mlx, game->mlx_win);
 	exit(0);
 	return (0);

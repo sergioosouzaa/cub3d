@@ -3,21 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   enemies.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:30:11 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/17 18:41:53 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/19 19:29:52 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cube.h"
-
-	// 	if (game->sprites[1].hp <= 0)
-	// {
-	// 	game->sprites[1].pos_x = -1;
-	// 	game->sprites[1].pos_y = -1;
-	// }
-
 
 void	move_turtle(t_game *game)
 {
@@ -28,9 +21,9 @@ void	move_turtle(t_game *game)
 	{
 		vector = sqrt(game->sprites[2].dir_x * game->sprites[2].dir_x \
 		+ game->sprites[2].dir_y * game->sprites[2].dir_y);
-		if (worldMap[(int)(game->sprites[2].pos_x + (game->sprites[2].dir_x \
-		/ vector))][(int)(game->sprites[2].pos_y + \
-		(game->sprites[2].dir_y / vector))] > 0)
+		if (game->world_map[(int)(game->sprites[2].pos_x + \
+		(game->sprites[2].dir_x / vector))][(int)(game->sprites[2].pos_y + \
+		(game->sprites[2].dir_y / vector))] > '0')
 		{
 			aux_1 = game->sprites[2].dir_x;
 			game->sprites[2].dir_x = game->sprites[2].dir_x * \
@@ -41,9 +34,9 @@ void	move_turtle(t_game *game)
 		else
 		{
 			game->sprites[2].pos_x = game->sprites[2].pos_x + \
-			(game->sprites[2].dir_x / vector) * 0.08;
+			(game->sprites[2].dir_x / vector) * 0.15;
 			game->sprites[2].pos_y = game->sprites[2].pos_y + \
-			(game->sprites[2].dir_y / vector) * 0.08;
+			(game->sprites[2].dir_y / vector) * 0.15;
 		}
 	}
 }
@@ -55,7 +48,7 @@ void	move_mc(t_game *game)
 	double	raydir_y;
 	double	vector;
 
-	camera_x = 2 * (screenWidth / 5 * 3.7) / (double)(screenWidth) - 1;
+	camera_x = 2 * (SCREENWIDTH / 5 * 3.7) / (double)(SCREENWIDTH) - 1;
 	raydir_x = game->map.dir_x + (game->map.plane_x * camera_x);
 	raydir_y = game->map.dir_y + (game->map.plane_y * camera_x);
 	vector = sqrt(raydir_x * raydir_x + raydir_y * raydir_y);
@@ -63,28 +56,43 @@ void	move_mc(t_game *game)
 	game->sprites[0].pos_y = game->map.pos_y + (raydir_y / vector) * 0.4;
 }
 
-void	move_bowser(t_game *game)
+int	c_m(t_game *game, int signal, int mode)
+{
+	if (mode == 1)
+	{
+		if (game->world_map[(int)(game->sprites[1].pos_x + (signal) \
+		* 0.06)][(int)game->sprites[1].pos_y] < '1')
+			return (1);
+	}
+	else
+		if (game->world_map[(int)(game->sprites[1].pos_x)][\
+		(int)(game->sprites[1].pos_y + (signal) * 0.06)] < '1')
+			return (1);
+	return (0);
+}
+
+void	move_bowser(t_game *g)
 {
 	static long long	time;
 
-	if (get_first_time() - time > 10)
+	if (get_first_time() - time > 15)
 	{
 		time = get_first_time();
-		if (game->sprites[1].pos_x >= 0 && game->sprites[1].pos_y >= 0)
+		if (g->sprites[1].pos_x >= 0 && g->sprites[1].pos_y >= 0)
 		{
-			if (fabs(game->sprites[1].pos_x - game->sprites[0].pos_x) > 0.016)
+			if (fabs(g->sprites[1].pos_x - g->sprites[0].pos_x) > 0.016)
 			{
-				if (game->sprites[1].pos_x < game->sprites[0].pos_x && game->world_map[(int)(game->sprites[1].pos_x + 0.016)][(int)game->sprites[1].pos_y] < '1')
-					game->sprites[1].pos_x = game->sprites[1].pos_x + 0.016;
-				if (game->sprites[1].pos_x > game->sprites[0].pos_x && game->world_map[(int)(game->sprites[1].pos_x - 0.016)][(int)game->sprites[1].pos_y] < '1')
-					game->sprites[1].pos_x = game->sprites[1].pos_x - 0.016;
+				if (g->sprites[1].pos_x < g->sprites[0].pos_x && c_m(g, 1, 1))
+					g->sprites[1].pos_x = g->sprites[1].pos_x + 0.06;
+				if (g->sprites[1].pos_x > g->sprites[0].pos_x && c_m(g, -1, 1))
+					g->sprites[1].pos_x = g->sprites[1].pos_x - 0.06;
 			}
-			if (fabs(game->sprites[1].pos_y - game->sprites[0].pos_y ) > 0.016)
+			if (fabs(g->sprites[1].pos_y - g->sprites[0].pos_y) > 0.016)
 			{
-				if (game->sprites[1].pos_y < game->sprites[0].pos_y && game->world_map[(int)game->sprites[1].pos_x][(int)(game->sprites[1].pos_y + 0.016)] < '1')
-					game->sprites[1].pos_y = game->sprites[1].pos_y + 0.016;
-				if (game->sprites[1].pos_y > game->sprites[0].pos_y && game->world_map[(int)game->sprites[1].pos_x][(int)(game->sprites[1].pos_y - 0.016)] < '1')
-					game->sprites[1].pos_y = game->sprites[1].pos_y - 0.016;
+				if (g->sprites[1].pos_y < g->sprites[0].pos_y && c_m(g, 1, 0))
+					g->sprites[1].pos_y = g->sprites[1].pos_y + 0.06;
+				if (g->sprites[1].pos_y > g->sprites[0].pos_y && c_m(g, -1, 0))
+					g->sprites[1].pos_y = g->sprites[1].pos_y - 0.06;
 			}
 		}
 	}
@@ -95,4 +103,4 @@ void	move_sprites(t_game *game)
 	move_mc(game);
 	move_bowser(game);
 	move_turtle(game);
-} 
+}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycast.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:12:14 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/17 19:22:57 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/19 19:52:32 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,15 +77,15 @@ void	paint_raycast(t_game game, t_ray *ray, int x, int f)
 	int		y;
 
 	y = 0;
-	while (y < screenHeight)
+	while (y < SCREENHEIGHT)
 	{
 		if (y < ray->draw_start)
 			my_mlx_pixel_put(&game.img, x, y, sky_color(&game));
 		else if (y < ray->draw_end)
 		{
 			ray->tex_y = (int)ray->tex_pos;
-			if (ray->tex_y > texHeight - 1)
-				ray->tex_y = texHeight - 1;
+			if (ray->tex_y > TEXHEIGHT - 1)
+				ray->tex_y = TEXHEIGHT - 1;
 			ray->tex_pos += ray->step;
 			ray->color = get_color(&ray->texture, ray->tex_x, ray->tex_y);
 			if (ray->side == 1)
@@ -107,8 +107,8 @@ void	raycast(t_game game)
 
 	x = 0;
 	f = return_f();
-	perpedist = malloc(sizeof(int) * screenWidth);
-	while (x < screenWidth)
+	perpedist = malloc(sizeof(int) * SCREENWIDTH);
+	while (x < SCREENWIDTH)
 	{
 		ray_init(&ray, game, x);
 		side_dist_init(&ray, game.map);
@@ -120,55 +120,8 @@ void	raycast(t_game game)
 	}
 	draw_sprites(perpedist, &game);
 	draw_minimap(game);
+	draw_health(&game);
 	mlx_put_image_to_window(game.mlx, game.mlx_win, game.img.img, 0, 0);
 	put_pic_minimap(game);
 	free(perpedist);
-}
-
-//VAI ESTAR NA LIBFT
-
-static size_t	count(int n)
-{
-	int	i;
-
-	i = 0;
-	if (n <= 0)
-		i = 1;
-	while (n != 0)
-	{
-		n = n / 10;
-		i++;
-	}
-	return (i);
-}
-
-static char	*numb(char *s, unsigned int n, size_t len)
-{
-	while (n > 0)
-	{
-		s[len--] = (n % 10) + '0';
-		n = n / 10;
-	}
-	return (s);
-}
-
-char	*ft_itoa(int n)
-{
-	char	*str;
-	size_t	d;
-
-	d = count(n);
-	str = malloc(d + 1 * sizeof (char));
-	if (!str)
-		return (NULL);
-	str[d--] = '\0';
-	if (n < 0)
-	{	
-		n *= (-1);
-		str[0] = '-';
-	}
-	if (n == 0)
-		str[0] = '0';
-	str = numb(str, n, d);
-	return (str);
 }

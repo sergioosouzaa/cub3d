@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 10:49:58 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/14 16:53:37 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/19 19:01:58 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,15 +85,15 @@ void	display_char_select(t_game *game)
 	if (game->char_select == 0)
 	{
 		mlx_put_image_to_window(game->mlx, game->mlx_win, game->menu[0].img, \
-		(screenWidth / 4) * 0.8, screenHeight / 2);
+		(SCREENWIDTH / 4) * 0.8, SCREENHEIGHT / 2);
 		mlx_put_image_to_window(game->mlx, game->mlx_win, \
-		game->menu[2 + i].img, (screenWidth / 4) * 3, screenHeight / 2);
+		game->menu[2 + i].img, (SCREENWIDTH / 4) * 3, SCREENHEIGHT / 2);
 	}
 	else if (game->char_select == 1)
 	{
 		mlx_put_image_to_window(game->mlx, game->mlx_win, game->menu[i].img, \
-		(screenWidth / 4) * 0.8, screenHeight / 2);
+		(SCREENWIDTH / 4) * 0.8, SCREENHEIGHT / 2);
 		mlx_put_image_to_window(game->mlx, game->mlx_win, game->menu[2].img, \
-		(screenWidth / 4) * 3, screenHeight / 2);
+		(SCREENWIDTH / 4) * 3, SCREENHEIGHT / 2);
 	}
 }

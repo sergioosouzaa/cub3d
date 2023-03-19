@@ -7,7 +7,7 @@ LXFLAGS = -lmlx -lm -framework OpenGL -framework AppKit
 
 SRCS	= 	main.c utils.c raycast.c time_utils.c texture.c menu.c char_select.c controls.c doors.c image_utils.c\
 			keyboard_events.c dda.c sprites.c sprite_utils.c minimap.c creating_map.c check_space.c\
-			utils_map.c utils_validation.c validation.c movements.c enemies.c gaming.c
+			utils_map.c utils_validation.c validation.c movements.c enemies.c gaming.c movements2.c utils2.c
 
 OBJS	=  $(SRCS:.c=.o)
 

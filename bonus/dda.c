@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:49:15 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/17 11:35:52 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/19 19:05:59 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ray_init(t_ray *ray, t_game game, int x)
 {
-	ray->camera_x = 2 * x / (double)(screenWidth) - 1;
+	ray->camera_x = 2 * x / (double)(SCREENWIDTH) - 1;
 	ray->raydir_x = game.map.dir_x + (game.map.plane_x * ray->camera_x);
 	ray->raydir_y = game.map.dir_y + (game.map.plane_y * ray->camera_x);
 	ray->map_x = (int)game.map.pos_x;
@@ -33,13 +33,13 @@ void	ray_init(t_ray *ray, t_game game, int x)
 
 void	calc_texture(t_ray *ray, t_game game)
 {
-	ray->line_heigh = (int)(screenHeight / ray->perpwalldist);
-	ray->draw_start = -ray->line_heigh / 2 + screenHeight / 2 + ray->pitch;
+	ray->line_heigh = (int)(SCREENHEIGHT / ray->perpwalldist);
+	ray->draw_start = -ray->line_heigh / 2 + SCREENHEIGHT / 2 + ray->pitch;
 	if (ray->draw_start < 0)
 		ray->draw_start = 0;
-	ray->draw_end = ray->line_heigh / 2 + screenHeight / 2 + ray->pitch;
-	if (ray->draw_end >= screenHeight)
-		ray->draw_end = screenHeight - 1;
+	ray->draw_end = ray->line_heigh / 2 + SCREENHEIGHT / 2 + ray->pitch;
+	if (ray->draw_end >= SCREENHEIGHT)
+		ray->draw_end = SCREENHEIGHT - 1;
 	ray->texture = get_texture(*ray, game);
 	if (ray->side == 0)
 		ray->wall_x = game.map.pos_y + ray->perpwalldist * ray->raydir_y;
@@ -48,15 +48,15 @@ void	calc_texture(t_ray *ray, t_game game)
 	ray->wall_x -= floor((ray->wall_x));
 	if (game.world_map[ray->map_x][ray->map_y] == '9')
 		ray->tex_x = (int)((ray->wall_x - (game.doors[0].x)) \
-	* (double)texWidth);
+	* (double)TEXWIDTH);
 	else
-		ray->tex_x = (int)(ray->wall_x * (double)texWidth);
+		ray->tex_x = (int)(ray->wall_x * (double)TEXWIDTH);
 	if (ray->side == 0 && ray->raydir_x > 0)
-		ray->tex_x = texWidth - ray->tex_x - 1;
+		ray->tex_x = TEXWIDTH - ray->tex_x - 1;
 	if (ray->side == 1 && ray->raydir_y < 0)
-		ray->tex_x = texWidth - ray->tex_x - 1;
-	ray->step = 1.0 * texHeight / ray->line_heigh;
-	ray->tex_pos = (ray->draw_start - ray->pitch - screenHeight / 2 + \
+		ray->tex_x = TEXWIDTH - ray->tex_x - 1;
+	ray->step = 1.0 * TEXHEIGHT / ray->line_heigh;
+	ray->tex_pos = (ray->draw_start - ray->pitch - SCREENHEIGHT / 2 + \
 	ray->line_heigh / 2) * ray->step;
 }
 

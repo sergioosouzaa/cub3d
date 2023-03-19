@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 10:56:39 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/18 17:29:17 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/19 16:37:35 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	handle_release(int key, t_game *game)
 	if (key == KEY_WALK_LEFT)
 		game->key.walk_l = 0;
 	if (key == KEY_WALK_RIGHT)
-		game->key.walk_r = 0;	
+		game->key.walk_r = 0;
 	return (0);
 }
 

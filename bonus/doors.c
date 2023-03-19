@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:03:14 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/13 11:21:50 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/19 19:19:21 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,15 @@ int	get_door_index(t_game *game, int x, int y)
 		i++;
 	}
 	return (-1);
+}
+
+void	create_doors(t_game *game)
+{
+	game->doors = malloc(sizeof(t_door));
+	game->door_num = 1;
+	game->doors[0].pos_x = 13;
+	game->doors[0].pos_y = 13;
+	game->doors[0].first_time = 0;
+	game->doors[0].mode = 1;
+	game->doors[0].x = 1;
 }
