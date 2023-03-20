@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cube.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
+/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 17:03:26 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/19 21:00:53 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/20 14:23:51 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,6 +238,7 @@ void			move_mc(t_game *game);
 void			move_turtle(t_game *game);
 void			put_img( t_game game);
 int				hsv_to_rgb(int hue, double saturation, double value);
+void			destroy_imgs(t_game *game);
 
 /*    					Time Utils 						*/
 

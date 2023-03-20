@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+         #
+#    By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/29 14:10:12 by sdos-san          #+#    #+#              #
-#    Updated: 2023/03/20 13:49:53 by sdos-san         ###   ########.fr        #
+#    Updated: 2023/03/20 14:01:07 by thsousa          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,9 +65,8 @@ all: $(NAME)
 bonus: $(BOBJS)
 		@cd libft && $(MAKE)
 		@cd minilibx && $(MAKE)
-		cc $^ -I ./minilibx -L ./minilibx -l mlx -framework OpenGl -framework Appkit $(LIBFT) -o $(NAME)
+		cc $^ -I ./minilibx -L ./minilibx -l mlx -framework OpenGl -framework Appkit $(LIBFT) -o cub3D_bonus
 		@printf "$(GREEN)cub3D Bonus Compiled 😎\n"
-		./bonus/cub3D ./bonus/maps/1.cub
 #		@cd bonus && $(MAKE)
 clean:
 		@printf "$(YELLOW)Deleting cub3D Objects...\n"
@@ -79,11 +78,12 @@ fclean:	clean
 		@printf "$(YELLOW)Deleting cub3D ...\n"
 		@cd libft && $(MAKE) fclean
 		@$(RM) $(NAME)
+		@$(RM) cub3d_bonus
 		@printf "$(GREEN)cub3D file Deleted 😎 🗑\n"
 
 re:				fclean all
 
-.PHONY:		all clean fclean re libft
+.PHONY:		all clean fclean re libft bonus
 
 GREEN=\033[0;32m
 YELLOW=\033[0;33m

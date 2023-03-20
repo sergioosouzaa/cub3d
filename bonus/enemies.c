@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   enemies.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
+/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:30:11 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/19 20:54:44 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/20 14:43:54 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,12 @@ int	c_m(t_game *game, int signal, int mode)
 	if (mode == 1)
 	{
 		if (game->world_map[(int)(game->sprites[1].pos_x + (signal) \
-		* 0.06)][(int)game->sprites[1].pos_y] < '1')
+		* 0.025)][(int)game->sprites[1].pos_y] < '1')
 			return (1);
 	}
 	else
 		if (game->world_map[(int)(game->sprites[1].pos_x)][\
-		(int)(game->sprites[1].pos_y + (signal) * 0.06)] < '1')
+		(int)(game->sprites[1].pos_y + (signal) * 0.025)] < '1')
 			return (1);
 	return (0);
 }
@@ -83,16 +83,16 @@ void	move_bowser(t_game *g)
 			if (fabs(g->sprites[1].pos_x - g->sprites[0].pos_x) > 0.016)
 			{
 				if (g->sprites[1].pos_x < g->sprites[0].pos_x && c_m(g, 1, 1))
-					g->sprites[1].pos_x = g->sprites[1].pos_x + 0.04;
+					g->sprites[1].pos_x = g->sprites[1].pos_x + 0.025;
 				if (g->sprites[1].pos_x > g->sprites[0].pos_x && c_m(g, -1, 1))
-					g->sprites[1].pos_x = g->sprites[1].pos_x - 0.04;
+					g->sprites[1].pos_x = g->sprites[1].pos_x - 0.025;
 			}
 			if (fabs(g->sprites[1].pos_y - g->sprites[0].pos_y) > 0.016)
 			{
 				if (g->sprites[1].pos_y < g->sprites[0].pos_y && c_m(g, 1, 0))
-					g->sprites[1].pos_y = g->sprites[1].pos_y + 0.04;
+					g->sprites[1].pos_y = g->sprites[1].pos_y + 0.025;
 				if (g->sprites[1].pos_y > g->sprites[0].pos_y && c_m(g, -1, 0))
-					g->sprites[1].pos_y = g->sprites[1].pos_y - 0.04;
+					g->sprites[1].pos_y = g->sprites[1].pos_y - 0.025;
 			}
 		}
 	}

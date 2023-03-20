@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
+/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:25:31 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/19 19:45:48 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/20 14:41:22 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,21 @@ void	get_sprites(t_game *game)
 
 void	destroy_imgs(t_game *game)
 {
-	mlx_destroy_image(game->mlx, game->sprites[0].texture_1.img);
+	if (game->mode > 2)
+	{
+		mlx_destroy_image(game->mlx, game->sprites[0].texture_1.img);
+		mlx_destroy_image(game->mlx, game->sprites[0].texture_2.img);
+		mlx_destroy_image(game->mlx, game->sprites[0].texture_3.img);
+		mlx_destroy_image(game->mlx, game->sprites[0].texture_4.img);
+		mlx_destroy_image(game->mlx, game->minimap.img);
+		mlx_destroy_image(game->mlx, game->door.img);
+	}
 	mlx_destroy_image(game->mlx, game->sprites[1].texture_1.img);
 	mlx_destroy_image(game->mlx, game->sprites[2].texture_1.img);
-	mlx_destroy_image(game->mlx, game->sprites[0].texture_2.img);
 	mlx_destroy_image(game->mlx, game->sprites[1].texture_2.img);
 	mlx_destroy_image(game->mlx, game->sprites[2].texture_2.img);
-	mlx_destroy_image(game->mlx, game->sprites[0].texture_3.img);
 	mlx_destroy_image(game->mlx, game->sprites[1].texture_3.img);
 	mlx_destroy_image(game->mlx, game->sprites[2].texture_3.img);
-	mlx_destroy_image(game->mlx, game->sprites[0].texture_4.img);
-	mlx_destroy_image(game->mlx, game->minimap.img);
 	mlx_destroy_image(game->mlx, game->img_east.img);
 	mlx_destroy_image(game->mlx, game->img_north.img);
 	mlx_destroy_image(game->mlx, game->img_south.img);

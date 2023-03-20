@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   char_select.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
+/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 10:49:58 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/19 19:01:58 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/20 14:42:09 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	handle_char_select(t_game *game)
 		game->char_select = 1;
 	if (game->key.space || game->key.esc)
 	{
-		game->mode = 3;
 		mlx_destroy_image(game->mlx, game->menu[0].img);
 		mlx_destroy_image(game->mlx, game->menu[1].img);
 		mlx_destroy_image(game->mlx, game->menu[2].img);
@@ -57,6 +56,7 @@ void	handle_char_select(t_game *game)
 	}
 	if (game->key.space)
 	{
+		game->mode = 3;
 		if (game->char_select == 0)
 			open_luigi(game);
 		else

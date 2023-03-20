@@ -6,7 +6,7 @@
 /*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:44 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/13 18:36:44 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/20 14:23:33 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,7 @@ int	exit_close(t_game *game)
 		i++;
 	}
 	free(game->world_map);
-	mlx_destroy_image(game->mlx, game->img.img);
-	mlx_destroy_image(game->mlx, game->img_east.img);
-	mlx_destroy_image(game->mlx, game->img_north.img);
-	mlx_destroy_image(game->mlx, game->img_south.img);
-	mlx_destroy_image(game->mlx, game->img_west.img);
-	mlx_clear_window(game->mlx, game->mlx_win);
+	destroy_imgs(game);
 	exit(0);
 	return (0);
 }
