@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:28:04 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/19 21:06:59 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/20 13:23:47 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	play_music(void)
 	{
 		system("killall afplay");
 		system("afplay ./sounds/game.mp3 &");
+		time = get_first_time();
 	}
 }
 
