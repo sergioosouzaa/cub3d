@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 16:58:45 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/19 21:00:42 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/19 21:06:32 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,6 @@ int	mouse_event(int button, int x, int y, t_game *game)
 		game->sprites[2].pos_y = game->sprites[0].pos_y;
 		game->sprites[2].dir_x = raydir_x;
 		game->sprites[2].dir_y = raydir_y;
-	}
-	if (game->sprites[1].hp <= 0)
-	{
-		game->sprites[1].pos_x = -1;
-		game->sprites[1].pos_y = -1;
 	}
 	if (button == 2)
 		game->sky = (game->sky + 1) % 2;
