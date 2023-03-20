@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:30:11 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/19 19:29:52 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/19 20:54:44 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,16 +83,16 @@ void	move_bowser(t_game *g)
 			if (fabs(g->sprites[1].pos_x - g->sprites[0].pos_x) > 0.016)
 			{
 				if (g->sprites[1].pos_x < g->sprites[0].pos_x && c_m(g, 1, 1))
-					g->sprites[1].pos_x = g->sprites[1].pos_x + 0.06;
+					g->sprites[1].pos_x = g->sprites[1].pos_x + 0.04;
 				if (g->sprites[1].pos_x > g->sprites[0].pos_x && c_m(g, -1, 1))
-					g->sprites[1].pos_x = g->sprites[1].pos_x - 0.06;
+					g->sprites[1].pos_x = g->sprites[1].pos_x - 0.04;
 			}
 			if (fabs(g->sprites[1].pos_y - g->sprites[0].pos_y) > 0.016)
 			{
 				if (g->sprites[1].pos_y < g->sprites[0].pos_y && c_m(g, 1, 0))
-					g->sprites[1].pos_y = g->sprites[1].pos_y + 0.06;
+					g->sprites[1].pos_y = g->sprites[1].pos_y + 0.04;
 				if (g->sprites[1].pos_y > g->sprites[0].pos_y && c_m(g, -1, 0))
-					g->sprites[1].pos_y = g->sprites[1].pos_y - 0.06;
+					g->sprites[1].pos_y = g->sprites[1].pos_y - 0.04;
 			}
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:16:03 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/19 19:05:56 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/19 20:48:16 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	handle_key(t_game *game)
 		walk_side(game, -1);
 	if (game->key.walk_r && game->key.walk_l != game->key.walk_r)
 		walk_side(game, 1);
+	if (game->key.c)
+		send_turtle(game);
 	return (0);
 }
 

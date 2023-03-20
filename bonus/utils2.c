@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 17:01:56 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/19 19:50:25 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/19 20:58:39 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	draw_health(t_game *game)
 {
 	int	hp;
 
-	if(game->sprites[1].hp > 0)
+	if (game->sprites[1].hp > 0)
 	{
 		hp = game->sprites[1].hp;
 		while (hp > 0)
@@ -45,7 +45,7 @@ void	draw_health(t_game *game)
 			hp--;
 		}
 	}
-	if(game->sprites[0].hp > 0)
+	if (game->sprites[0].hp > 0)
 	{
 		hp = game->sprites[0].hp;
 		while (hp > 0)

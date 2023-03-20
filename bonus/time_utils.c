@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:28:04 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/13 11:29:02 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/19 21:00:35 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,31 @@ long long	get_first_time(void)
 	return ((first.tv_sec) * 1000 + (first.tv_usec) * 0.001);
 }
 
-/* Return the time passed after the program has started */
-
-long long	time_return(long long first_time)
+void	play_music(void)
 {
-	struct timeval	first;
-	long long		actual_time;
+	static long long	time;
 
-	gettimeofday(&first, NULL);
-	actual_time = (first.tv_sec) * 1000 + (first.tv_usec) * 0.001;
-	return (actual_time - first_time);
+	if (get_first_time() - time > 120000)
+	{
+		system("killall afplay");
+		system("afplay ./sounds/game.mp3 &");
+	}
+}
+
+void	game_over(t_game *game)
+{
+	if (game->sprites[0].hp <= 0)
+		exit_close(game);
+}
+
+void	continue_game(t_game *game)
+{
+	if (game->sprites[1].hp > 0)
+		mlx_string_put(game->mlx, game->mlx_win, \
+		(SCREENWIDTH / 2) - 10, 30, 0x00FF0000, "BOWSER HP");
+	if (game->sprites[0].hp > 0)
+		mlx_string_put(game->mlx, game->mlx_win, \
+		90, 30, 0x0000FF00, "YOUR HP");
+	play_music();
+	game_over(game);
 }

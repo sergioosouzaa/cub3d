@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 16:58:45 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/19 19:51:37 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/19 21:00:42 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,8 @@ void	start_game(t_game *game)
 	raycast(*game);
 	fps = ft_itoa(60 / (get_first_time() - time));
 	mlx_string_put(game->mlx, game->mlx_win, 5, 10, 0x00FF00FF, fps);
-	if (game->sprites[1].hp > 0)
-		mlx_string_put(game->mlx, game->mlx_win, \
-		(SCREENWIDTH / 2) - 10, 30, 0x00FF0000, "BOWSER HP");
-	if (game->sprites[0].hp > 0)
-		mlx_string_put(game->mlx, game->mlx_win, \
-		90, 30, 0x0000FF00, "YOUR HP");
 	free(fps);
+	continue_game(game);
 }
 
 void	start_menu(t_game *game)

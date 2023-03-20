@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 17:03:26 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/19 19:50:16 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/19 21:00:53 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ enum e_mac_e_key_codes
 	KEY_WALK_RIGHT = 0,
 	KEY_WALK_LEFT = 2,
 	KEY_SPACE = 49,
+	KEY_C = 8,
 } ;
 
 typedef struct s_draw_sprites
@@ -73,6 +74,7 @@ typedef struct s_keys {
 	int	walk_l;
 	int	walk_r;
 	int	space;
+	int	c;
 }				t_keys;
 
 typedef struct s_data {
@@ -320,5 +322,9 @@ void			walk_side(t_game *game, int signal);
 void			create_doors(t_game *game);
 char			*ft_itoa(int n);
 void			draw_health(t_game *game);
+void			send_turtle(t_game *game);
+void			play_music(void);
+void			game_over(t_game *game);
+void			continue_game(t_game *game);
 
 #endif

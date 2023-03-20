@@ -6,11 +6,26 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 16:53:08 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/19 19:22:00 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/19 20:47:42 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cube.h"
+
+void	send_turtle(t_game *game)
+{
+	double	camera_x;
+	double	raydir_x;
+	double	raydir_y;
+
+	camera_x = 2 * (SCREENWIDTH / 5 * 3.7) / (double)(SCREENWIDTH) - 1;
+	raydir_x = game->map.dir_x + (game->map.plane_x * camera_x);
+	raydir_y = game->map.dir_y + (game->map.plane_y * camera_x);
+	game->sprites[2].pos_x = game->sprites[0].pos_x;
+	game->sprites[2].pos_y = game->sprites[0].pos_y;
+	game->sprites[2].dir_x = raydir_x;
+	game->sprites[2].dir_y = raydir_y;
+}
 
 void	change_cam(t_game *game, int signal, double rotation)
 {

@@ -6,7 +6,7 @@
 /*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 10:56:39 by sdos-san          #+#    #+#             */
-/*   Updated: 2023/03/19 16:37:35 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/19 20:45:20 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int	handle_press(int key, t_game *game)
 		game->key.walk_l = 1;
 	if (key == KEY_WALK_RIGHT)
 		game->key.walk_r = 1;
+	if (key == KEY_C)
+		game->key.c = 1;
 	if (key == KEY_ESC)
 	{
 		system("killall afplay");
@@ -53,6 +55,8 @@ int	handle_release(int key, t_game *game)
 		game->key.walk_l = 0;
 	if (key == KEY_WALK_RIGHT)
 		game->key.walk_r = 0;
+	if (key == KEY_C)
+		game->key.c = 0;
 	return (0);
 }
 
@@ -68,5 +72,6 @@ t_keys	init_keys(void)
 	key.space = 0;
 	key.walk_r = 0;
 	key.walk_l = 0;
+	key.c = 0;
 	return (key);
 }
