@@ -6,7 +6,7 @@
 /*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:04 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/16 18:28:29 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/14 17:50:45 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,4 @@ void	free_matriz(char **str)
 	while (str[i++])
 		free (str[i]);
 	str = NULL;
-}
-
-void	init_game(t_game *game)
-{
-	game->key = init_keys();
-	game->mlx = mlx_init();
-	game->mlx_win = mlx_new_window(game->mlx, SCREENWIDTH,
-			SCREENHEIGHT, "cub3d");
-	game->size_txt = TEXWIDTH;
-	game->img.img = mlx_new_image(game->mlx, SCREENWIDTH, SCREENHEIGHT);
-	game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel,
-			&game->img.line_length, &game->img.endian);
 }

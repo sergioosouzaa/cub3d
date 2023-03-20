@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 11:25:12 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/14 18:09:07 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/20 11:35:56 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,12 @@ static char	*ft_read(char *line)
 	i = 0;
 	if (!line[i])
 		return (NULL);
-	while (line[i] != '\n' && line[i])
+	while (line[i] && line[i] != '\n')
 		i++;
-	str = malloc((i + 1) * sizeof(char));
+	if (!line[i])
+		str = malloc((i + 1) * sizeof(char));
+	else
+		str = malloc((i + 2) * sizeof(char));
 	if (!str)
 		return (NULL);
 	i = 0;

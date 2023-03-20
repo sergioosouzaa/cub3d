@@ -6,7 +6,7 @@
 /*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:26 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/16 16:24:38 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/14 18:30:41 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int	main(int argc, char **argv)
 		color_rgb(pos.floor, &game, 0);
 		color_rgb(pos.ceiling, &game, 1);
 		get_sprites(&pos, &game);
-		init_game(&game);
 		game.map = pos;
 		raycast(game);
 		mlx_hook(game.mlx_win, 2, (1L << 0), &handle_press, &game);
@@ -33,7 +32,7 @@ int	main(int argc, char **argv)
 		mlx_loop_hook(game.mlx, &game_loop, &game);
 		mlx_loop(game.mlx);
 	}
-	printf("Argument invalid.\n");
+	printf("Map not found\n");
 }
 
 void	walk_side(t_game *game, int signal)

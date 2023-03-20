@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:50 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/16 18:26:41 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/20 11:45:03 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	fill_map(char **map, t_map *mapa)
 	size_t	i;
 	int		j;
 
-	new = malloc((mapa->lines + 2) * sizeof(char **));
+	new = malloc((mapa->lines + 3) * sizeof(char **));
 	j = -1;
 	i = 0;
 	new[i] = ft_strdup(map[0]);

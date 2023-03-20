@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_colors.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
+/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:38 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/16 16:20:05 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/20 11:46:20 by sdos-san         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,19 @@ void	create_rgb(int *rgb, t_game *game, int var)
 
 	color = (rgb[0] << 16 | rgb[1] << 8 | rgb[2]);
 	if (var == 1)
+	{
+		game->mlx = mlx_init();
+		game->mlx_win = mlx_new_window(game->mlx, SCREENWIDTH,
+				SCREENHEIGHT, "cub3d");
+		game->size_txt = TEXWIDTH;
+		game->img.img = mlx_new_image(game->mlx, SCREENWIDTH, SCREENHEIGHT);
+		game->img.addr = mlx_get_data_addr(game->img.img, \
+		&game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
 		game->ceiling_color = color;
+	}
 	else if (var == 0)
 		game->floor_color = color;
+	game->key = init_keys();
 }
 
 unsigned int	get_color(t_data *data, int x, int y)

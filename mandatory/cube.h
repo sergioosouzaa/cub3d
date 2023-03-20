@@ -6,7 +6,7 @@
 /*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:20 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/16 16:20:43 by thsousa          ###   ########.fr       */
+/*   Updated: 2023/03/14 18:48:27 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,5 @@ void			map_border(char **new_map, t_map *map);
 void			functions_pixel(t_ray *ray, t_game game, int x, int y);
 void			walk_side(t_game *game, int signal);
 void			free_matriz(char **str);
-void			init_game(t_game *game);
 
 #endif

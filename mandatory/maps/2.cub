@@ -1,7 +1,7 @@
-NO         ./sprites/Brick.xpm
-SO        ./sprites/Circle.xpm
-WE    ./sprites/wood.xpm
-EA       ./sprites/Yellow.xpm
+NO         ./sprits/Brick.xpm
+SO        ./sprits/Circle.xpm
+WE    ./sprits/wood.xpm
+EA       ./sprits/Yellow.xpm
 F 17,134,40
 C 0,180,253
 
