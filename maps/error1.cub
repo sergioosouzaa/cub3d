@@ -1,7 +1,7 @@
-NO ./textures/gray.xpm
-SO ./textures/red.xpm
-WE ./textures/green.xpm
-EA ./textures/blue.xpm
+NO ./sprits/Brick.xpm
+SO ./sprits/Circle.xpm
+WE ./sprits/wood.xpm
+EA ./sprits/Yellow.xpm
 
 C 28,28,28
 F 28,28,28

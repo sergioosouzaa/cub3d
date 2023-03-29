@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdos-san <sdos-san@student.42.rio>         +#+  +:+       +#+        */
+/*   By: thsousa <thsousa@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:36:50 by thsousa           #+#    #+#             */
-/*   Updated: 2023/03/20 11:44:53 by sdos-san         ###   ########.fr       */
+/*   Updated: 2023/03/20 14:57:27 by thsousa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ void	get_pos(char **valid_map, t_map *map)
 			if (valid_map[j][i] == 'N' || valid_map[j][i] == 'E'
 				|| valid_map[j][i] == 'S' || valid_map[j][i] == 'W')
 			{
-				map->pos_x = j;
-				map->pos_y = i;
+				map->pos_x = j + 0.2;
+				map->pos_y = i + 0.2;
 				get_direction(valid_map[j][i], map);
 				valid_map[j][i] = '0';
 				size++;
@@ -73,7 +73,7 @@ void	get_pos(char **valid_map, t_map *map)
 void	get_direction(char player, t_map *map)
 {
 	map->dir_x = 0;
-	map->dir_y = 1;
+	map->dir_y = 0;
 	if (player == 'N')
 		set_direction(&map->dir_y, 1);
 	else if (player == 'W')
